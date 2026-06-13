@@ -1,0 +1,2 @@
+date,us_ratings,us_avg,downloads_wk,trial_starts_wk,trials_converted_wk,sub_units_wk,credit_units_wk,peppol_sends_wk,proceeds_wk,notes
+2026-06-13,0,0,0,0,0,0,0,0,0,pre-launch baseline; app shell not yet created in ASC (apple_id TODO); bundle com.guitaripod.payday registered (AL4DRY5YYV); icon + 6.9" screenshots done; launch spec in docs/launch-spec.md

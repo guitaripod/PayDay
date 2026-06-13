@@ -1,0 +1,124 @@
+import Combine
+import Foundation
+import PayDayKit
+
+/// Owns the in-progress document. Every mutation republishes the whole invoice
+/// and its freshly-computed totals, so the view stays a pure function of state.
+@MainActor
+final class InvoiceEditorViewModel {
+    let invoicePublisher = PassthroughSubject<Invoice, Never>()
+    let totalsPublisher = PassthroughSubject<ComputedTotals, Never>()
+    let validationPublisher = PassthroughSubject<[ValidationIssue], Never>()
+    let savedPublisher = PassthroughSubject<Invoice, Never>()
+
+    private(set) var invoice: Invoice
+    let isNew: Bool
+
+    private let invoices: InvoiceRepository
+    private let clients: ClientRepository
+    private let business: BusinessRepository
+
+    init(
+        kind: DocumentType = .invoice,
+        existing: Invoice? = nil,
+        invoices: InvoiceRepository = .shared,
+        clients: ClientRepository = .shared,
+        business: BusinessRepository = .shared
+    ) {
+        self.invoices = invoices
+        self.clients = clients
+        self.business = business
+        if let existing {
+            self.invoice = existing
+            self.isNew = false
+        } else {
+            let today = Format.today()
+            self.invoice = Invoice(
+                id: UUID().uuidString,
+                type: kind,
+                number: "",
+                issueDate: today,
+                dueDate: today.adding(days: AppSettings.defaultPaymentTermDays),
+                currency: Currency(AppSettings.defaultCurrencyCode),
+                seller: Party(id: "business", legalName: ""),
+                buyer: Party(id: "", legalName: ""))
+            self.isNew = true
+        }
+    }
+
+    func start() {
+        Task {
+            if isNew {
+                let profile = try? await business.load()
+                if let profile {
+                    invoice.seller = profile.seller
+                    invoice.currency = profile.currency
+                    invoice.paymentMeans = profile.paymentMeans
+                    invoice.paymentTerms = profile.defaultPaymentTerms
+                }
+                invoice.number = (try? await business.nextNumber(for: invoice.type, on: invoice.issueDate))
+                    ?? NumberSequence(type: invoice.type, template: NumberSequence.defaultTemplate(for: invoice.type)).peek(on: invoice.issueDate)
+            }
+            publish()
+        }
+    }
+
+    private func publish() {
+        invoicePublisher.send(invoice)
+        totalsPublisher.send(invoice.totals())
+        validationPublisher.send(invoice.type.isEInvoiceable ? InvoiceValidator.validate(invoice) : [])
+    }
+
+    func setBuyer(_ party: Party) { invoice.buyer = party; publish() }
+    func setNumber(_ value: String) { invoice.number = value; publish() }
+    func setIssueDate(_ date: CalendarDate) {
+        invoice.issueDate = date
+        invoice.dueDate = date.adding(days: AppSettings.defaultPaymentTermDays)
+        publish()
+    }
+    func setDueDate(_ date: CalendarDate) { invoice.dueDate = date; publish() }
+    func setNote(_ value: String) { invoice.note = value; publish() }
+    func setPaymentTerms(_ value: String) { invoice.paymentTerms = value; publish() }
+
+    func upsert(_ line: LineItem) {
+        if let index = invoice.lines.firstIndex(where: { $0.id == line.id }) {
+            invoice.lines[index] = line
+        } else {
+            invoice.lines.append(line)
+        }
+        publish()
+    }
+
+    func removeLine(id: String) {
+        invoice.lines.removeAll { $0.id == id }
+        publish()
+    }
+
+    func appendDraftedLines(_ drafts: [InvoiceAIService.DraftedLine]) {
+        let rate = Decimal(AppSettings.defaultVATRatePercent)
+        for draft in drafts {
+            invoice.lines.append(LineItem(
+                id: UUID().uuidString, name: draft.name, details: draft.details,
+                quantity: draft.quantity, unitPrice: draft.unitPrice,
+                vatCategory: .standard, vatRatePercent: rate))
+        }
+        publish()
+    }
+
+    func newLineTemplate() -> LineItem {
+        LineItem(id: UUID().uuidString, name: "", quantity: 1, unit: .hour, unitPrice: 0,
+                 vatCategory: .standard, vatRatePercent: Decimal(AppSettings.defaultVATRatePercent))
+    }
+
+    func save() {
+        Task {
+            do {
+                if !invoice.buyer.id.isEmpty { try await clients.save(invoice.buyer) }
+                try await invoices.save(invoice)
+                savedPublisher.send(invoice)
+            } catch {
+                AppLogger.shared.error("save failed: \(error)", category: .db)
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+# Xcode / SPM
+*.xcodeproj
+!project.yml
+.build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.swiftpm/
+
+# Local config & secrets (never commit)
+.env.local
+PayDay/Secrets.swift
+workers/.dev.vars
+workers/.wrangler/
+
+# Node
+workers/node_modules/
+
+# macOS
+.DS_Store
+
+# Logs / build artifacts
+*.log
+build/

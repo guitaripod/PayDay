@@ -1,0 +1,107 @@
+name: Release to App Store Connect
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_number:
+        description: "CFBundleVersion for this upload"
+        required: true
+
+jobs:
+  upload:
+    name: Archive, sign, and upload
+    runs-on: macos-26
+
+    env:
+      PAYDAY_BUNDLE_ID: com.guitaripod.payday
+      PAYDAY_TEAM_ID: P4DQK6SRKR
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select latest stable Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Guard against beta build host
+        run: |
+          sw_vers
+          BUILD=$(sw_vers -buildVersion)
+          if [[ "$BUILD" =~ [A-Z]5[0-9]+[a-z]$ ]]; then
+            echo "::error::Runner macOS build $BUILD looks like a beta — App Store will reject (ITMS-90111)."
+            exit 1
+          fi
+
+      # AICREDITS_DEPLOY_KEY must be a read-only deploy key on guitaripod/AICredits
+      # (project references git@github.com:guitaripod/AICredits.git; SPM clones over SSH).
+      - name: Set up SSH for private SPM dependency
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.AICREDITS_DEPLOY_KEY }}
+
+      - name: Trust github.com host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Import signing identity
+        run: |
+          KEYCHAIN=$RUNNER_TEMP/build.keychain-db
+          KEYCHAIN_PASSWORD=$(uuidgen)
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          echo -n "${{ secrets.SIGNING_P12_BASE64 }}" | base64 --decode -o $RUNNER_TEMP/signing.p12
+          security import $RUNNER_TEMP/signing.p12 -k "$KEYCHAIN" -P "${{ secrets.P12_PASSWORD }}" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security list-keychains -d user -s "$KEYCHAIN" login.keychain
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo -n "${{ secrets.PROVISIONING_PROFILE_BASE64 }}" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/payday-appstore.mobileprovision
+
+      - name: Generate Xcode project
+        run: |
+          brew install xcodegen
+          cat > PayDay/Secrets.swift <<'EOF'
+          import Foundation
+
+          enum Secrets {
+              static let workerBaseURL = URL(string: "https://payday-worker.guitaripod.workers.dev")!
+              static let makoBaseURL = URL(string: "https://mako.midgarcorp.cc")!
+              static let revenueCatPublicKey = "${{ secrets.REVENUECAT_PUBLIC_KEY }}"
+              static let redirectURI = "https://mako.midgarcorp.cc/auth/callback"
+          }
+          EOF
+          xcodegen generate
+
+      - name: Set build number
+        run: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ github.event.inputs.build_number }}" PayDay/Info.plist
+
+      - name: Assert Secrets.swift is in the packaged sources
+        run: test -f PayDay/Secrets.swift || (echo "::error::Secrets.swift missing" && exit 1)
+
+      - name: Archive
+        run: |
+          xcodebuild -project PayDay.xcodeproj \
+            -scheme PayDay \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath $RUNNER_TEMP/PayDay.xcarchive \
+            -scmProvider system \
+            archive
+
+      - name: Package IPA
+        run: |
+          mkdir -p $RUNNER_TEMP/export/Payload
+          cp -R "$RUNNER_TEMP/PayDay.xcarchive/Products/Applications/PayDay.app" $RUNNER_TEMP/export/Payload/
+          cd $RUNNER_TEMP/export && zip -qry PayDay.ipa Payload
+
+      - name: Upload to App Store Connect
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo -n "${{ secrets.ASC_API_KEY_P8_BASE64 }}" | base64 --decode -o ~/.appstoreconnect/private_keys/AuthKey_DSS2FFU68G.p8
+          xcrun altool --upload-app -f $RUNNER_TEMP/export/PayDay.ipa -t ios \
+            --apiKey DSS2FFU68G \
+            --apiIssuer a5ebdab5-0ceb-463c-8151-195b902f117b

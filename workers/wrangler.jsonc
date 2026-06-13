@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "payday-worker",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "placement": {
+    "mode": "smart"
+  },
+  "vars": {
+    "ENVIRONMENT": "production",
+    "PEPPOL_GATEWAY_BASE": "https://api.storecove.com/api/v2",
+    "SUPPORTED_CURRENCIES": "EUR,USD,GBP,SEK,NOK,DKK,PLN,CZK,CHF,HUF,ISK"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "AUTH_NONCE",
+      "id": "REPLACE_WITH_KV_ID"
+    },
+    {
+      "binding": "FX_CACHE",
+      "id": "REPLACE_WITH_KV_ID"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "payday",
+      "database_id": "REPLACE_WITH_D1_ID"
+    }
+  ]
+}
