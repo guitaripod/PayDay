@@ -102,7 +102,11 @@ final class PaywallViewController: UIViewController {
                 self.renderCards()
             }
             .store(in: &cancellables)
+        // dropFirst: $isPremium replays its current value on subscribe, so without
+        // this an already-Pro user opening the paywall (e.g. Settings → Credits)
+        // would have it dismiss instantly. Only a transition to Pro should close it.
         store.$isPremium
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isPremium in if isPremium { self?.dismiss(animated: true) } }
             .store(in: &cancellables)

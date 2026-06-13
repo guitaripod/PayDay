@@ -13,6 +13,7 @@ final class InvoiceEditorViewModel {
 
     private(set) var invoice: Invoice
     let isNew: Bool
+    private var numberReserved = false
 
     private let invoices: InvoiceRepository
     private let clients: ClientRepository
@@ -56,8 +57,11 @@ final class InvoiceEditorViewModel {
                     invoice.paymentMeans = profile.paymentMeans
                     invoice.paymentTerms = profile.defaultPaymentTerms
                 }
-                invoice.number = (try? await business.nextNumber(for: invoice.type, on: invoice.issueDate))
-                    ?? NumberSequence(type: invoice.type, template: NumberSequence.defaultTemplate(for: invoice.type)).peek(on: invoice.issueDate)
+                // Peek (do NOT advance) on open — the number is only reserved on
+                // the first save, so abandoned drafts don't burn invoice numbers.
+                let seq = (try? await business.sequence(for: invoice.type))
+                    ?? NumberSequence(type: invoice.type, template: NumberSequence.defaultTemplate(for: invoice.type))
+                invoice.number = seq.peek(on: invoice.issueDate)
             }
             publish()
         }
@@ -113,8 +117,17 @@ final class InvoiceEditorViewModel {
     func save() {
         Task {
             do {
+                if isNew && !numberReserved {
+                    // Reserve the real number atomically on first save (advances the
+                    // counter exactly once per persisted document).
+                    if let reserved = try? await business.nextNumber(for: invoice.type, on: invoice.issueDate) {
+                        invoice.number = reserved
+                    }
+                    numberReserved = true
+                }
                 if !invoice.buyer.id.isEmpty { try await clients.save(invoice.buyer) }
                 try await invoices.save(invoice)
+                publish()
                 savedPublisher.send(invoice)
             } catch {
                 AppLogger.shared.error("save failed: \(error)", category: .db)

@@ -16,6 +16,9 @@ final class InvoiceEditorViewController: UIViewController {
     private var invoice: Invoice?
     private var totals: ComputedTotals?
     private var issues: [ValidationIssue] = []
+    /// Only an explicit Save pops back to the list; Preview also persists but
+    /// must stay on the pushed preview screen.
+    private var popAfterSave = false
 
     init(viewModel: InvoiceEditorViewModel) {
         self.viewModel = viewModel
@@ -42,7 +45,7 @@ final class InvoiceEditorViewController: UIViewController {
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         totalsBar.translatesAutoresizingMaskIntoConstraints = false
-        totalsBar.onSave = { [weak self] in self?.viewModel.save() }
+        totalsBar.onSave = { [weak self] in self?.popAfterSave = true; self?.viewModel.save() }
         view.addSubview(tableView)
         view.addSubview(totalsBar)
         NSLayoutConstraint.activate([
@@ -67,7 +70,11 @@ final class InvoiceEditorViewController: UIViewController {
             .sink { [weak self] in self?.issues = $0; self?.totalsBar.update(issues: $0) }
             .store(in: &cancellables)
         viewModel.savedPublisher.receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.navigationController?.popViewController(animated: true) }
+            .sink { [weak self] _ in
+                guard let self, self.popAfterSave else { return }
+                self.popAfterSave = false
+                self.navigationController?.popViewController(animated: true)
+            }
             .store(in: &cancellables)
     }
 

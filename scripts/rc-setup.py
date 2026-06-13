@@ -50,8 +50,11 @@ def items(path):
 
 
 def main():
-    app_id = items(f"/projects/{PROJECT}/apps")[0]["id"]
-    print("app:", app_id)
+    apps = items(f"/projects/{PROJECT}/apps")
+    # Prefer the production App Store app; fall back to whatever exists (test store).
+    app = next((a for a in apps if a.get("type") == "app_store"), apps[0])
+    app_id = app["id"]
+    print("app:", app_id, app.get("type"))
 
     # Entitlement `pro`
     ents = {e["lookup_key"]: e for e in items(f"/projects/{PROJECT}/entitlements")}
@@ -62,8 +65,10 @@ def main():
         pro = post(f"/projects/{PROJECT}/entitlements", {"lookup_key": "pro", "display_name": "Pay Day Pro"})["id"]
         print("+ entitlement pro")
 
-    # Products
-    existing = {p["store_identifier"]: p for p in items(f"/projects/{PROJECT}/products")}
+    # Products (dedup per-app: the same store_identifier can exist on both the
+    # test-store and App Store apps in this project).
+    existing = {p["store_identifier"]: p for p in items(f"/projects/{PROJECT}/products")
+                if p.get("app_id") == app_id}
     ids = {}
     for sid, ptype, name, _pkg in SUBS + [(s, t, n, None) for s, t, n in PACKS]:
         if sid in existing:
@@ -72,7 +77,9 @@ def main():
             continue
         body = {"store_identifier": sid, "app_id": app_id, "type": ptype,
                 "display_name": name, "title": name}
-        if ptype == "subscription":
+        # The `subscription` block is only valid for the simulated (test) store;
+        # for the App Store, RC reads the duration from App Store Connect.
+        if ptype == "subscription" and app.get("type") == "test_store":
             body["subscription"] = {"duration": "P1Y" if "annual" in sid else "P1M"}
         r = post(f"/projects/{PROJECT}/products", body)
         if r:

@@ -103,7 +103,10 @@ extension InvoiceListViewController: UITableViewDataSource, UITableViewDelegate 
         cell.selectionStyle = .none
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }
         let invoice = documents[indexPath.row]
-        let row = InvoiceRowView(invoice: invoice) { [weak self] in self?.open(invoice) }
+        let row = InvoiceRowView(invoice: invoice) {}
+        // The cell owns the tap (didSelectRow) and swipe actions; the embedded
+        // control must not intercept touches or it double-pushes / eats swipes.
+        row.isUserInteractionEnabled = false
         row.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(row)
         row.pinEdges(to: cell.contentView, insets: UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0))
