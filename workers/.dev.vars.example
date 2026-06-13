@@ -1,0 +1,20 @@
+APP_JWT_SECRET=
+APPLE_CLIENT_ID=com.guitaripod.payday
+APPLE_TEAM_ID=
+
+# Peppol access-point broker. Leave PEPPOL_API_KEY empty to use the offline stub
+# gateway (dev/CI default — every send "accepts" with a synthetic id).
+#
+# Recommand (recommended for launch): self-serve, free playground that simulates
+# AS4. Set provider=recommand, base=https://app.recommand.eu, KEY+SECRET from the
+# dashboard (Basic auth key:secret), and LEGAL_ENTITY_ID = the Recommand companyId
+# of the sending participant.
+PEPPOL_PROVIDER=recommand
+PEPPOL_API_KEY=
+PEPPOL_API_SECRET=
+PEPPOL_GATEWAY_BASE=https://app.recommand.eu
+PEPPOL_LEGAL_ENTITY_ID=
+
+# Storecove alternative: set PEPPOL_PROVIDER= (empty), base=https://api.storecove.com/api/v2,
+# PEPPOL_API_KEY=<Bearer token>, PEPPOL_LEGAL_ENTITY_ID=<integer legalEntityId>.
+# PEPPOL_API_SECRET is unused for Storecove.

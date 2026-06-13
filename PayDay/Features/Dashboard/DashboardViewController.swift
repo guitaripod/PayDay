@@ -52,7 +52,7 @@ final class DashboardViewController: UIViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.alwaysBounceVertical = true
         view.addSubview(scrollView)
-        scrollView.pinEdges(toSafeAreaOf: view)
+        scrollView.pinEdges(to: view)
 
         stack.axis = .vertical
         stack.spacing = DesignSystem.Spacing.l

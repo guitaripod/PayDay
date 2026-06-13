@@ -71,7 +71,7 @@ export class StorecovePeppolGateway implements PeppolGateway {
       body: JSON.stringify({
         documentTypes: ['invoice'],
         network: 'peppol',
-        metaSchemeId: 'iso6523-actorid-upis',
+        metaScheme: 'iso6523-actorid-upis',
         scheme: recipient.schemeID,
         identifier: recipient.endpointID,
       }),
@@ -89,7 +89,7 @@ export class StorecovePeppolGateway implements PeppolGateway {
       method: 'POST',
       headers: this.headers(),
       body: JSON.stringify({
-        legalEntityId: this.legalEntityID,
+        legalEntityId: Number(this.legalEntityID),
         routing: {
           eIdentifiers: [{ scheme: recipient.schemeID, id: recipient.endpointID }],
         },
@@ -97,21 +97,101 @@ export class StorecovePeppolGateway implements PeppolGateway {
           documentType: 'invoice',
           rawDocumentData: {
             document: btoa(unescape(encodeURIComponent(ublXML))),
-            parse: true,
+            parse: false,
             parseStrategy: 'ubl',
           },
         },
       }),
     })
     if (!res.ok) {
-      return { status: 'failed', reason: `gateway_${res.status}` }
+      return { status: 'failed', reason: `gateway_${res.status}: ${await readError(res)}` }
     }
     const body = (await res.json()) as { guid?: string }
     return { status: 'accepted', transmissionID: body.guid }
   }
 }
 
+/// Recommand REST adapter (app.recommand.eu). Basic auth (key:secret), the
+/// sending company id is carried in the URL path, and app-generated UBL is sent
+/// verbatim as documentType:'xml' — no base64, no provider-side regeneration.
+export class RecommandPeppolGateway implements PeppolGateway {
+  constructor(
+    private readonly base: string,
+    private readonly apiKey: string,
+    private readonly apiSecret: string,
+    private readonly companyID: string,
+    private readonly fetchImpl: typeof fetch = fetch
+  ) {}
+
+  private headers(): HeadersInit {
+    return {
+      authorization: `Basic ${btoa(`${this.apiKey}:${this.apiSecret}`)}`,
+      'content-type': 'application/json',
+    }
+  }
+
+  async lookup(recipient: PeppolRecipient): Promise<Reachability> {
+    const res = await this.fetchImpl(`${this.base}/api/peppol/verify`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify({
+        recipient: `${recipient.schemeID}:${recipient.endpointID}`,
+      }),
+    })
+    if (!res.ok) return { reachable: false, supportedDocumentTypes: [] }
+    const body = (await res.json()) as { reachable?: boolean; isReachable?: boolean }
+    const reachable = body.reachable ?? body.isReachable ?? false
+    return {
+      reachable,
+      supportedDocumentTypes: reachable ? ['urn:cen.eu:en16931:2017'] : [],
+    }
+  }
+
+  async send(ublXML: string, recipient: PeppolRecipient): Promise<SendResult> {
+    const res = await this.fetchImpl(
+      `${this.base}/api/peppol/${this.companyID}/send`,
+      {
+        method: 'POST',
+        headers: this.headers(),
+        body: JSON.stringify({
+          recipient: `${recipient.schemeID}:${recipient.endpointID}`,
+          documentType: 'xml',
+          document: ublXML,
+        }),
+      }
+    )
+    if (!res.ok) {
+      return { status: 'failed', reason: `gateway_${res.status}: ${await readError(res)}` }
+    }
+    const body = (await res.json()) as { id?: string; peppolMessageId?: string }
+    return { status: 'accepted', transmissionID: body.peppolMessageId ?? body.id }
+  }
+}
+
+async function readError(res: Response): Promise<string> {
+  try {
+    return (await res.text()).slice(0, 300)
+  } catch {
+    return ''
+  }
+}
+
 export function makePeppolGateway(env: Env, fetchImpl: typeof fetch = fetch): PeppolGateway {
+  if (
+    env.PEPPOL_PROVIDER === 'recommand' &&
+    env.PEPPOL_API_KEY &&
+    env.PEPPOL_API_SECRET &&
+    env.PEPPOL_GATEWAY_BASE &&
+    env.PEPPOL_LEGAL_ENTITY_ID
+  ) {
+    return new RecommandPeppolGateway(
+      env.PEPPOL_GATEWAY_BASE,
+      env.PEPPOL_API_KEY,
+      env.PEPPOL_API_SECRET,
+      env.PEPPOL_LEGAL_ENTITY_ID,
+      fetchImpl
+    )
+  }
   if (env.PEPPOL_API_KEY && env.PEPPOL_GATEWAY_BASE && env.PEPPOL_LEGAL_ENTITY_ID) {
     return new StorecovePeppolGateway(
       env.PEPPOL_GATEWAY_BASE,

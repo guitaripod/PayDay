@@ -13,7 +13,8 @@
   },
   "vars": {
     "ENVIRONMENT": "production",
-    "PEPPOL_GATEWAY_BASE": "https://api.storecove.com/api/v2",
+    "PEPPOL_PROVIDER": "recommand",
+    "PEPPOL_GATEWAY_BASE": "https://app.recommand.eu",
     "SUPPORTED_CURRENCIES": "EUR,USD,GBP,SEK,NOK,DKK,PLN,CZK,CHF,HUF,ISK"
   },
   "kv_namespaces": [

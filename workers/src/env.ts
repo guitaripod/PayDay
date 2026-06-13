@@ -7,7 +7,9 @@ export type Env = {
   APPLE_CLIENT_ID: string
   APPLE_TEAM_ID: string
 
+  PEPPOL_PROVIDER: string
   PEPPOL_API_KEY: string
+  PEPPOL_API_SECRET: string
   PEPPOL_GATEWAY_BASE: string
   PEPPOL_LEGAL_ENTITY_ID: string
 
