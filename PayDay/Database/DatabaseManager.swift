@@ -13,11 +13,19 @@ final class DatabaseManager: @unchecked Sendable {
             let dir = support.appendingPathComponent("payday", isDirectory: true)
             try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
             let path = dir.appendingPathComponent("payday.sqlite").path
-            dbQueue = try DatabaseQueue(path: path)
-            try Self.runMigrations(dbQueue)
+            let queue = try DatabaseQueue(path: path)
+            try Self.runMigrations(queue)
+            dbQueue = queue
             AppLogger.shared.info("database opened at \(path)", category: .db)
         } catch {
-            fatalError("Database init failed: \(error)")
+            // Don't crash-loop on a corrupt store / failed migration / sandbox
+            // issue — degrade to an in-memory database so the app still launches.
+            // Logged at .error; an in-memory DatabaseQueue cannot fail to open.
+            AppLogger.shared.error("database open failed, falling back to in-memory: \(error)", category: .db)
+            // swiftlint:disable:next force_try
+            let queue = try! DatabaseQueue()
+            try? Self.runMigrations(queue)
+            dbQueue = queue
         }
     }
 

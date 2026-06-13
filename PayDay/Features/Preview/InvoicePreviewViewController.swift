@@ -166,14 +166,17 @@ final class InvoicePreviewViewController: UIViewController {
                 case .submitting: hud.message = "Submitting to Peppol…"
                 case .accepted: hud.message = "Accepted by the network."
                 case .delivered(let id):
+                    Haptics.success()
                     hud.dismiss(animated: true) { self.presentAlert("Delivered", "Transmission \(id) accepted by Peppol.") }
                     return
                 case .failed(let reason):
+                    Haptics.error()
                     hud.dismiss(animated: true) { self.presentAlert("Send failed", reason) }
                     return
                 }
             }
         } catch {
+            Haptics.error()
             hud.dismiss(animated: true) { self.presentAlert("Send failed", error.localizedDescription) }
         }
     }

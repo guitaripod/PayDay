@@ -56,6 +56,7 @@ extension ClientListViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        guard indexPath.row < clients.count else { return cell }
         let party = clients[indexPath.row]
         var config = cell.defaultContentConfiguration()
         config.text = party.displayName
@@ -67,15 +68,18 @@ extension ClientListViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        guard indexPath.row < clients.count else { return }
         let party = clients[indexPath.row]
         if let selection { selection(party) } else { edit(party) }
     }
 
     func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        guard indexPath.row < clients.count else { return }
         edit(clients[indexPath.row])
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard indexPath.row < clients.count else { return nil }
         let party = clients[indexPath.row]
         let delete = UIContextualAction(style: .destructive, title: "Delete") { _, _, done in
             Task { try? await ClientRepository.shared.delete(id: party.id); done(true) }

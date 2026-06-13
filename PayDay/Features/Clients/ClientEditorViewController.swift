@@ -76,9 +76,10 @@ final class ClientEditorViewController: UIViewController {
         let vatID = vatField.text ?? ""
         guard !vatID.isEmpty else { vatStatusLabel.text = nil; return }
         vatStatusLabel.text = "Checking VAT…"
-        Task {
-            let result = try? await vatService.validate(vatID: vatID)
+        Task { [weak self] in
+            let result = try? await self?.vatService.validate(vatID: vatID)
             await MainActor.run {
+                guard let self else { return }
                 guard let result else { self.vatStatusLabel.text = nil; return }
                 if !result.reachable {
                     self.vatStatusLabel.text = "Couldn't reach VIES — you can still issue."
@@ -105,10 +106,12 @@ final class ClientEditorViewController: UIViewController {
             party.peppolSchemeID = String(peppol.prefix(while: { $0 != ":" }))
             party.peppolEndpointID = peppol
         }
-        Task {
-            try? await ClientRepository.shared.save(party)
+        let saved = party
+        Task { [weak self] in
+            try? await ClientRepository.shared.save(saved)
             await MainActor.run {
-                self.onSave(self.party)
+                guard let self else { return }
+                self.onSave(saved)
                 self.navigationController?.popViewController(animated: true)
             }
         }

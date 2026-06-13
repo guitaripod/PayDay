@@ -41,12 +41,19 @@ final class DashboardViewController: UIViewController {
     private func bind() {
         viewModel.snapshotPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.apply($0) }
+            .sink { [weak self] in
+                self?.scrollView.refreshControl?.endRefreshing()
+                self?.apply($0)
+            }
             .store(in: &cancellables)
     }
 
     private func buildLayout() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.alwaysBounceVertical = true
+        let refresh = UIRefreshControl()
+        refresh.addAction(UIAction { [weak self] _ in self?.viewModel.load() }, for: .valueChanged)
+        scrollView.refreshControl = refresh
         view.addSubview(scrollView)
         scrollView.pinEdges(toSafeAreaOf: view)
 
@@ -110,8 +117,55 @@ final class DashboardViewController: UIViewController {
                 font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary))
         } else {
             for invoice in snapshot.recent {
-                recentStack.addArrangedSubview(InvoiceRowView(invoice: invoice) { [weak self] in self?.open(invoice) })
+                let row = InvoiceRowView(invoice: invoice,
+                                         menu: { [weak self] in self?.recentMenu(for: invoice) },
+                                         onTap: { [weak self] in self?.open(invoice) })
+                recentStack.addArrangedSubview(row)
             }
+        }
+    }
+
+    private func recentMenu(for invoice: Invoice) -> UIMenu {
+        var children: [UIMenuElement] = [
+            UIAction(title: "Open", image: UIImage(systemName: "doc.text")) { [weak self] _ in self?.open(invoice) },
+        ]
+        if invoice.type == .invoice && invoice.status != .paid {
+            children.append(UIAction(title: "Mark Paid", image: UIImage(systemName: "checkmark.circle.fill")) { [weak self] _ in
+                self?.markPaid(invoice) })
+        }
+        if invoice.type == .estimate {
+            children.append(UIAction(title: "Convert to Invoice", image: UIImage(systemName: "arrow.right.circle.fill")) { [weak self] _ in
+                self?.convert(invoice) })
+        }
+        children.append(UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
+            self?.delete(invoice) })
+        return UIMenu(children: children)
+    }
+
+    private func markPaid(_ invoice: Invoice) {
+        Haptics.success()
+        var paid = invoice
+        paid.status = .paid
+        Task {
+            try? await InvoiceRepository.shared.save(paid)
+            viewModel.load()
+        }
+    }
+
+    private func convert(_ estimate: Invoice) {
+        Haptics.success()
+        Task {
+            let number = (try? await BusinessRepository.shared.nextNumber(for: .invoice, on: Format.today())) ?? estimate.number
+            _ = try? await InvoiceRepository.shared.makeInvoice(fromEstimate: estimate, number: number, today: Format.today())
+            viewModel.load()
+        }
+    }
+
+    private func delete(_ invoice: Invoice) {
+        Haptics.warning()
+        Task {
+            try? await InvoiceRepository.shared.delete(id: invoice.id)
+            viewModel.load()
         }
     }
 

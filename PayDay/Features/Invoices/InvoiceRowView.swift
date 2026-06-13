@@ -2,21 +2,35 @@ import UIKit
 import PayDayKit
 
 /// A tappable summary row for a document, reused on the dashboard and the list.
+/// On the dashboard it carries its own tap, context menu, and pointer lift; in
+/// the list the cell owns interaction (the row is disabled there).
 final class InvoiceRowView: UIControl {
     private let onTap: () -> Void
+    private var menuDelegate: MenuDelegate?
+    private let pointerDelegate = PointerDelegate()
 
-    init(invoice: Invoice, onTap: @escaping () -> Void) {
+    init(invoice: Invoice, menu: (() -> UIMenu?)? = nil, onTap: @escaping () -> Void) {
         self.onTap = onTap
         super.init(frame: .zero)
         backgroundColor = DesignSystem.Color.surface
         layer.cornerRadius = DesignSystem.Radius.control
         layer.cornerCurve = .continuous
         build(invoice)
-        addAction(UIAction { [weak self] _ in self?.onTap() }, for: .touchUpInside)
+        addAction(UIAction { [weak self] _ in Haptics.tap(); self?.onTap() }, for: .touchUpInside)
+        if let menu {
+            let delegate = MenuDelegate(provider: menu)
+            menuDelegate = delegate
+            addInteraction(UIContextMenuInteraction(delegate: delegate))
+        }
+        addInteraction(UIPointerInteraction(delegate: pointerDelegate))
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
+
+    override var isHighlighted: Bool {
+        didSet { alpha = isHighlighted ? 0.6 : 1 }
+    }
 
     private func build(_ invoice: Invoice) {
         let payable = Money(minorUnits: invoice.totals().summary.payableAmount.minorUnits, currency: invoice.currency)
@@ -44,5 +58,20 @@ final class InvoiceRowView: UIControl {
         row.pinEdges(to: self, insets: UIEdgeInsets(top: 12, left: 14, bottom: 12, right: 14))
         isUserInteractionEnabled = true
         for sub in [number, client, amount] { sub.isUserInteractionEnabled = false }
+    }
+
+    private final class MenuDelegate: NSObject, UIContextMenuInteractionDelegate {
+        private let provider: () -> UIMenu?
+        init(provider: @escaping () -> UIMenu?) { self.provider = provider }
+        func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+            UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [provider] _ in provider() }
+        }
+    }
+
+    private final class PointerDelegate: NSObject, UIPointerInteractionDelegate {
+        func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+            guard let view = interaction.view else { return nil }
+            return UIPointerStyle(effect: .lift(UITargetedPreview(view: view)))
+        }
     }
 }

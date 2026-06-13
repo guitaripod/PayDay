@@ -32,11 +32,20 @@ final class InvoiceEditorViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
         title = viewModel.isNew ? "New" : "Edit"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
+        let previewItem = UIBarButtonItem(
             title: "Preview", primaryAction: UIAction { [weak self] _ in self?.preview() })
+        navigationItem.rightBarButtonItems = [previewItem, editButtonItem]
         setupLayout()
         bind()
         viewModel.start()
+    }
+
+    /// `editButtonItem` toggles this; forward it so the line-items table shows
+    /// reorder handles + delete controls (drag-reorder lives in Edit mode so it
+    /// doesn't collide with the long-press context menu).
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: animated)
     }
 
     private func setupLayout() {
@@ -73,6 +82,7 @@ final class InvoiceEditorViewController: UIViewController {
             .sink { [weak self] _ in
                 guard let self, self.popAfterSave else { return }
                 self.popAfterSave = false
+                Haptics.success()
                 self.navigationController?.popViewController(animated: true)
             }
             .store(in: &cancellables)
@@ -135,16 +145,24 @@ final class InvoiceEditorViewController: UIViewController {
 
     private func runDraft(_ work: @escaping (InvoiceAIService, Currency) async throws -> [InvoiceAIService.DraftedLine]) {
         let currency = invoice?.currency ?? .eur
-        Task {
+        Task { [weak self] in
+            guard let self else { return }
             do {
                 let drafts = try await work(InvoiceAIService(), currency)
                 if drafts.isEmpty {
-                    presentInfo("Nothing found", "Couldn't extract line items — try describing them instead.")
+                    self.presentInfo("Nothing found", "Couldn't extract line items — try describing them instead.")
                 } else {
-                    viewModel.appendDraftedLines(drafts)
+                    self.viewModel.appendDraftedLines(drafts)
                 }
             } catch {
-                presentInfo("Couldn't draft", "The AI request failed. Check your connection or credits.")
+                // AI is credit-metered; the most common failure is an empty balance.
+                await AICreditsManager.store.refresh()
+                if AICreditsManager.store.isEmpty {
+                    let paywall = PaywallViewController(reason: "You're out of credits. Top up to draft line items and reminders with AI.")
+                    self.present(UINavigationController(rootViewController: paywall), animated: true)
+                } else {
+                    self.presentInfo("Couldn't draft", "The AI request failed — check your connection and try again.")
+                }
             }
         }
     }
@@ -261,6 +279,59 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
             else if indexPath.row == count { editLine(nil) }
             else { aiAssist() }
         case .notes: editNote(row: indexPath.row)
+        }
+    }
+
+    private func isLineRow(_ indexPath: IndexPath) -> Bool {
+        Section(rawValue: indexPath.section) == .lines && indexPath.row < (invoice?.lines.count ?? 0)
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        isLineRow(indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        isLineRow(indexPath) ? .delete : .none
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete, isLineRow(indexPath), let line = invoice?.lines[indexPath.row] else { return }
+        Haptics.warning()
+        viewModel.removeLine(id: line.id)
+    }
+
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        isLineRow(indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt source: IndexPath, toProposedIndexPath proposed: IndexPath) -> IndexPath {
+        // Keep reordering within the line rows of the line-items section.
+        guard proposed.section == Section.lines.rawValue else { return source }
+        let last = max(0, (invoice?.lines.count ?? 1) - 1)
+        return IndexPath(row: min(proposed.row, last), section: Section.lines.rawValue)
+    }
+
+    func tableView(_ tableView: UITableView, moveRowAt source: IndexPath, to destination: IndexPath) {
+        Haptics.tap()
+        viewModel.moveLine(from: source.row, to: destination.row)
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard isLineRow(indexPath), let line = invoice?.lines[indexPath.row] else { return nil }
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, done in
+            Haptics.warning(); self?.viewModel.removeLine(id: line.id); done(true)
+        }
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
+
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard isLineRow(indexPath), let line = invoice?.lines[indexPath.row] else { return nil }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            UIMenu(children: [
+                UIAction(title: "Edit", image: UIImage(systemName: "pencil")) { _ in self?.editLine(line) },
+                UIAction(title: "Duplicate", image: UIImage(systemName: "plus.square.on.square")) { _ in Haptics.tap(); self?.viewModel.duplicateLine(id: line.id) },
+                UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in Haptics.warning(); self?.viewModel.removeLine(id: line.id) },
+            ])
         }
     }
 

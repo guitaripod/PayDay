@@ -22,8 +22,10 @@ final class InvoiceListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            systemItem: .add, primaryAction: UIAction { [weak self] _ in self?.create() })
+        navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .add, menu: UIMenu(children: [
+            UIAction(title: "New Invoice", image: UIImage(systemName: "doc.text")) { [weak self] _ in self?.create(.invoice) },
+            UIAction(title: "New Estimate", image: UIImage(systemName: "doc.plaintext")) { [weak self] _ in self?.create(.estimate) },
+        ]))
         kindControl.selectedSegmentIndex = viewModel.kind == .estimate ? 1 : 0
         kindControl.addAction(UIAction { [weak self] _ in self?.switchKind() }, for: .valueChanged)
         navigationItem.titleView = kindControl
@@ -49,6 +51,9 @@ final class InvoiceListViewController: UIViewController {
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.rowHeight = 68
+        let refresh = UIRefreshControl()
+        refresh.addAction(UIAction { [weak self] _ in self?.viewModel.load() }, for: .valueChanged)
+        tableView.refreshControl = refresh
         view.addSubview(tableView)
         tableView.pinEdges(to: view)
     }
@@ -75,13 +80,20 @@ final class InvoiceListViewController: UIViewController {
             .sink { [weak self] documents in
                 self?.documents = documents
                 self?.emptyLabel.isHidden = !documents.isEmpty
+                self?.tableView.refreshControl?.endRefreshing()
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
     }
 
-    private func create() {
-        let editor = InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(kind: viewModel.kind))
+    private func create(_ kind: DocumentType) {
+        Haptics.tap()
+        if kind != viewModel.kind {
+            viewModel.kind = kind
+            kindControl.selectedSegmentIndex = kind == .estimate ? 1 : 0
+            title = kind == .estimate ? "Estimates" : "Invoices"
+        }
+        let editor = InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(kind: kind))
         navigationController?.pushViewController(editor, animated: true)
     }
 
@@ -102,6 +114,7 @@ extension InvoiceListViewController: UITableViewDataSource, UITableViewDelegate 
         cell.backgroundConfiguration = .clear()
         cell.selectionStyle = .none
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+        guard indexPath.row < documents.count else { return cell }
         let invoice = documents[indexPath.row]
         let row = InvoiceRowView(invoice: invoice) {}
         // The cell owns the tap (didSelectRow) and swipe actions; the embedded
@@ -114,33 +127,66 @@ extension InvoiceListViewController: UITableViewDataSource, UITableViewDelegate 
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.row < documents.count else { return }
         open(documents[indexPath.row])
     }
 
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let invoice = documents[indexPath.row]
-        let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, done in
-            self?.viewModel.delete(invoice); done(true)
-        }
-        let duplicate = UIContextualAction(style: .normal, title: "Duplicate") { [weak self] _, _, done in
-            self?.viewModel.duplicate(invoice); done(true)
-        }
-        duplicate.backgroundColor = DesignSystem.Color.sent
-        var actions = [delete, duplicate]
+    // MARK: shared actions (used by swipe + context menu)
+
+    private func markPaid(_ invoice: Invoice) { Haptics.success(); viewModel.markPaid(invoice) }
+    private func convert(_ invoice: Invoice) { Haptics.success(); viewModel.convertToInvoice(invoice) }
+    private func duplicate(_ invoice: Invoice) { Haptics.tap(); viewModel.duplicate(invoice) }
+    private func remove(_ invoice: Invoice) { Haptics.warning(); viewModel.delete(invoice) }
+
+    /// The natural "primary" gesture per document type: pay an invoice, convert an estimate.
+    private func primaryAction(for invoice: Invoice) -> (title: String, symbol: String, color: UIColor, run: () -> Void)? {
         if invoice.type == .invoice && invoice.status != .paid {
-            let paid = UIContextualAction(style: .normal, title: "Mark Paid") { [weak self] _, _, done in
-                self?.viewModel.markPaid(invoice); done(true)
-            }
-            paid.backgroundColor = DesignSystem.Color.paid
-            actions.append(paid)
+            return ("Mark Paid", "checkmark.circle.fill", DesignSystem.Color.paid, { [weak self] in self?.markPaid(invoice) })
         }
         if invoice.type == .estimate {
-            let convert = UIContextualAction(style: .normal, title: "→ Invoice") { [weak self] _, _, done in
-                self?.viewModel.convertToInvoice(invoice); done(true)
-            }
-            convert.backgroundColor = DesignSystem.Color.accent
-            actions.append(convert)
+            return ("Invoice", "arrow.right.circle.fill", DesignSystem.Color.accent, { [weak self] in self?.convert(invoice) })
         }
-        return UISwipeActionsConfiguration(actions: actions)
+        return nil
+    }
+
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard indexPath.row < documents.count, let primary = primaryAction(for: documents[indexPath.row]) else { return nil }
+        let action = UIContextualAction(style: .normal, title: primary.title) { _, _, done in primary.run(); done(true) }
+        action.image = UIImage(systemName: primary.symbol)
+        action.backgroundColor = primary.color
+        let config = UISwipeActionsConfiguration(actions: [action])
+        config.performsFirstActionWithFullSwipe = true
+        return config
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard indexPath.row < documents.count else { return nil }
+        let invoice = documents[indexPath.row]
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, done in
+            self?.remove(invoice); done(true)
+        }
+        let duplicate = UIContextualAction(style: .normal, title: "Duplicate") { [weak self] _, _, done in
+            self?.duplicate(invoice); done(true)
+        }
+        duplicate.backgroundColor = DesignSystem.Color.sent
+        return UISwipeActionsConfiguration(actions: [delete, duplicate])
+    }
+
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard indexPath.row < documents.count else { return nil }
+        let invoice = documents[indexPath.row]
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            guard let self else { return nil }
+            var children: [UIMenuElement] = [
+                UIAction(title: "Open", image: UIImage(systemName: "doc.text")) { _ in self.open(invoice) },
+                UIAction(title: "Duplicate", image: UIImage(systemName: "plus.square.on.square")) { _ in self.duplicate(invoice) },
+            ]
+            if let primary = self.primaryAction(for: invoice) {
+                children.append(UIAction(title: primary.title == "Invoice" ? "Convert to Invoice" : primary.title,
+                                         image: UIImage(systemName: primary.symbol)) { _ in primary.run() })
+            }
+            children.append(UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in self.remove(invoice) })
+            return UIMenu(children: children)
+        }
     }
 }

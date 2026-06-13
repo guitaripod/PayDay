@@ -98,6 +98,30 @@ final class InvoiceEditorViewModel {
         publish()
     }
 
+    func removeLine(at index: Int) {
+        guard invoice.lines.indices.contains(index) else { return }
+        invoice.lines.remove(at: index)
+        publish()
+    }
+
+    func duplicateLine(id: String) {
+        guard let index = invoice.lines.firstIndex(where: { $0.id == id }) else { return }
+        var copy = invoice.lines[index]
+        copy.id = UUID().uuidString
+        invoice.lines.insert(copy, at: index + 1)
+        publish()
+    }
+
+    /// Reorder a line (drag-to-reorder in the editor). Fires the full publish so
+    /// the VC's `invoice` mirror resyncs; the table has already committed the move
+    /// animation by the time the reload runs, so there is no animation fight.
+    func moveLine(from: Int, to: Int) {
+        guard invoice.lines.indices.contains(from), to >= 0, to <= invoice.lines.count else { return }
+        let line = invoice.lines.remove(at: from)
+        invoice.lines.insert(line, at: min(to, invoice.lines.count))
+        publish()
+    }
+
     func appendDraftedLines(_ drafts: [InvoiceAIService.DraftedLine]) {
         let rate = Decimal(AppSettings.defaultVATRatePercent)
         for draft in drafts {

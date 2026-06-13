@@ -125,6 +125,7 @@ final class PaywallViewController: UIViewController {
     }
 
     private func select(_ index: Int) {
+        Haptics.selection()
         selectedIndex = index
         renderCards()
     }
