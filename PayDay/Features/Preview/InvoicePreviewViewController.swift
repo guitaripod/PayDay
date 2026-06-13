@@ -86,28 +86,39 @@ final class InvoicePreviewViewController: UIViewController {
 
     private func renderAsync() {
         let invoice = self.invoice
-        Task {
-            let premium = demoForceCompliant ? true : await AICreditsManager.store.client.isPremium()
-            self.isPremium = premium
-            let profile = (try? await BusinessRepository.shared.load())?.defaultEInvoiceProfile ?? .en16931
-            let accent = DesignSystem.Color.accent
-            let output: FacturXEmbedder.Output = await Task.detached(priority: .userInitiated) {
-                let visual = InvoicePDFRenderer(style: .init(accent: accent)).render(invoice)
-                // Compliant Factur-X (embedded XML) is a Pro feature; free users
-                // still get a clean professional PDF.
-                if invoice.type.isEInvoiceable && premium {
-                    return FacturXEmbedder(profile: profile).embed(invoice: invoice, visualPDF: visual)
-                }
-                return FacturXEmbedder.Output(pdf: visual, embedded: false, sidecarXML: Data())
+        let accent = DesignSystem.Color.accent
+        Task { [weak self] in
+            // Render the human-readable PDF first and show it immediately — the
+            // free, offline issuing path must never block on a network call
+            // (the Pro check / Factur-X embed below). CLAUDE.md: never block issuing.
+            let visual = await Task.detached(priority: .userInitiated) {
+                InvoicePDFRenderer(style: .init(accent: accent)).render(invoice)
             }.value
+            guard let self else { return }
             self.spinner.stopAnimating()
-            self.renderedPDF = output.pdf
-            self.embed = output
-            if let document = PDFDocument(data: output.pdf) {
+            self.renderedPDF = visual
+            self.embed = FacturXEmbedder.Output(pdf: visual, embedded: false, sidecarXML: Data())
+            if let document = PDFDocument(data: visual) {
                 self.pdfView.document = document
             } else {
                 self.statusLabel.text = "Couldn't render this document. Try again."
                 self.statusLabel.textColor = DesignSystem.Color.overdue
+            }
+            self.updateStatus()
+
+            // Then resolve Pro and upgrade to the embedded Factur-X if eligible.
+            guard invoice.type.isEInvoiceable else { return }
+            let premium = self.demoForceCompliant ? true : await AICreditsManager.store.client.isPremium()
+            self.isPremium = premium
+            guard premium else { self.updateStatus(); return }
+            let profile = (try? await BusinessRepository.shared.load())?.defaultEInvoiceProfile ?? .en16931
+            let embedded = await Task.detached(priority: .userInitiated) {
+                FacturXEmbedder(profile: profile).embed(invoice: invoice, visualPDF: visual)
+            }.value
+            self.renderedPDF = embedded.pdf
+            self.embed = embedded
+            if let document = PDFDocument(data: embedded.pdf) {
+                self.pdfView.document = document
             }
             self.updateStatus()
         }
@@ -123,17 +134,17 @@ final class InvoicePreviewViewController: UIViewController {
         if issues.isEmpty {
             let embedded = embed?.embedded == true
             if embedded {
-                statusLabel.text = "✓ EN 16931 compliant · Factur-X embedded in PDF"
+                statusLabel.text = "✓ EN 16931 valid · Factur-X embedded in PDF"
                 statusLabel.textColor = DesignSystem.Color.paid
             } else if isPremium {
-                statusLabel.text = "✓ EN 16931 compliant · structured XML attached on export"
+                statusLabel.text = "✓ EN 16931 valid · structured XML attached on export"
                 statusLabel.textColor = DesignSystem.Color.paid
             } else {
-                statusLabel.text = "✓ This invoice is EN 16931 ready — unlock Pro to export a compliant Factur-X / Peppol e-invoice."
+                statusLabel.text = "✓ This invoice is EN 16931 valid — unlock Pro to export a Factur-X / Peppol e-invoice."
                 statusLabel.textColor = DesignSystem.Color.sent
             }
         } else {
-            statusLabel.text = "⚠︎ \(issues.count) issue\(issues.count == 1 ? "" : "s") before this is a compliant e-invoice:\n• " + issues.prefix(3).map(\.message).joined(separator: "\n• ")
+            statusLabel.text = "⚠︎ \(issues.count) issue\(issues.count == 1 ? "" : "s") before this is a valid e-invoice:\n• " + issues.prefix(3).map(\.message).joined(separator: "\n• ")
             statusLabel.textColor = DesignSystem.Color.overdue
         }
     }
@@ -162,7 +173,7 @@ final class InvoicePreviewViewController: UIViewController {
                 return
             }
             guard InvoiceValidator.isCompliant(invoice), let ubl = try? UBLInvoiceWriter().xml(for: invoice) else {
-                presentAlert("Not compliant yet", "Resolve the EN 16931 issues shown above before sending.")
+                presentAlert("Not valid yet", "Resolve the EN 16931 issues shown above before sending.")
                 return
             }
             let recipient = PeppolRecipient(

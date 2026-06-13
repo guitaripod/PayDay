@@ -93,8 +93,17 @@ final class InvoiceAIService: Sendable {
             DraftedLine(
                 name: $0.name,
                 details: $0.details ?? "",
-                quantity: Decimal($0.quantity ?? 1),
-                unitPrice: Decimal($0.unit_price ?? 0))
+                quantity: sanitizedDecimal($0.quantity, default: 1),
+                unitPrice: sanitizedDecimal($0.unit_price, default: 0))
         }
+    }
+
+    /// LLM-decoded numbers are untrusted: a non-finite or absurd-magnitude value
+    /// would poison `Money(rounding:)` into garbage minor units that round-trip
+    /// into the PDF and EN 16931 XML. Clamp to a finite, sane range at the boundary.
+    private static func sanitizedDecimal(_ value: Double?, default fallback: Decimal) -> Decimal {
+        guard let value, value.isFinite else { return fallback }
+        let bounded = min(max(value, -1_000_000_000), 1_000_000_000)
+        return Decimal(bounded)
     }
 }

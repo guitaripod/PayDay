@@ -44,7 +44,12 @@ final class PaywallViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Restore", primaryAction: UIAction { [weak self] _ in self?.restore() })
         build()
         bindStore()
+        // Never show fabricated prices in release — they could drift from App
+        // Store Connect (3.1.2). DEBUG renders decided prices for screenshots;
+        // release shows a loading state until the store's real plans arrive.
+        #if DEBUG
         plans = Self.fallbackPlans
+        #endif
         renderCards()
         Task { await store.loadPlans() }
     }
@@ -115,6 +120,15 @@ final class PaywallViewController: UIViewController {
     private func renderCards() {
         cardsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         cardViews = []
+        guard !plans.isEmpty else {
+            let loading = DesignSystem.label("Loading plans…", font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary)
+            cardsStack.addArrangedSubview(loading)
+            ctaButton.isEnabled = false
+            ctaButton.alpha = 0.5
+            return
+        }
+        ctaButton.isEnabled = true
+        ctaButton.alpha = 1
         for (index, plan) in plans.enumerated() {
             let card = planCard(plan, selected: index == selectedIndex)
             card.addAction(UIAction { [weak self] _ in self?.select(index) }, for: .touchUpInside)
@@ -273,8 +287,6 @@ final class PaywallViewController: UIViewController {
                badge: "Save 33%", footnote: "7 days free, then €39.99/year. Auto-renews. Cancel anytime.",
                cta: "Start 7-day free trial"),
         PlanVM(id: "com.guitaripod.payday.pro.monthly", title: "Billed monthly", price: "€4.99", term: "month",
-               badge: nil, footnote: nil, cta: "Subscribe"),
-        PlanVM(id: "com.guitaripod.payday.pro.lifetime", title: "One-time purchase", price: "€89.99", term: "once",
-               badge: nil, footnote: "Peppol sends metered via credit packs.", cta: "Buy Pay Day Pro"),
+               badge: nil, footnote: "Billed €4.99 every month. Auto-renews. Cancel anytime.", cta: "Subscribe"),
     ]
 }

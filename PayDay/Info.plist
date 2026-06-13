@@ -22,8 +22,6 @@
 	<string>1</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>NSCameraUsageDescription</key>
-	<string>Pay Day uses the camera so you can photograph a receipt or quote and turn it into invoice line items.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Pay Day lets you pick a logo for your invoices and import a photo of a receipt to draft line items.</string>
 	<key>UIApplicationSceneManifest</key>
@@ -56,13 +54,6 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>

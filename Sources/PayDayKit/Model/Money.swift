@@ -20,6 +20,11 @@ public struct Money: Sendable, Equatable, Hashable, Codable, Comparable {
     /// Round a raw decimal amount into whole minor units, half-up away from
     /// zero — the rounding EN 16931 validators accept for monetary terms.
     public init(rounding amount: Decimal, in currency: Currency) {
+        guard !amount.isNaN else {
+            self.minorUnits = 0
+            self.currency = currency
+            return
+        }
         let scaled = amount * currency.scale
         var input = scaled
         var rounded = Decimal()
