@@ -20,18 +20,18 @@
   "kv_namespaces": [
     {
       "binding": "AUTH_NONCE",
-      "id": "REPLACE_WITH_KV_ID"
+      "id": "c4a26daf0ce943a3905e769f5ea37a96"
     },
     {
       "binding": "FX_CACHE",
-      "id": "REPLACE_WITH_KV_ID"
+      "id": "acde43492d0b4eedbc4ca306f09b5371"
     }
   ],
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "payday",
-      "database_id": "REPLACE_WITH_D1_ID"
+      "database_id": "8d80678a-fd9e-4bb9-ad05-8f3ec0bdef14"
     }
   ]
 }
