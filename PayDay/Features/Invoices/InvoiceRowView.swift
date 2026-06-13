@@ -58,6 +58,11 @@ final class InvoiceRowView: UIControl {
         row.pinEdges(to: self, insets: UIEdgeInsets(top: 12, left: 14, bottom: 12, right: 14))
         isUserInteractionEnabled = true
         for sub in [number, client, amount] { sub.isUserInteractionEnabled = false }
+
+        isAccessibilityElement = true
+        accessibilityTraits = .button
+        accessibilityLabel = "\(invoice.type.displayName) \(invoice.number), \(invoice.buyer.displayName)"
+        accessibilityValue = "\(Format.money(payable)), \(invoice.status.displayName)"
     }
 
     private final class MenuDelegate: NSObject, UIContextMenuInteractionDelegate {

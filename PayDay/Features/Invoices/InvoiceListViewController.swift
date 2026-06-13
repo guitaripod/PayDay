@@ -6,7 +6,7 @@ final class InvoiceListViewController: UIViewController {
     private let viewModel: InvoiceListViewModel
     private var cancellables = Set<AnyCancellable>()
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
-    private let emptyLabel = UILabel()
+    private var emptyView: UIView?
     private var documents: [Invoice] = []
 
     init(kind: DocumentType) {
@@ -37,6 +37,7 @@ final class InvoiceListViewController: UIViewController {
     private func switchKind() {
         viewModel.kind = kindControl.selectedSegmentIndex == 1 ? .estimate : .invoice
         title = viewModel.kind == .estimate ? "Estimates" : "Invoices"
+        setupEmpty()
         viewModel.load()
     }
 
@@ -59,19 +60,27 @@ final class InvoiceListViewController: UIViewController {
     }
 
     private func setupEmpty() {
-        emptyLabel.text = "No \(viewModel.kind.noun)s yet.\nTap + to create one."
-        emptyLabel.numberOfLines = 0
-        emptyLabel.textAlignment = .center
-        emptyLabel.font = DesignSystem.Typography.body()
-        emptyLabel.textColor = DesignSystem.Color.secondary
-        emptyLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(emptyLabel)
+        emptyView?.removeFromSuperview()
+        let isEstimate = viewModel.kind == .estimate
+        let kind = viewModel.kind
+        let empty = DesignSystem.emptyState(
+            symbol: isEstimate ? "doc.plaintext" : "doc.text.badge.plus",
+            title: "No \(viewModel.kind.noun)s yet",
+            subtitle: isEstimate
+                ? "Create an estimate to send a quote — convert it to an invoice when it's accepted."
+                : "Create your first invoice. It's free, unlimited, and ready for EU e-invoicing.",
+            ctaTitle: "Create \(viewModel.kind.noun)",
+            ctaAction: { [weak self] in self?.create(kind) })
+        empty.translatesAutoresizingMaskIntoConstraints = false
+        empty.isHidden = true
+        view.addSubview(empty)
         NSLayoutConstraint.activate([
-            emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            emptyLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            emptyLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            empty.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            empty.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            empty.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 40),
+            empty.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -40),
         ])
+        emptyView = empty
     }
 
     private func bind() {
@@ -79,7 +88,7 @@ final class InvoiceListViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] documents in
                 self?.documents = documents
-                self?.emptyLabel.isHidden = !documents.isEmpty
+                self?.emptyView?.isHidden = !documents.isEmpty
                 self?.tableView.refreshControl?.endRefreshing()
                 self?.tableView.reloadData()
             }

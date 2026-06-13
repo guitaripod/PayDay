@@ -125,9 +125,12 @@ final class PaywallViewController: UIViewController {
     }
 
     private func select(_ index: Int) {
+        guard index != selectedIndex else { return }
         Haptics.selection()
         selectedIndex = index
-        renderCards()
+        UIView.transition(with: cardsStack, duration: 0.2, options: .transitionCrossDissolve) {
+            self.renderCards()
+        }
     }
 
     private func updateCTA() {

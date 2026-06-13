@@ -32,6 +32,20 @@ enum DesignSystem {
             default: return draft
             }
         }
+
+        static func statusSymbol(_ status: String) -> String {
+            switch status {
+            case "paid": return "checkmark.circle.fill"
+            case "accepted": return "checkmark.seal.fill"
+            case "overdue": return "exclamationmark.circle.fill"
+            case "declined": return "xmark.circle.fill"
+            case "sent": return "paperplane.fill"
+            case "viewed": return "eye.fill"
+            case "partiallyPaid": return "circle.lefthalf.filled"
+            case "void": return "nosign"
+            default: return "pencil"
+            }
+        }
     }
 
     enum Spacing {
@@ -49,14 +63,21 @@ enum DesignSystem {
     }
 
     enum Typography {
-        static func largeTitle() -> UIFont { .systemFont(ofSize: 34, weight: .bold) }
-        static func title() -> UIFont { .systemFont(ofSize: 22, weight: .bold) }
+        /// Every face scales with the user's text-size setting (Dynamic Type).
+        private static func scaled(_ style: UIFont.TextStyle, _ size: CGFloat, _ weight: UIFont.Weight) -> UIFont {
+            UIFontMetrics(forTextStyle: style).scaledFont(for: .systemFont(ofSize: size, weight: weight))
+        }
+        static func largeTitle() -> UIFont { scaled(.largeTitle, 34, .bold) }
+        static func title() -> UIFont { scaled(.title1, 22, .bold) }
         static func headline() -> UIFont { .preferredFont(forTextStyle: .headline) }
         static func body() -> UIFont { .preferredFont(forTextStyle: .body) }
         static func mono(_ size: CGFloat = 17, weight: UIFont.Weight = .semibold) -> UIFont {
-            .monospacedDigitSystemFont(ofSize: size, weight: weight)
+            UIFontMetrics(forTextStyle: .body).scaledFont(for: .monospacedDigitSystemFont(ofSize: size, weight: weight))
         }
         static func caption() -> UIFont { .preferredFont(forTextStyle: .caption1) }
+        static func scaledSystem(_ size: CGFloat, _ weight: UIFont.Weight, relativeTo style: UIFont.TextStyle = .body) -> UIFont {
+            scaled(style, size, weight)
+        }
     }
 
     @MainActor
@@ -66,6 +87,7 @@ enum DesignSystem {
         l.font = font
         l.textColor = color
         l.numberOfLines = 0
+        l.adjustsFontForContentSizeCategory = true
         return l
     }
 
@@ -78,7 +100,7 @@ enum DesignSystem {
         config.baseBackgroundColor = Color.accent
         config.baseForegroundColor = .black
         config.attributedTitle = AttributedString(
-            title, attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 17, weight: .semibold)]))
+            title, attributes: AttributeContainer([.font: Typography.scaledSystem(17, .semibold)]))
         config.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 22, bottom: 14, trailing: 22)
         if let symbol { config.image = UIImage(systemName: symbol) }
         config.imagePadding = 8
@@ -93,7 +115,7 @@ enum DesignSystem {
         config.cornerStyle = .capsule
         config.baseForegroundColor = Color.accent
         config.attributedTitle = AttributedString(
-            title, attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 16, weight: .medium)]))
+            title, attributes: AttributeContainer([.font: Typography.scaledSystem(16, .medium)]))
         config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 18, bottom: 12, trailing: 18)
         if let symbol { config.image = UIImage(systemName: symbol) }
         config.imagePadding = 6
@@ -111,7 +133,7 @@ enum DesignSystem {
         return view
     }
 
-    /// A small status pill (Draft / Sent / Paid / Overdue …).
+    /// A small status pill with an icon (Draft / Sent / Paid / Overdue …).
     @MainActor
     static func statusPill(_ statusRaw: String, title: String) -> UIView {
         let container = UIView()
@@ -119,18 +141,58 @@ enum DesignSystem {
         container.backgroundColor = color.withAlphaComponent(0.16)
         container.layer.cornerRadius = 8
         container.layer.cornerCurve = .continuous
+
+        let icon = UIImageView(image: UIImage(systemName: Color.statusSymbol(statusRaw),
+            withConfiguration: UIImage.SymbolConfiguration(pointSize: 9, weight: .bold)))
+        icon.tintColor = color
         let label = UILabel()
         label.text = title.uppercased()
-        label.font = .systemFont(ofSize: 11, weight: .bold)
+        label.font = Typography.scaledSystem(11, .bold, relativeTo: .caption2)
         label.textColor = color
-        label.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(label)
+        label.adjustsFontForContentSizeCategory = true
+        let stack = UIStackView(arrangedSubviews: [icon, label])
+        stack.axis = .horizontal
+        stack.spacing = 3
+        stack.alignment = .center
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.isUserInteractionEnabled = false
+        container.addSubview(stack)
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 4),
-            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -4),
-            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
-            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
+            stack.topAnchor.constraint(equalTo: container.topAnchor, constant: 4),
+            stack.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -4),
+            stack.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
+            stack.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
         ])
+        container.isAccessibilityElement = true
+        container.accessibilityLabel = title
         return container
+    }
+
+    /// A centered empty-state placeholder (icon + title + subtitle + optional CTA),
+    /// used on the dashboard, the document list, and the clients list.
+    @MainActor
+    static func emptyState(symbol: String, title: String, subtitle: String,
+                           ctaTitle: String? = nil, ctaAction: (() -> Void)? = nil) -> UIView {
+        let icon = UIImageView(image: UIImage(systemName: symbol,
+            withConfiguration: UIImage.SymbolConfiguration(pointSize: 52, weight: .regular)))
+        icon.tintColor = Color.accent
+        icon.contentMode = .center
+        let titleLabel = label(title, font: Typography.title())
+        titleLabel.textAlignment = .center
+        let subtitleLabel = label(subtitle, font: Typography.body(), color: Color.secondary)
+        subtitleLabel.textAlignment = .center
+
+        let stack = UIStackView(arrangedSubviews: [icon, titleLabel, subtitleLabel])
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.spacing = Spacing.s
+        stack.setCustomSpacing(Spacing.m, after: icon)
+        if let ctaTitle, let ctaAction {
+            let cta = primaryButton(ctaTitle, symbol: "plus")
+            cta.addAction(UIAction { _ in ctaAction() }, for: .touchUpInside)
+            stack.addArrangedSubview(cta)
+            stack.setCustomSpacing(Spacing.l, after: subtitleLabel)
+        }
+        return stack
     }
 }

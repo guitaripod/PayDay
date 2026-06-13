@@ -34,6 +34,24 @@ final class ClientEditorViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .save, primaryAction: UIAction { [weak self] _ in self?.commit() })
         populate()
         build()
+        configureFieldChaining()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if nameField.text?.isEmpty ?? true { nameField.becomeFirstResponder() }
+    }
+
+    private var orderedFields: [UITextField] {
+        [nameField, emailField, line1Field, cityField, postalField, countryField, vatField, peppolField]
+    }
+
+    private func configureFieldChaining() {
+        let fields = orderedFields
+        for (i, field) in fields.enumerated() {
+            field.delegate = self
+            field.returnKeyType = i == fields.count - 1 ? .done : .next
+        }
     }
 
     private func populate() {
@@ -124,6 +142,20 @@ final class ClientEditorViewController: UIViewController {
         field.keyboardType = keyboard
         field.autocapitalizationType = keyboard == .emailAddress ? .none : .words
         field.font = DesignSystem.Typography.body()
+        field.adjustsFontForContentSizeCategory = true
         return field
+    }
+}
+
+extension ClientEditorViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let fields = orderedFields
+        if let i = fields.firstIndex(of: textField), i + 1 < fields.count {
+            fields[i + 1].becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+            commit()
+        }
+        return true
     }
 }

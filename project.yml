@@ -67,7 +67,8 @@ targets:
       properties:
         CFBundleDisplayName: Pay Day
         CFBundleShortVersionString: "1.0.0"
-        UILaunchScreen: {}
+        UILaunchScreen:
+          UIColorName: LaunchBackground
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
           UISceneConfigurations:

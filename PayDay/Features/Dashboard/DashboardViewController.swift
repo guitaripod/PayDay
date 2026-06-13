@@ -14,6 +14,7 @@ final class DashboardViewController: UIViewController {
     private let outstandingCaption = UILabel()
     private let statsRow = UIStackView()
     private let recentStack = UIStackView()
+    private lazy var setupBanner = makeSetupBanner()
 
     init(viewModel: DashboardViewModel = DashboardViewModel()) {
         self.viewModel = viewModel
@@ -26,9 +27,11 @@ final class DashboardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
+        let compose = UIBarButtonItem(
             image: UIImage(systemName: "square.and.pencil"),
             primaryAction: UIAction { [weak self] _ in self?.newInvoice() })
+        compose.accessibilityLabel = "New invoice"
+        navigationItem.rightBarButtonItem = compose
         buildLayout()
         bind()
     }
@@ -41,19 +44,13 @@ final class DashboardViewController: UIViewController {
     private func bind() {
         viewModel.snapshotPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.scrollView.refreshControl?.endRefreshing()
-                self?.apply($0)
-            }
+            .sink { [weak self] in self?.apply($0) }
             .store(in: &cancellables)
     }
 
     private func buildLayout() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.alwaysBounceVertical = true
-        let refresh = UIRefreshControl()
-        refresh.addAction(UIAction { [weak self] _ in self?.viewModel.load() }, for: .valueChanged)
-        scrollView.refreshControl = refresh
         view.addSubview(scrollView)
         scrollView.pinEdges(toSafeAreaOf: view)
 
@@ -69,6 +66,8 @@ final class DashboardViewController: UIViewController {
             stack.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -DesignSystem.Spacing.m * 2),
         ])
 
+        setupBanner.isHidden = true
+        stack.addArrangedSubview(setupBanner)
         stack.addArrangedSubview(makeOutstandingCard())
         statsRow.axis = .horizontal
         statsRow.distribution = .fillEqually
@@ -104,17 +103,69 @@ final class DashboardViewController: UIViewController {
         return card
     }
 
+    private func makeSetupBanner() -> UIView {
+        let card = DesignSystem.card()
+        card.backgroundColor = DesignSystem.Color.accent.withAlphaComponent(0.12)
+
+        let icon = UIImageView(image: UIImage(systemName: "building.2.crop.circle.fill"))
+        icon.tintColor = DesignSystem.Color.accent
+        icon.contentMode = .scaleAspectFit
+        icon.setContentHuggingPriority(.required, for: .horizontal)
+        NSLayoutConstraint.activate([icon.widthAnchor.constraint(equalToConstant: 28)])
+
+        let title = DesignSystem.label("Finish setting up your business",
+            font: .systemFont(ofSize: 15, weight: .semibold))
+        let subtitle = DesignSystem.label("Add your name, VAT ID, and IBAN so every invoice is complete.",
+            font: DesignSystem.Typography.caption(), color: DesignSystem.Color.secondary)
+        subtitle.numberOfLines = 0
+        let textStack = UIStackView(arrangedSubviews: [title, subtitle])
+        textStack.axis = .vertical
+        textStack.spacing = 2
+
+        let chevron = UIImageView(image: UIImage(systemName: "chevron.right"))
+        chevron.tintColor = DesignSystem.Color.tertiary
+        chevron.setContentHuggingPriority(.required, for: .horizontal)
+
+        let row = UIStackView(arrangedSubviews: [icon, textStack, chevron])
+        row.axis = .horizontal
+        row.alignment = .center
+        row.spacing = DesignSystem.Spacing.m
+        row.translatesAutoresizingMaskIntoConstraints = false
+        row.isUserInteractionEnabled = false
+        card.addSubview(row)
+        row.pinEdges(to: card, insets: UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16))
+
+        card.isAccessibilityElement = true
+        card.accessibilityTraits = .button
+        card.accessibilityLabel = "Finish setting up your business"
+        card.accessibilityHint = "Add your name, VAT ID, and IBAN"
+        card.addGestureRecognizer(UITapGestureRecognizer(actionHandler: { [weak self] in
+            Haptics.tap()
+            self?.navigationController?.pushViewController(BusinessSettingsViewController(), animated: true)
+        }))
+        return card
+    }
+
     private func apply(_ snapshot: DashboardViewModel.Snapshot) {
+        setupBanner.isHidden = snapshot.sellerConfigured
         outstandingLabel.text = Format.money(snapshot.outstanding)
+        outstandingLabel.accessibilityLabel = "Outstanding balance"
+        outstandingLabel.accessibilityValue = Format.money(snapshot.outstanding)
         statsRow.arrangedSubviews.forEach { $0.removeFromSuperview() }
         statsRow.addArrangedSubview(statTile("\(snapshot.invoiceCount)", "Invoices"))
         statsRow.addArrangedSubview(statTile("\(snapshot.estimateCount)", "Estimates"))
-        statsRow.addArrangedSubview(statTile("\(snapshot.overdueCount)", "Overdue", tint: DesignSystem.Color.overdue))
+        let overdueTap: (() -> Void)? = snapshot.overdueCount > 0 ? { [weak self] in
+            Haptics.tap(); self?.tabBarController?.selectedIndex = 1
+        } : nil
+        statsRow.addArrangedSubview(statTile("\(snapshot.overdueCount)", "Overdue",
+            tint: snapshot.overdueCount > 0 ? DesignSystem.Color.overdue : DesignSystem.Color.label,
+            onTap: overdueTap))
 
         recentStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         if snapshot.recent.isEmpty {
-            recentStack.addArrangedSubview(DesignSystem.label("No documents yet. Create your first invoice.",
-                font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary))
+            recentStack.addArrangedSubview(DesignSystem.emptyState(
+                symbol: "tray", title: "Nothing here yet",
+                subtitle: "Your recent invoices and estimates will show up here."))
         } else {
             for invoice in snapshot.recent {
                 let row = InvoiceRowView(invoice: invoice,
@@ -169,7 +220,8 @@ final class DashboardViewController: UIViewController {
         }
     }
 
-    private func statTile(_ value: String, _ caption: String, tint: UIColor = DesignSystem.Color.label) -> UIView {
+    private func statTile(_ value: String, _ caption: String, tint: UIColor = DesignSystem.Color.label,
+                          onTap: (() -> Void)? = nil) -> UIView {
         let card = DesignSystem.card()
         let valueLabel = DesignSystem.label(value, font: DesignSystem.Typography.mono(26, weight: .bold), color: tint)
         let captionLabel = DesignSystem.label(caption, font: DesignSystem.Typography.caption(), color: DesignSystem.Color.secondary)
@@ -177,8 +229,18 @@ final class DashboardViewController: UIViewController {
         inner.axis = .vertical
         inner.spacing = 2
         inner.translatesAutoresizingMaskIntoConstraints = false
+        inner.isUserInteractionEnabled = false
         card.addSubview(inner)
         inner.pinEdges(to: card, insets: UIEdgeInsets(top: 14, left: 14, bottom: 14, right: 14))
+        card.isAccessibilityElement = true
+        card.accessibilityLabel = caption
+        card.accessibilityValue = value
+        if let onTap {
+            card.accessibilityTraits = .button
+            card.accessibilityHint = "Shows overdue invoices"
+            let tap = UITapGestureRecognizer(actionHandler: onTap)
+            card.addGestureRecognizer(tap)
+        }
         return card
     }
 

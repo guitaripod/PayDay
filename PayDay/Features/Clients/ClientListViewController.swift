@@ -7,6 +7,7 @@ final class ClientListViewController: UIViewController {
     private let selection: ((Party) -> Void)?
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private var clients: [Party] = []
+    private var emptyView: UIView?
 
     init(selection: ((Party) -> Void)? = nil) {
         self.selection = selection
@@ -28,6 +29,21 @@ final class ClientListViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         view.addSubview(tableView)
         tableView.pinEdges(to: view)
+
+        let empty = DesignSystem.emptyState(
+            symbol: "person.crop.circle.badge.plus", title: "No clients yet",
+            subtitle: "Add the businesses you invoice. Their VAT ID and Peppol address power compliant e-invoices.",
+            ctaTitle: "Add client", ctaAction: { [weak self] in self?.edit(nil) })
+        empty.translatesAutoresizingMaskIntoConstraints = false
+        empty.isHidden = true
+        view.addSubview(empty)
+        NSLayoutConstraint.activate([
+            empty.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            empty.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            empty.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 40),
+            empty.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -40),
+        ])
+        emptyView = empty
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -40,6 +56,7 @@ final class ClientListViewController: UIViewController {
             let loaded = (try? await ClientRepository.shared.all()) ?? []
             await MainActor.run {
                 self.clients = loaded
+                self.emptyView?.isHidden = !loaded.isEmpty
                 self.tableView.reloadData()
             }
         }

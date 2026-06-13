@@ -29,16 +29,21 @@ final class InvoicePreviewViewController: UIViewController {
         super.viewDidLoad()
         title = invoice.number
         view.backgroundColor = DesignSystem.Color.background
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
+        let shareItem = UIBarButtonItem(
             image: UIImage(systemName: "square.and.arrow.up"),
             primaryAction: UIAction { [weak self] _ in self?.share() })
+        shareItem.accessibilityLabel = "Share"
+        navigationItem.rightBarButtonItem = shareItem
         buildLayout()
         renderAsync()
     }
 
+    private let spinner = UIActivityIndicatorView(style: .large)
+
     private func buildLayout() {
         statusBar.backgroundColor = DesignSystem.Color.surface
-        statusLabel.font = .systemFont(ofSize: 13, weight: .semibold)
+        statusLabel.font = DesignSystem.Typography.scaledSystem(13, .semibold, relativeTo: .footnote)
+        statusLabel.adjustsFontForContentSizeCategory = true
         statusLabel.numberOfLines = 0
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         statusBar.addSubview(statusLabel)
@@ -54,10 +59,18 @@ final class InvoicePreviewViewController: UIViewController {
         sendButton.translatesAutoresizingMaskIntoConstraints = false
         sendButton.isHidden = !invoice.type.isEInvoiceable
 
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.hidesWhenStopped = true
+        spinner.color = DesignSystem.Color.secondary
+
         view.addSubview(statusBar)
         view.addSubview(pdfView)
         view.addSubview(sendButton)
+        view.addSubview(spinner)
+        spinner.startAnimating()
         NSLayoutConstraint.activate([
+            spinner.centerXAnchor.constraint(equalTo: pdfView.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: pdfView.centerYAnchor),
             statusBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             statusBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             statusBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -87,9 +100,15 @@ final class InvoicePreviewViewController: UIViewController {
                 }
                 return FacturXEmbedder.Output(pdf: visual, embedded: false, sidecarXML: Data())
             }.value
+            self.spinner.stopAnimating()
             self.renderedPDF = output.pdf
             self.embed = output
-            self.pdfView.document = PDFDocument(data: output.pdf)
+            if let document = PDFDocument(data: output.pdf) {
+                self.pdfView.document = document
+            } else {
+                self.statusLabel.text = "Couldn't render this document. Try again."
+                self.statusLabel.textColor = DesignSystem.Color.overdue
+            }
             self.updateStatus()
         }
     }

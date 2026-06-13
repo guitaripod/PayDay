@@ -8,7 +8,9 @@ final class TotalsBarView: UIView {
     private let totalLabel = UILabel()
     private let captionLabel = UILabel()
     private let complianceLabel = UILabel()
+    private let complianceIcon = UIImageView()
     private let saveButton = DesignSystem.primaryButton("Save")
+    private var lastCompliant: Bool?
 
     private let glass = UIVisualEffectView.paydayGlass(cornerRadius: 26)
 
@@ -23,14 +25,24 @@ final class TotalsBarView: UIView {
 
     private func build() {
         captionLabel.text = "Total due"
-        captionLabel.font = .systemFont(ofSize: 12, weight: .semibold)
+        captionLabel.font = DesignSystem.Typography.scaledSystem(12, .semibold, relativeTo: .caption1)
         captionLabel.textColor = DesignSystem.Color.secondary
+        captionLabel.adjustsFontForContentSizeCategory = true
         totalLabel.font = DesignSystem.Typography.mono(24, weight: .bold)
         totalLabel.textColor = DesignSystem.Color.label
-        complianceLabel.font = .systemFont(ofSize: 11, weight: .medium)
+        totalLabel.adjustsFontForContentSizeCategory = true
+        complianceLabel.font = DesignSystem.Typography.scaledSystem(11, .medium, relativeTo: .caption2)
         complianceLabel.numberOfLines = 1
+        complianceLabel.adjustsFontForContentSizeCategory = true
+        complianceIcon.contentMode = .scaleAspectFit
+        complianceIcon.setContentHuggingPriority(.required, for: .horizontal)
 
-        let left = UIStackView(arrangedSubviews: [captionLabel, totalLabel, complianceLabel])
+        let complianceRow = UIStackView(arrangedSubviews: [complianceIcon, complianceLabel])
+        complianceRow.axis = .horizontal
+        complianceRow.spacing = 3
+        complianceRow.alignment = .center
+
+        let left = UIStackView(arrangedSubviews: [captionLabel, totalLabel, complianceRow])
         left.axis = .vertical
         left.spacing = 1
         left.alignment = .leading
@@ -57,17 +69,27 @@ final class TotalsBarView: UIView {
     }
 
     func update(totals: ComputedTotals) {
-        totalLabel.text = Format.money(totals.summary.payableAmount)
+        let money = Format.money(totals.summary.payableAmount)
+        totalLabel.text = money
+        totalLabel.accessibilityLabel = "Total due \(money)"
     }
 
     func update(issues: [ValidationIssue]) {
         let errors = issues.filter { $0.severity == .error }
-        if errors.isEmpty {
-            complianceLabel.text = "✓ EN 16931 ready"
-            complianceLabel.textColor = DesignSystem.Color.paid
-        } else {
-            complianceLabel.text = "\(errors.count) compliance issue\(errors.count == 1 ? "" : "s")"
-            complianceLabel.textColor = DesignSystem.Color.overdue
+        let compliant = errors.isEmpty
+        let symbol = compliant ? "checkmark.seal.fill" : "exclamationmark.triangle.fill"
+        let color = compliant ? DesignSystem.Color.paid : DesignSystem.Color.overdue
+        complianceIcon.image = UIImage(systemName: symbol,
+            withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .semibold))
+        complianceIcon.tintColor = color
+        complianceLabel.text = compliant ? "EN 16931 ready"
+            : "\(errors.count) compliance issue\(errors.count == 1 ? "" : "s")"
+        complianceLabel.textColor = color
+
+        if lastCompliant != nil && lastCompliant != compliant {
+            complianceIcon.addSymbolEffect(.bounce)
+            compliant ? Haptics.success() : Haptics.warning()
         }
+        lastCompliant = compliant
     }
 }

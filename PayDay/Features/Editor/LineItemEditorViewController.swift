@@ -14,7 +14,9 @@ final class LineItemEditorViewController: UIViewController {
     private let quantityField = LineItemEditorViewController.makeField(placeholder: "Qty", keyboard: .decimalPad)
     private let priceField = LineItemEditorViewController.makeField(placeholder: "Unit price", keyboard: .decimalPad)
     private let rateField = LineItemEditorViewController.makeField(placeholder: "VAT %", keyboard: .decimalPad)
-    private let categoryControl = UISegmentedControl(items: ["S", "K", "AE", "Z", "E"])
+    private let categoryButton = UIButton(type: .system)
+    private var selectedVATCategory: VATCategory = .standard
+    private let vatCategories: [VATCategory] = [.standard, .intraCommunity, .reverseCharge, .zeroRated, .exempt]
 
     init(line: LineItem, currency: Currency, onSave: @escaping (LineItem) -> Void, onDelete: (() -> Void)?) {
         self.line = line
@@ -42,15 +44,15 @@ final class LineItemEditorViewController: UIViewController {
         quantityField.text = decimalText(line.quantity)
         priceField.text = decimalText(line.unitPrice)
         rateField.text = decimalText(line.vatRatePercent)
-        categoryControl.selectedSegmentIndex = categoryIndex(line.vatCategory)
-        categoryControl.addAction(UIAction { [weak self] _ in self?.syncRateEnabled() }, for: .valueChanged)
+        selectedVATCategory = line.vatCategory
+        configureCategoryButton()
 
         let rows: [UIView] = [
             labeled("Description", nameField),
             labeled("Details", detailField),
             labeled("Quantity", quantityField),
             labeled("Unit price (\(currency.code))", priceField),
-            labeled("VAT category", categoryControl),
+            labeled("VAT category", categoryButton),
             labeled("VAT rate %", rateField),
         ]
         let stack = UIStackView(arrangedSubviews: rows)
@@ -91,18 +93,28 @@ final class LineItemEditorViewController: UIViewController {
         dismiss(animated: true)
     }
 
-    private func selectedCategory() -> VATCategory {
-        [.standard, .intraCommunity, .reverseCharge, .zeroRated, .exempt][categoryControl.selectedSegmentIndex]
-    }
+    private func selectedCategory() -> VATCategory { selectedVATCategory }
 
-    private func categoryIndex(_ category: VATCategory) -> Int {
-        switch category {
-        case .standard: return 0
-        case .intraCommunity: return 1
-        case .reverseCharge: return 2
-        case .zeroRated: return 3
-        default: return 4
-        }
+    private func configureCategoryButton() {
+        var config = UIButton.Configuration.gray()
+        config.baseForegroundColor = DesignSystem.Color.label
+        config.title = "\(selectedVATCategory.displayName) (\(selectedVATCategory.rawValue))"
+        config.image = UIImage(systemName: "chevron.up.chevron.down")
+        config.imagePlacement = .trailing
+        config.imagePadding = 8
+        config.cornerStyle = .medium
+        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { var c = $0; c.font = DesignSystem.Typography.body(); return c }
+        categoryButton.configuration = config
+        categoryButton.contentHorizontalAlignment = .leading
+        categoryButton.menu = UIMenu(children: vatCategories.map { cat in
+            UIAction(title: "\(cat.displayName) (\(cat.rawValue))",
+                     state: cat == selectedVATCategory ? .on : .off) { [weak self] _ in
+                self?.selectedVATCategory = cat
+                self?.configureCategoryButton()
+                self?.syncRateEnabled()
+            }
+        })
+        categoryButton.showsMenuAsPrimaryAction = true
     }
 
     private func decimalText(_ value: Decimal) -> String {

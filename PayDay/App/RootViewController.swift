@@ -12,6 +12,9 @@ final class RootViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Accent the selected tab; leave bar backgrounds default so iOS 26 keeps
+        // its Liquid Glass (a custom appearance background would suppress it).
+        tabBar.tintColor = DesignSystem.Color.accent
         viewControllers = [
             wrap(DashboardViewController(), title: "Home", symbol: "house.fill"),
             wrap(InvoiceListViewController(kind: .invoice), title: "Invoices", symbol: "doc.text.fill"),
