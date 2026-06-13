@@ -168,7 +168,7 @@ final class InvoicePreviewViewController: UIViewController {
                 presentPaywall(reason: "Peppol delivery is a Pay Day Pro feature.")
                 return
             }
-            guard invoice.buyer.peppolEndpointID.contains(":") else {
+            guard !invoice.buyer.peppolEndpointID.trimmed.isEmpty, !invoice.buyer.peppolSchemeID.trimmed.isEmpty else {
                 presentAlert("No Peppol address", "Add a Peppol ID to this client to send over the network.")
                 return
             }

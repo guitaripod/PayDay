@@ -58,6 +58,21 @@ public struct UBLInvoiceWriter: Sendable {
 
         root.add(supplierParty(invoice.seller))
         root.add(customerParty(invoice.buyer))
+        // PEPPOL-EN16931 intra-community supply rules: BR-IC-11 requires the actual
+        // delivery date (BT-72, issue date is the accepted default) and BR-IC-12
+        // requires the deliver-to country (BT-80) — the buyer's country for an IC supply.
+        if invoice.lines.contains(where: { $0.vatCategory == .intraCommunity }) {
+            let delivery = XMLBuilder("cac:Delivery")
+            delivery.element("cbc:ActualDeliveryDate", invoice.issueDate.iso8601)
+            let location = XMLBuilder("cac:DeliveryLocation")
+            let address = XMLBuilder("cac:Address")
+            let country = XMLBuilder("cac:Country")
+            country.element("cbc:IdentificationCode", invoice.buyer.address.countryCode)
+            address.add(country)
+            location.add(address)
+            delivery.add(location)
+            root.add(delivery)
+        }
         if !invoice.paymentMeans.iban.trimmed.isEmpty {
             root.add(paymentMeans(invoice.paymentMeans))
         }

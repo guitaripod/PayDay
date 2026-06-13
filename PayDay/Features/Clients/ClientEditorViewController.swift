@@ -62,7 +62,7 @@ final class ClientEditorViewController: UIViewController {
         postalField.text = party.address.postalCode
         countryField.text = party.address.countryCode
         vatField.text = party.vatID
-        peppolField.text = party.peppolEndpointID.isEmpty ? "" : "\(party.peppolSchemeID):\(party.peppolEndpointID.components(separatedBy: ":").last ?? "")"
+        peppolField.text = party.peppolEndpointID.isEmpty ? "" : "\(party.peppolSchemeID):\(party.peppolEndpointID)"
         vatField.addAction(UIAction { [weak self] _ in self?.checkVAT() }, for: .editingDidEnd)
     }
 
@@ -120,9 +120,9 @@ final class ClientEditorViewController: UIViewController {
             line1: line1Field.text ?? "", city: cityField.text ?? "",
             postalCode: postalField.text ?? "", countryCode: countryField.text ?? "")
         party.vatID = vatField.text ?? ""
-        if let peppol = peppolField.text, peppol.contains(":") {
-            party.peppolSchemeID = String(peppol.prefix(while: { $0 != ":" }))
-            party.peppolEndpointID = peppol
+        if let peppol = peppolField.text, let colon = peppol.firstIndex(of: ":") {
+            party.peppolSchemeID = String(peppol[..<colon]).trimmed
+            party.peppolEndpointID = String(peppol[peppol.index(after: colon)...]).trimmed
         }
         let saved = party
         Task { [weak self] in

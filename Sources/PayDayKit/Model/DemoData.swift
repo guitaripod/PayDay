@@ -19,7 +19,7 @@ public enum DemoData {
                 countryCode: "FI"),
             vatID: "FI12345678",
             legalRegistrationID: "1234567-8",
-            peppolEndpointID: "0037:12345678",
+            peppolEndpointID: "12345678",
             peppolSchemeID: "0037")
     }
 
@@ -35,7 +35,7 @@ public enum DemoData {
                 postalCode: "10117",
                 countryCode: "DE"),
             vatID: "DE123456789",
-            peppolEndpointID: "9930:DE123456789",
+            peppolEndpointID: "DE123456789",
             peppolSchemeID: "9930")
     }
 

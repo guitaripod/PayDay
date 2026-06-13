@@ -2,16 +2,16 @@
 <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
   <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
   <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
-  <cbc:ID>INV-2026-0007</cbc:ID>
-  <cbc:IssueDate>2026-06-01</cbc:IssueDate>
-  <cbc:DueDate>2026-06-15</cbc:DueDate>
+  <cbc:ID>INV-2026-0008</cbc:ID>
+  <cbc:IssueDate>2026-06-05</cbc:IssueDate>
+  <cbc:DueDate>2026-07-05</cbc:DueDate>
   <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
-  <cbc:Note>Thank you for working with Aurora Studio.</cbc:Note>
+  <cbc:Note>VAT reverse charged — Article 196 VAT Directive 2006/112/EC.</cbc:Note>
   <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
-  <cbc:BuyerReference>PO-SAIMAA-2026-04</cbc:BuyerReference>
+  <cbc:BuyerReference>REF-NORDLICHT-22</cbc:BuyerReference>
   <cac:AccountingSupplierParty>
     <cac:Party>
-      <cbc:EndpointID schemeID="0037">0037:12345678</cbc:EndpointID>
+      <cbc:EndpointID schemeID="0037">12345678</cbc:EndpointID>
       <cac:PostalAddress>
         <cbc:StreetName>Mannerheimintie 12</cbc:StreetName>
         <cbc:CityName>Helsinki</cbc:CityName>
@@ -39,31 +39,42 @@
   </cac:AccountingSupplierParty>
   <cac:AccountingCustomerParty>
     <cac:Party>
+      <cbc:EndpointID schemeID="9930">DE123456789</cbc:EndpointID>
       <cac:PostalAddress>
-        <cbc:StreetName>Kauppakatu 3</cbc:StreetName>
-        <cbc:CityName>Tampere</cbc:CityName>
-        <cbc:PostalZone>33100</cbc:PostalZone>
+        <cbc:StreetName>Friedrichstraße 100</cbc:StreetName>
+        <cbc:CityName>Berlin</cbc:CityName>
+        <cbc:PostalZone>10117</cbc:PostalZone>
         <cac:Country>
-          <cbc:IdentificationCode>FI</cbc:IdentificationCode>
+          <cbc:IdentificationCode>DE</cbc:IdentificationCode>
         </cac:Country>
       </cac:PostalAddress>
       <cac:PartyTaxScheme>
-        <cbc:CompanyID>FI87654321</cbc:CompanyID>
+        <cbc:CompanyID>DE123456789</cbc:CompanyID>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
-        <cbc:RegistrationName>Saimaa Ventures Oy</cbc:RegistrationName>
+        <cbc:RegistrationName>Nordlicht GmbH</cbc:RegistrationName>
       </cac:PartyLegalEntity>
       <cac:Contact>
-        <cbc:ElectronicMail>laskut@saimaa.example</cbc:ElectronicMail>
+        <cbc:Name>Lena Brandt</cbc:Name>
+        <cbc:ElectronicMail>ap@nordlicht.example</cbc:ElectronicMail>
       </cac:Contact>
     </cac:Party>
   </cac:AccountingCustomerParty>
+  <cac:Delivery>
+    <cbc:ActualDeliveryDate>2026-06-05</cbc:ActualDeliveryDate>
+    <cac:DeliveryLocation>
+      <cac:Address>
+        <cac:Country>
+          <cbc:IdentificationCode>DE</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:Address>
+    </cac:DeliveryLocation>
+  </cac:Delivery>
   <cac:PaymentMeans>
     <cbc:PaymentMeansCode>58</cbc:PaymentMeansCode>
-    <cbc:PaymentID>RF18 0007</cbc:PaymentID>
     <cac:PayeeFinancialAccount>
       <cbc:ID>FI21 1234 5600 0007 85</cbc:ID>
       <cbc:Name>Aurora Studio Oy</cbc:Name>
@@ -73,16 +84,17 @@
     </cac:PayeeFinancialAccount>
   </cac:PaymentMeans>
   <cac:PaymentTerms>
-    <cbc:Note>Net 14 days. 8% annual interest on overdue amounts.</cbc:Note>
+    <cbc:Note>Net 30 days.</cbc:Note>
   </cac:PaymentTerms>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="EUR">1326.00</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
     <cac:TaxSubtotal>
-      <cbc:TaxableAmount currencyID="EUR">5200.00</cbc:TaxableAmount>
-      <cbc:TaxAmount currencyID="EUR">1326.00</cbc:TaxAmount>
+      <cbc:TaxableAmount currencyID="EUR">6600.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
       <cac:TaxCategory>
-        <cbc:ID>S</cbc:ID>
-        <cbc:Percent>25.5</cbc:Percent>
+        <cbc:ID>K</cbc:ID>
+        <cbc:Percent>0.00</cbc:Percent>
+        <cbc:TaxExemptionReason>Intra-Community supply</cbc:TaxExemptionReason>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
@@ -90,47 +102,28 @@
     </cac:TaxSubtotal>
   </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
-    <cbc:LineExtensionAmount currencyID="EUR">5200.00</cbc:LineExtensionAmount>
-    <cbc:TaxExclusiveAmount currencyID="EUR">5200.00</cbc:TaxExclusiveAmount>
-    <cbc:TaxInclusiveAmount currencyID="EUR">6526.00</cbc:TaxInclusiveAmount>
-    <cbc:PayableAmount currencyID="EUR">6526.00</cbc:PayableAmount>
+    <cbc:LineExtensionAmount currencyID="EUR">6600.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">6600.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">6600.00</cbc:TaxInclusiveAmount>
+    <cbc:PayableAmount currencyID="EUR">6600.00</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>
     <cbc:ID>1</cbc:ID>
-    <cbc:InvoicedQuantity unitCode="HUR">32.00</cbc:InvoicedQuantity>
-    <cbc:LineExtensionAmount currencyID="EUR">3040.00</cbc:LineExtensionAmount>
+    <cbc:InvoicedQuantity unitCode="HUR">60.00</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">6600.00</cbc:LineExtensionAmount>
     <cac:Item>
-      <cbc:Description>Logo, type system, guidelines</cbc:Description>
-      <cbc:Name>Brand identity design</cbc:Name>
+      <cbc:Description>Sprint 14</cbc:Description>
+      <cbc:Name>iOS development</cbc:Name>
       <cac:ClassifiedTaxCategory>
-        <cbc:ID>S</cbc:ID>
-        <cbc:Percent>25.5</cbc:Percent>
+        <cbc:ID>K</cbc:ID>
+        <cbc:Percent>0.00</cbc:Percent>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:ClassifiedTaxCategory>
     </cac:Item>
     <cac:Price>
-      <cbc:PriceAmount currencyID="EUR">95.00</cbc:PriceAmount>
-    </cac:Price>
-  </cac:InvoiceLine>
-  <cac:InvoiceLine>
-    <cbc:ID>2</cbc:ID>
-    <cbc:InvoicedQuantity unitCode="LS">1.00</cbc:InvoicedQuantity>
-    <cbc:LineExtensionAmount currencyID="EUR">2160.00</cbc:LineExtensionAmount>
-    <cac:Item>
-      <cbc:Description>Responsive, 4 sections</cbc:Description>
-      <cbc:Name>Landing page build</cbc:Name>
-      <cac:ClassifiedTaxCategory>
-        <cbc:ID>S</cbc:ID>
-        <cbc:Percent>25.5</cbc:Percent>
-        <cac:TaxScheme>
-          <cbc:ID>VAT</cbc:ID>
-        </cac:TaxScheme>
-      </cac:ClassifiedTaxCategory>
-    </cac:Item>
-    <cac:Price>
-      <cbc:PriceAmount currencyID="EUR">2400.00</cbc:PriceAmount>
+      <cbc:PriceAmount currencyID="EUR">110.00</cbc:PriceAmount>
     </cac:Price>
   </cac:InvoiceLine>
 </Invoice>

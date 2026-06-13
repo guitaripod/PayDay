@@ -22,9 +22,9 @@ const fixture = readFileSync(
 )
 
 const recipient = {
-  schemeID: process.env.PEPPOL_TEST_SCHEME ?? '0208',
-  endpointID: process.env.PEPPOL_TEST_ENDPOINT ?? '0563697860',
-  countryCode: 'BE',
+  schemeID: process.env.PEPPOL_TEST_SCHEME ?? '9930',
+  endpointID: process.env.PEPPOL_TEST_ENDPOINT ?? 'DE123456789',
+  countryCode: 'DE',
 }
 
 const basicAuth = `Basic ${btoa(`${key}:${secret}`)}`

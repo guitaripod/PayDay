@@ -28,7 +28,9 @@ struct UBLInvoiceWriterTests {
     @Test("Endpoint id and party tax scheme")
     func parties() throws {
         let xml = try UBLInvoiceWriter().xml(for: DemoData.sampleIntraCommunityInvoice())
-        #expect(xml.contains("<cbc:EndpointID schemeID=\"0037\">0037:12345678</cbc:EndpointID>"))
+        #expect(xml.contains("<cbc:EndpointID schemeID=\"0037\">12345678</cbc:EndpointID>"))
+        #expect(xml.contains("<cbc:EndpointID schemeID=\"9930\">DE123456789</cbc:EndpointID>"))
+        #expect(!xml.contains("0037:12345678"))
         #expect(xml.contains("<cbc:CompanyID>DE123456789</cbc:CompanyID>"))
         #expect(xml.contains("<cbc:TaxExemptionReason>Intra-Community supply</cbc:TaxExemptionReason>"))
     }

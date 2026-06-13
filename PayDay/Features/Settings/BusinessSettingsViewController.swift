@@ -45,7 +45,7 @@ final class BusinessSettingsViewController: UIViewController {
         countryField.text = profile.seller.address.countryCode
         ibanField.text = profile.paymentMeans.iban
         bicField.text = profile.paymentMeans.bic
-        peppolField.text = profile.seller.peppolEndpointID
+        peppolField.text = profile.seller.peppolEndpointID.isEmpty ? "" : "\(profile.seller.peppolSchemeID):\(profile.seller.peppolEndpointID)"
         vatRateField.text = String(profile.defaultVATRatePercent)
         termsField.text = profile.defaultPaymentTerms
     }
@@ -84,9 +84,9 @@ final class BusinessSettingsViewController: UIViewController {
         profile.paymentMeans = PaymentMeans(
             method: .creditTransfer, iban: ibanField.text ?? "", bic: bicField.text ?? "",
             accountName: profile.seller.legalName)
-        if let peppol = peppolField.text, peppol.contains(":") {
-            profile.seller.peppolEndpointID = peppol
-            profile.seller.peppolSchemeID = String(peppol.prefix(while: { $0 != ":" }))
+        if let peppol = peppolField.text, let colon = peppol.firstIndex(of: ":") {
+            profile.seller.peppolSchemeID = String(peppol[..<colon]).trimmed
+            profile.seller.peppolEndpointID = String(peppol[peppol.index(after: colon)...]).trimmed
         }
         profile.defaultVATRatePercent = Double(vatRateField.text ?? "") ?? profile.defaultVATRatePercent
         profile.defaultPaymentTerms = termsField.text ?? ""
