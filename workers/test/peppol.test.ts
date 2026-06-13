@@ -85,7 +85,7 @@ describe('recommand adapter wire shape', () => {
     const gw = new RecommandPeppolGateway('https://app.recommand.eu', 'key', 'secret', 'company_123', impl)
     const result = await gw.send('<Invoice>raw</Invoice>', recipient)
 
-    expect(calls[0].url).toBe('https://app.recommand.eu/api/peppol/company_123/send')
+    expect(calls[0].url).toBe('https://app.recommand.eu/api/v1/company_123/send')
     const headers = calls[0].init.headers as Record<string, string>
     expect(headers.authorization).toBe(`Basic ${btoa('key:secret')}`)
     const body = bodyOf(calls[0])
@@ -96,13 +96,20 @@ describe('recommand adapter wire shape', () => {
     expect(result.transmissionID).toBe('msg_99')
   })
 
-  it('verifies reachability via /api/peppol/verify', async () => {
-    const { impl, calls } = recordingFetch({ reachable: true })
+  it('verifies reachability via /api/v1/verify using peppolAddress and isValid', async () => {
+    const { impl, calls } = recordingFetch({ success: true, isValid: true })
     const gw = new RecommandPeppolGateway('https://app.recommand.eu', 'key', 'secret', 'company_123', impl)
     const reach = await gw.lookup(recipient)
-    expect(calls[0].url).toBe('https://app.recommand.eu/api/peppol/verify')
-    expect(bodyOf(calls[0]).recipient).toBe('0208:987654321')
+    expect(calls[0].url).toBe('https://app.recommand.eu/api/v1/verify')
+    expect(bodyOf(calls[0]).peppolAddress).toBe('0208:987654321')
     expect(reach.reachable).toBe(true)
+  })
+
+  it('reports unreachable when verify returns isValid:false', async () => {
+    const { impl } = recordingFetch({ success: true, isValid: false })
+    const gw = new RecommandPeppolGateway('https://app.recommand.eu', 'key', 'secret', 'company_123', impl)
+    const reach = await gw.lookup(recipient)
+    expect(reach.reachable).toBe(false)
   })
 
   it('surfaces the provider error body in reason on a non-OK send', async () => {

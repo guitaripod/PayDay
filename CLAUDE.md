@@ -92,7 +92,11 @@ CLOUDFLARE_API_TOKEN=$(cat ~/.cloudflare-api-token) npx wrangler deploy   # prod
 `PAYDAY_DEVICE_UDID`, `PAYDAY_DEVICE_NAME`. `PayDay/Secrets.swift` (gitignored, from
 `Secrets.example.swift`): `workerBaseURL`, `makoBaseURL`, `revenueCatPublicKey`, `redirectURI`.
 Worker secrets via `wrangler secret put` (prod) + `workers/.dev.vars` (local): `APP_JWT_SECRET`,
-`APPLE_CLIENT_ID`, `APPLE_TEAM_ID`, `PEPPOL_API_KEY`, `PEPPOL_GATEWAY_BASE`. Never commit any.
+`APPLE_CLIENT_ID`, `APPLE_TEAM_ID`, `PEPPOL_API_KEY`, `PEPPOL_API_SECRET`, `PEPPOL_LEGAL_ENTITY_ID`.
+Plaintext vars in `wrangler.jsonc`: `PEPPOL_PROVIDER` (`recommand` default, or `storecove`),
+`PEPPOL_GATEWAY_BASE`. The provider gateway runs only when all of API_KEY + (Recommand: API_SECRET) +
+GATEWAY_BASE + LEGAL_ENTITY_ID are set; otherwise the stub gateway runs (so a missing secret silently
+ships the stub). For Recommand, LEGAL_ENTITY_ID carries the sending company id. Never commit secrets.
 
 ## Reality
 

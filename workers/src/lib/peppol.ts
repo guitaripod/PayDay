@@ -1,8 +1,9 @@
 /// Peppol access-point gateway abstraction. Pay Day is NOT an access point and
 /// does not implement AS4/SML/SMP; it brokers transmission through a third-party
-/// gateway (Storecove-shaped here). When no API key is configured the stub
-/// gateway runs, so the whole app — including dev and CI — works without a live
-/// Peppol contract, and the seam lets us swap providers later.
+/// gateway. Two adapters ship — Recommand (default, app.recommand.eu) and
+/// Storecove (api.storecove.com) — selected by `PEPPOL_PROVIDER`. When the
+/// provider secrets are absent the stub gateway runs, so the whole app —
+/// including dev and CI — works without a live Peppol contract.
 
 import type { Env } from '../env'
 
@@ -131,16 +132,16 @@ export class RecommandPeppolGateway implements PeppolGateway {
   }
 
   async lookup(recipient: PeppolRecipient): Promise<Reachability> {
-    const res = await this.fetchImpl(`${this.base}/api/peppol/verify`, {
+    const res = await this.fetchImpl(`${this.base}/api/v1/verify`, {
       method: 'POST',
       headers: this.headers(),
       body: JSON.stringify({
-        recipient: `${recipient.schemeID}:${recipient.endpointID}`,
+        peppolAddress: `${recipient.schemeID}:${recipient.endpointID}`,
       }),
     })
     if (!res.ok) return { reachable: false, supportedDocumentTypes: [] }
-    const body = (await res.json()) as { reachable?: boolean; isReachable?: boolean }
-    const reachable = body.reachable ?? body.isReachable ?? false
+    const body = (await res.json()) as { success?: boolean; isValid?: boolean }
+    const reachable = body.isValid === true
     return {
       reachable,
       supportedDocumentTypes: reachable ? ['urn:cen.eu:en16931:2017'] : [],
@@ -149,7 +150,7 @@ export class RecommandPeppolGateway implements PeppolGateway {
 
   async send(ublXML: string, recipient: PeppolRecipient): Promise<SendResult> {
     const res = await this.fetchImpl(
-      `${this.base}/api/peppol/${this.companyID}/send`,
+      `${this.base}/api/v1/${this.companyID}/send`,
       {
         method: 'POST',
         headers: this.headers(),
