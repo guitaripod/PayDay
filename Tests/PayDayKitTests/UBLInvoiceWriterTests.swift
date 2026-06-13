@@ -48,6 +48,22 @@ struct UBLInvoiceWriterTests {
         #expect(xml.contains("<cac:BillingReference>"))
     }
 
+    @Test("Discounted line emits a reconciling line allowance (PEPPOL-EN16931-R120)")
+    func lineDiscountAllowance() throws {
+        let xml = try UBLInvoiceWriter().xml(for: DemoData.sampleInvoice())
+        #expect(xml.contains("<cbc:ChargeIndicator>false</cbc:ChargeIndicator>"))
+        #expect(xml.contains("<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>"))
+    }
+
+    @Test("Intra-community supply carries delivery date and deliver-to country (BR-IC-11/12)")
+    func intraCommunityDelivery() throws {
+        let xml = try UBLInvoiceWriter().xml(for: DemoData.sampleIntraCommunityInvoice())
+        #expect(xml.contains("<cac:Delivery>"))
+        #expect(xml.contains("<cbc:ActualDeliveryDate>"))
+        #expect(xml.contains("<cac:DeliveryLocation>"))
+        #expect(xml.contains("<cbc:IdentificationCode>DE</cbc:IdentificationCode>"))
+    }
+
     @Test("Output is well-formed XML")
     func wellFormed() throws {
         let xml = try UBLInvoiceWriter().xml(for: DemoData.sampleInvoice())

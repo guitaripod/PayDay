@@ -209,6 +209,21 @@ public struct UBLInvoiceWriter: Sendable {
         node.add(XMLBuilder(qtyTag, text: decimalString(line.quantity, scale: 4)).attr("unitCode", line.unit.rawValue))
         node.add(XMLBuilder("cbc:LineExtensionAmount", text: net.canonicalString).attr("currencyID", cur))
 
+        // PEPPOL-EN16931-R120: line net (BT-131) must equal quantity × price minus
+        // line allowances. A per-line discount is declared as a line AllowanceCharge
+        // (BG-27) whose amount is exactly round(qty × price) − net, so the rule holds
+        // by construction regardless of how the engine rounded the discounted net.
+        let grossRounded = Money(rounding: line.quantity * line.unitPrice, in: net.currency)
+        let allowanceMinor = grossRounded.minorUnits - net.minorUnits
+        if allowanceMinor > 0 {
+            let allowance = Money(minorUnits: allowanceMinor, currency: net.currency)
+            let ac = XMLBuilder("cac:AllowanceCharge")
+            ac.element("cbc:ChargeIndicator", "false")
+            ac.element("cbc:AllowanceChargeReason", "Discount")
+            ac.add(XMLBuilder("cbc:Amount", text: allowance.canonicalString).attr("currencyID", cur))
+            node.add(ac)
+        }
+
         let item = XMLBuilder("cac:Item")
         if !line.details.trimmed.isEmpty {
             item.element("cbc:Description", line.details)
