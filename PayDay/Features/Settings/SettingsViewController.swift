@@ -95,7 +95,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case .pro:
             if !isPremium { present(UINavigationController(rootViewController: PaywallViewController()), animated: true) }
         case .credits:
-            navigationController?.pushViewController(CreditsViewController(), animated: true)
+            CreditStorePresenter.present(from: self)
         case .privacy: open("https://mako.midgarcorp.cc/privacy/payday")
         case .terms: open("https://mako.midgarcorp.cc/terms/payday")
         case .support: open("mailto:support@midgarcorp.cc")

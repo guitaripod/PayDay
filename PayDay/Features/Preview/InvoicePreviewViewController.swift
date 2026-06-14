@@ -168,6 +168,15 @@ final class InvoicePreviewViewController: UIViewController {
                 presentPaywall(reason: "Peppol delivery is a Pay Day Pro feature.")
                 return
             }
+            // Peppol delivery is metered: each send costs credits (charged
+            // server-side on an accepted transmission). Gate here so the user
+            // tops up before sending rather than discovering it failed.
+            await AICreditsManager.store.refresh()
+            let peppolSendCost = 30
+            if AICreditsManager.store.balance < peppolSendCost {
+                CreditStorePresenter.present(from: self, shortfall: peppolSendCost - AICreditsManager.store.balance)
+                return
+            }
             guard !invoice.buyer.peppolEndpointID.trimmed.isEmpty, !invoice.buyer.peppolSchemeID.trimmed.isEmpty else {
                 presentAlert("No Peppol address", "Add a Peppol ID to this client to send over the network.")
                 return

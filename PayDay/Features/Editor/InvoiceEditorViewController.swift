@@ -158,8 +158,7 @@ final class InvoiceEditorViewController: UIViewController {
                 // AI is credit-metered; the most common failure is an empty balance.
                 await AICreditsManager.store.refresh()
                 if AICreditsManager.store.isEmpty {
-                    let paywall = PaywallViewController(reason: "You're out of credits. Top up to draft line items and reminders with AI.")
-                    self.present(UINavigationController(rootViewController: paywall), animated: true)
+                    CreditStorePresenter.present(from: self)
                 } else {
                     self.presentInfo("Couldn't draft", "The AI request failed — check your connection and try again.")
                 }
