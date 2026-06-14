@@ -8,7 +8,8 @@ import UIKit
 @MainActor
 enum CreditStorePresenter {
     static func present(from presenter: UIViewController, shortfall: Int? = nil) {
-        let view = CreditStoreView(shortfall: shortfall).environmentObject(AICreditsManager.store)
+        let store = AICreditsManager.store
+        let view = PayDayCreditStoreView(store: store, shortfall: shortfall).environmentObject(store)
         presenter.present(UIHostingController(rootView: view), animated: true)
     }
 }
