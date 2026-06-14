@@ -21,7 +21,8 @@ PREFIX = "com.guitaripod.payday"
 SUBS = [
     (f"{PREFIX}.pro.annual", "subscription", "Pay Day Pro (Annual)", "$rc_annual"),
     (f"{PREFIX}.pro.monthly", "subscription", "Pay Day Pro (Monthly)", "$rc_monthly"),
-    (f"{PREFIX}.pro.lifetime", "non_consumable", "Pay Day Pro (Lifetime)", "$rc_lifetime"),
+    # Lifetime intentionally dropped: the paywall sells only subscriptions, so a
+    # lifetime non-consumable would be an unreachable IAP at review.
 ]
 PACKS = [
     (f"{PREFIX}.credits.starter", "consumable", "30 Credits"),

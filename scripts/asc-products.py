@@ -163,8 +163,8 @@ def main():
     gid = ensure_group()
     ensure_subscription(gid, f"{PREFIX}.pro.annual", "Pay Day Pro Annual", "Pay Day Pro (Annual)", "ONE_YEAR", 39.99, True)
     ensure_subscription(gid, f"{PREFIX}.pro.monthly", "Pay Day Pro Monthly", "Pay Day Pro (Monthly)", "ONE_MONTH", 4.99, False)
-    print("Non-consumable:")
-    ensure_iap(f"{PREFIX}.pro.lifetime", "Pay Day Pro Lifetime", "Pay Day Pro (Lifetime)", "NON_CONSUMABLE", 99.99)
+    # Lifetime non-consumable intentionally not provisioned: the paywall sells only
+    # subscriptions, so a lifetime IAP would be unreachable at review.
     print("Consumable credit packs:")
     ensure_iap(f"{PREFIX}.credits.starter", "Credits Starter 30", "30 Credits", "CONSUMABLE", 2.99)
     ensure_iap(f"{PREFIX}.credits.regular", "Credits Regular 110", "110 Credits", "CONSUMABLE", 9.99)
