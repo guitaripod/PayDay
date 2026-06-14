@@ -34,6 +34,16 @@ final class DatabaseManager: @unchecked Sendable {
         try Self.runMigrations(dbQueue)
     }
 
+    /// Wipe all on-device business data — used by account deletion. The schema
+    /// (tables + migrations) is kept; only rows are removed.
+    func eraseAllData() throws {
+        try dbQueue.write { db in
+            for table in ["documents", "clients", "business", "sequences"] {
+                try db.execute(sql: "DELETE FROM \(table)")
+            }
+        }
+    }
+
     private static func runMigrations(_ db: DatabaseQueue) throws {
         var migrator = DatabaseMigrator()
         migrator.registerMigration("v1") { db in

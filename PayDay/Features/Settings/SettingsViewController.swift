@@ -5,12 +5,13 @@ import PayDayKit
 /// Settings: business profile, defaults, appearance, Pro status, credit balance,
 /// and the legal/support links App Review expects.
 final class SettingsViewController: UIViewController {
-    private enum Row { case business, payment, defaults, appearance, pro, credits, privacy, terms, support }
+    private enum Row { case business, payment, defaults, appearance, pro, credits, privacy, terms, support, deleteAccount }
     private let sections: [(String, [Row])] = [
         ("Your business", [.business, .payment, .defaults]),
         ("Pay Day Pro", [.pro, .credits]),
         ("App", [.appearance]),
         ("About", [.privacy, .terms, .support]),
+        ("Account", [.deleteAccount]),
     ]
 
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -74,6 +75,12 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case .privacy: config.text = "Privacy Policy"; config.image = UIImage(systemName: "hand.raised")
         case .terms: config.text = "Terms of Use"; config.image = UIImage(systemName: "doc.text")
         case .support: config.text = "Support"; config.image = UIImage(systemName: "envelope")
+        case .deleteAccount:
+            config.text = "Delete account"
+            config.textProperties.color = DesignSystem.Color.overdue
+            config.image = UIImage(systemName: "trash")
+            config.imageProperties.tintColor = DesignSystem.Color.overdue
+            cell.accessoryType = .none
         }
         cell.contentConfiguration = config
         return cell
@@ -92,6 +99,50 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case .privacy: open("https://mako.midgarcorp.cc/privacy/payday")
         case .terms: open("https://mako.midgarcorp.cc/terms/payday")
         case .support: open("mailto:support@midgarcorp.cc")
+        case .deleteAccount: confirmDeleteAccount()
+        }
+    }
+
+    private func confirmDeleteAccount() {
+        let alert = UIAlertController(
+            title: "Delete account?",
+            message: "This permanently deletes your account, credit balance, and every invoice, estimate, and client on this device. This cannot be undone.",
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Delete account", style: .destructive) { [weak self] _ in
+            self?.performDeleteAccount()
+        })
+        present(alert, animated: true)
+    }
+
+    private func performDeleteAccount() {
+        let progress = UIAlertController(title: "Deleting…", message: nil, preferredStyle: .alert)
+        present(progress, animated: true)
+        Task { [weak self] in
+            do {
+                try await AccountService.deleteAccount()
+                progress.dismiss(animated: true) { self?.resetAfterDeletion() }
+            } catch {
+                progress.dismiss(animated: true) {
+                    let fail = UIAlertController(title: "Couldn't delete account", message: error.localizedDescription, preferredStyle: .alert)
+                    fail.addAction(UIAlertAction(title: "OK", style: .default))
+                    self?.present(fail, animated: true)
+                }
+            }
+        }
+    }
+
+    private func resetAfterDeletion() {
+        AppSettings.hasOnboarded = false
+        Task { await AICreditsManager.store.bootstrap() }
+        guard let window = view.window else { return }
+        let onboarding = OnboardingViewController()
+        onboarding.onFinish = { [weak onboarding] in
+            AppSettings.hasOnboarded = true
+            onboarding?.view.window?.rootViewController = RootViewController()
+        }
+        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve) {
+            window.rootViewController = onboarding
         }
     }
 
