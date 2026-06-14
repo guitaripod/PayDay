@@ -117,6 +117,25 @@ def main():
             print(f"  + package {pkg_key}")
         post(f"/projects/{PROJECT}/packages/{pkg}/actions/attach_products",
              {"products": [{"product_id": ids[sid], "eligibility_criteria": "all"}]})
+
+    # Consumable credit packs must also be packages in the offering — AICredits
+    # prices packs from offering packages (availablePackages), so without these
+    # the credit store shows packs with no price and can't purchase them.
+    for sid, _t, name in PACKS:
+        if sid not in ids:
+            continue
+        pkg_key = sid.split(".")[-1]
+        if pkg_key in existing_pkgs:
+            pkg = existing_pkgs[pkg_key]["id"]
+        else:
+            r = post(f"/projects/{PROJECT}/offerings/{off}/packages",
+                     {"lookup_key": pkg_key, "display_name": name})
+            if not r:
+                continue
+            pkg = r["id"]
+            print(f"  + package {pkg_key}")
+        post(f"/projects/{PROJECT}/packages/{pkg}/actions/attach_products",
+             {"products": [{"product_id": ids[sid], "eligibility_criteria": "all"}]})
     print("DONE")
 
 
