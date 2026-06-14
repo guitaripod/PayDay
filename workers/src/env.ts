@@ -3,9 +3,6 @@ export type Env = {
   FX_CACHE: KVNamespace
   DB: D1Database
 
-  APP_JWT_SECRET: string
-  APPLE_CLIENT_ID: string
-  APPLE_TEAM_ID: string
   MAKO_BASE_URL: string
 
   PEPPOL_PROVIDER: string

@@ -1,6 +1,5 @@
 import { Hono } from 'hono'
 import type { AppVars, Env } from './env'
-import { authRoutes } from './routes/auth'
 import { configRoutes } from './routes/config'
 import { vatRoutes } from './routes/vat'
 import { fxRoutes } from './routes/fx'
@@ -12,7 +11,6 @@ app.get('/v1/healthz', (c) =>
   c.json({ ok: true, ts: new Date().toISOString(), env: c.env.ENVIRONMENT })
 )
 
-app.route('/', authRoutes)
 app.route('/', configRoutes)
 app.route('/', vatRoutes)
 app.route('/', fxRoutes)
