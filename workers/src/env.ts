@@ -6,6 +6,7 @@ export type Env = {
   APP_JWT_SECRET: string
   APPLE_CLIENT_ID: string
   APPLE_TEAM_ID: string
+  MAKO_BASE_URL: string
 
   PEPPOL_PROVIDER: string
   PEPPOL_API_KEY: string

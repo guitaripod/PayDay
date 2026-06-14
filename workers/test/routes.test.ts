@@ -1,12 +1,26 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import app from '../src/index'
-import { mintAppJWT } from '../src/lib/jwt'
-import { APP_JWT_SECRET, makeEnv } from './helpers/env'
+import { makeEnv } from './helpers/env'
 
-async function authHeader() {
-  const token = await mintAppJWT({ uid: 'user-1' }, APP_JWT_SECRET)
-  return { authorization: `Bearer ${token}` }
+// Auth + metering go through mako; stub those endpoints so route tests stay offline.
+function authHeader() {
+  return { authorization: 'Bearer mako-api-key-user-1' }
 }
+
+beforeEach(() => {
+  vi.stubGlobal('fetch', async (input: RequestInfo | URL) => {
+    const url = typeof input === 'string' ? input : input.toString()
+    if (url.endsWith('/v1/identity/me')) {
+      return new Response(JSON.stringify({ user_id: 'user-1', app_id: 'payday' }), { status: 200 })
+    }
+    if (url.endsWith('/v1/credits/charge')) {
+      return new Response(JSON.stringify({ charged: 30, balance: 70 }), { status: 200 })
+    }
+    return new Response('not mocked', { status: 404 })
+  })
+})
+
+afterEach(() => vi.unstubAllGlobals())
 
 describe('worker routes', () => {
   it('healthz is open', async () => {
@@ -33,7 +47,7 @@ describe('worker routes', () => {
       '/v1/peppol/lookup',
       {
         method: 'POST',
-        headers: { ...(await authHeader()), 'content-type': 'application/json' },
+        headers: { ...authHeader(), 'content-type': 'application/json' },
         body: JSON.stringify({ recipient: { endpointID: '0037:12345678', schemeID: '0037', countryCode: 'FI' } }),
       },
       makeEnv()
@@ -48,7 +62,7 @@ describe('worker routes', () => {
       '/v1/peppol/send',
       {
         method: 'POST',
-        headers: { ...(await authHeader()), 'content-type': 'application/json' },
+        headers: { ...authHeader(), 'content-type': 'application/json' },
         body: JSON.stringify({
           ublXML: '<Invoice/>',
           invoiceNumber: 'INV-2026-0007',

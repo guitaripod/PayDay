@@ -60,6 +60,23 @@ peppolRoutes.post('/v1/peppol/send', requireAuth, async (c) => {
     )
     .run()
 
+  // Meter the send: charge mako credits only for an accepted transmission, so a
+  // rejected document never costs the user. The iOS Send action gates on the
+  // balance client-side, so an insufficient charge here is a rare backstop.
+  let balance: number | undefined
+  if (result.status === 'accepted') {
+    try {
+      const charge = await fetch(`${c.env.MAKO_BASE_URL}/v1/credits/charge`, {
+        method: 'POST',
+        headers: { authorization: c.req.header('Authorization')!, 'x-app-id': 'payday', 'content-type': 'application/json' },
+        body: JSON.stringify({ capability: 'peppol.send', reference: result.transmissionID ?? (body.invoiceNumber ?? '') }),
+      })
+      if (charge.ok) balance = ((await charge.json()) as { balance?: number }).balance
+    } catch {
+      // best-effort: the document is already transmitted
+    }
+  }
+
   const status = result.status === 'accepted' ? 200 : 502
-  return c.json(result, status)
+  return c.json(balance === undefined ? result : { ...result, balance }, status)
 })

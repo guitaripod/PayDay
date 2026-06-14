@@ -55,7 +55,7 @@ export class StorecovePeppolGateway implements PeppolGateway {
     private readonly base: string,
     private readonly apiKey: string,
     private readonly legalEntityID: string,
-    private readonly fetchImpl: typeof fetch = fetch
+    private readonly fetchImpl: typeof fetch = fetch.bind(globalThis)
   ) {}
 
   private headers(): HeadersInit {
@@ -121,7 +121,7 @@ export class RecommandPeppolGateway implements PeppolGateway {
     private readonly apiKey: string,
     private readonly apiSecret: string,
     private readonly companyID: string,
-    private readonly fetchImpl: typeof fetch = fetch
+    private readonly fetchImpl: typeof fetch = fetch.bind(globalThis)
   ) {}
 
   private headers(): HeadersInit {
@@ -177,7 +177,7 @@ async function readError(res: Response): Promise<string> {
   }
 }
 
-export function makePeppolGateway(env: Env, fetchImpl: typeof fetch = fetch): PeppolGateway {
+export function makePeppolGateway(env: Env, fetchImpl: typeof fetch = fetch.bind(globalThis)): PeppolGateway {
   if (
     env.PEPPOL_PROVIDER === 'recommand' &&
     env.PEPPOL_API_KEY &&

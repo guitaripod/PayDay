@@ -15,6 +15,7 @@ export function makeEnv(overrides: Partial<Env> = {}): TestEnv {
     APP_JWT_SECRET,
     APPLE_CLIENT_ID,
     APPLE_TEAM_ID,
+    MAKO_BASE_URL: 'https://mako.test',
     PEPPOL_PROVIDER: '',
     PEPPOL_API_KEY: '',
     PEPPOL_API_SECRET: '',
