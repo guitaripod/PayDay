@@ -22,6 +22,7 @@ final class BusinessSettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Business"
+        navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = DesignSystem.Color.background
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .save, primaryAction: UIAction { [weak self] _ in self?.commit() })
         build()

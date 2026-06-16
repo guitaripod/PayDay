@@ -30,6 +30,7 @@ final class ClientEditorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Client"
+        navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = DesignSystem.Color.background
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .save, primaryAction: UIAction { [weak self] _ in self?.commit() })
         populate()

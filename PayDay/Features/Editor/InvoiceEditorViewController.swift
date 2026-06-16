@@ -31,7 +31,8 @@ final class InvoiceEditorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
-        title = viewModel.isNew ? "New" : "Edit"
+        title = viewModel.isNew ? "New \(viewModel.invoice.type.displayName)" : viewModel.invoice.number
+        navigationItem.largeTitleDisplayMode = .never
         let previewItem = UIBarButtonItem(
             title: "Preview", primaryAction: UIAction { [weak self] _ in self?.preview() })
         navigationItem.rightBarButtonItems = [previewItem, editButtonItem]

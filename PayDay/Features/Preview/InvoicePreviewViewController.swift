@@ -28,6 +28,7 @@ final class InvoicePreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = invoice.number
+        navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = DesignSystem.Color.background
         let shareItem = UIBarButtonItem(
             image: UIImage(systemName: "square.and.arrow.up"),
