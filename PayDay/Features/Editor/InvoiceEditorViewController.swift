@@ -90,10 +90,17 @@ final class InvoiceEditorViewController: UIViewController {
     }
 
     private func preview() {
-        guard let invoice else { return }
-        viewModel.save()
-        let previewVC = InvoicePreviewViewController(invoice: invoice)
-        navigationController?.pushViewController(previewVC, animated: true)
+        viewModel.save { [weak self] saved in
+            guard let self else { return }
+            guard let saved else {
+                let alert = UIAlertController(title: "Couldn't save", message: "The invoice couldn't be saved. Please try again.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(alert, animated: true)
+                return
+            }
+            let previewVC = InvoicePreviewViewController(invoice: saved)
+            self.navigationController?.pushViewController(previewVC, animated: true)
+        }
     }
 
     private func editClient() {
@@ -118,7 +125,7 @@ final class InvoiceEditorViewController: UIViewController {
     private func aiAssist() {
         let sheet = UIAlertController(title: "Draft line items", message: "Pay Day turns words or a photo into billable lines.", preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: "Describe in words", style: .default) { [weak self] _ in self?.aiFromText() })
-        sheet.addAction(UIAlertAction(title: "Scan a photo or receipt", style: .default) { [weak self] _ in self?.aiFromPhoto() })
+        sheet.addAction(UIAlertAction(title: "Choose a photo or receipt", style: .default) { [weak self] _ in self?.aiFromPhoto() })
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         sheet.popoverPresentationController?.sourceView = view
         present(sheet, animated: true)
@@ -243,9 +250,10 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
             let lineCount = invoice.lines.count
             if indexPath.row < lineCount {
                 let line = invoice.lines[indexPath.row]
-                let net = invoice.totals().lineNets[indexPath.row]
                 config.text = line.name.isEmpty ? "Untitled" : line.name
-                config.secondaryText = Format.money(net)
+                if let nets = totals?.lineNets, nets.indices.contains(indexPath.row) {
+                    config.secondaryText = Format.money(nets[indexPath.row])
+                }
                 cell.accessoryType = .disclosureIndicator
             } else if indexPath.row == lineCount {
                 config.text = "Add line item"
@@ -338,8 +346,11 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
     private func editDetail(row: Int) {
         switch row {
         case 0: promptText(title: "Invoice number", value: invoice?.number ?? "") { [weak self] in self?.viewModel.setNumber($0) }
-        case 1: promptDate(title: "Issue date", value: invoice?.issueDate) { [weak self] in self?.viewModel.setIssueDate($0) }
-        default: promptDate(title: "Due date", value: invoice?.dueDate) { [weak self] in self?.viewModel.setDueDate($0) }
+        case 1:
+            let window = Self.dateWindow()
+            promptDate(title: "Issue date", value: invoice?.issueDate, minimum: window.lowerBound, maximum: window.upperBound) { [weak self] in self?.viewModel.setIssueDate($0) }
+        default:
+            promptDate(title: "Due date", value: invoice?.dueDate, minimum: invoice?.issueDate, maximum: Self.dateWindow().upperBound) { [weak self] in self?.viewModel.setDueDate($0) }
         }
     }
 
@@ -359,8 +370,15 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
         present(alert, animated: true)
     }
 
-    private func promptDate(title: String, value: CalendarDate?, onSave: @escaping (CalendarDate) -> Void) {
-        let picker = DatePickerSheetViewController(title: title, date: value ?? Format.today(), onPick: onSave)
+    private func promptDate(title: String, value: CalendarDate?, minimum: CalendarDate? = nil, maximum: CalendarDate? = nil, onSave: @escaping (CalendarDate) -> Void) {
+        let picker = DatePickerSheetViewController(title: title, date: value ?? Format.today(), minimumDate: minimum, maximumDate: maximum, onPick: onSave)
         present(UINavigationController(rootViewController: picker), animated: true)
+    }
+
+    /// A sane few-years window around today that issue/invoice dates are clamped
+    /// to, so a slip in the picker can't produce a wildly out-of-range date.
+    private static func dateWindow() -> ClosedRange<CalendarDate> {
+        let today = Format.today()
+        return today.adding(days: -365 * 5)...today.adding(days: 365 * 5)
     }
 }

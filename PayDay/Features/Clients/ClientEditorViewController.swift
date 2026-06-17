@@ -17,6 +17,7 @@ final class ClientEditorViewController: UIViewController {
     private let vatField = ClientEditorViewController.field("VAT ID (e.g. DE123456789)")
     private let peppolField = ClientEditorViewController.field("Peppol ID (scheme:id)")
     private let vatStatusLabel = UILabel()
+    private let peppolStatusLabel = UILabel()
 
     init(party: Party?, onSave: @escaping (Party) -> Void) {
         self.party = party ?? Party(id: UUID().uuidString, legalName: "")
@@ -70,11 +71,14 @@ final class ClientEditorViewController: UIViewController {
     private func build() {
         vatStatusLabel.font = .systemFont(ofSize: 12, weight: .medium)
         vatStatusLabel.textColor = DesignSystem.Color.secondary
+        peppolStatusLabel.font = .systemFont(ofSize: 12, weight: .medium)
+        peppolStatusLabel.textColor = DesignSystem.Color.secondary
+        peppolStatusLabel.numberOfLines = 0
 
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         let stack = UIStackView(arrangedSubviews: [
-            nameField, emailField, line1Field, cityField, postalField, countryField, vatField, vatStatusLabel, peppolField,
+            nameField, emailField, line1Field, cityField, postalField, countryField, vatField, vatStatusLabel, peppolField, peppolStatusLabel,
         ])
         stack.axis = .vertical
         stack.spacing = DesignSystem.Spacing.m
@@ -116,15 +120,12 @@ final class ClientEditorViewController: UIViewController {
 
     private func commit() {
         party.legalName = nameField.text ?? ""
-        party.email = emailField.text ?? ""
+        party.email = (emailField.text ?? "").normalizedEmail
         party.address = PostalAddress(
             line1: line1Field.text ?? "", city: cityField.text ?? "",
             postalCode: postalField.text ?? "", countryCode: countryField.text ?? "")
-        party.vatID = vatField.text ?? ""
-        if let peppol = peppolField.text, let colon = peppol.firstIndex(of: ":") {
-            party.peppolSchemeID = String(peppol[..<colon]).trimmed
-            party.peppolEndpointID = String(peppol[peppol.index(after: colon)...]).trimmed
-        }
+        party.vatID = (vatField.text ?? "").normalizedVATID
+        applyPeppol(peppolField.text ?? "", into: &party)
         let saved = party
         Task { [weak self] in
             try? await ClientRepository.shared.save(saved)
@@ -133,6 +134,27 @@ final class ClientEditorViewController: UIViewController {
                 self.onSave(saved)
                 self.navigationController?.popViewController(animated: true)
             }
+        }
+    }
+
+    /// Always rewrites the party's Peppol address from the field, so clearing
+    /// it removes a stale endpoint instead of leaving one that would still be
+    /// used for real delivery. Colon-less, non-empty input is surfaced as an
+    /// advisory hint and the address is cleared (never blocks saving).
+    private func applyPeppol(_ raw: String, into party: inout Party) {
+        let input = raw.trimmed
+        if input.isEmpty {
+            party.peppolSchemeID = ""
+            party.peppolEndpointID = ""
+            peppolStatusLabel.text = nil
+        } else if let colon = input.firstIndex(of: ":") {
+            party.peppolSchemeID = String(input[..<colon]).trimmed
+            party.peppolEndpointID = String(input[input.index(after: colon)...]).trimmed
+            peppolStatusLabel.text = nil
+        } else {
+            party.peppolSchemeID = ""
+            party.peppolEndpointID = ""
+            peppolStatusLabel.text = "Use scheme:id, e.g. 0208:0123456789"
         }
     }
 

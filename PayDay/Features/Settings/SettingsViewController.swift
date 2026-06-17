@@ -124,15 +124,30 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
                 progress.dismiss(animated: true) { self?.resetAfterDeletion() }
             } catch {
                 progress.dismiss(animated: true) {
-                    let fail = UIAlertController(title: "Couldn't delete account", message: error.localizedDescription, preferredStyle: .alert)
-                    fail.addAction(UIAlertAction(title: "OK", style: .default))
-                    self?.present(fail, animated: true)
+                    self?.presentDeleteFailure(error)
                 }
             }
         }
     }
 
+    /// Presents the failure alert only once the progress alert has fully
+    /// dismissed, dismissing any in-flight presentation first so we never stack
+    /// an alert on an alert.
+    private func presentDeleteFailure(_ error: Error) {
+        guard presentedViewController == nil else {
+            dismiss(animated: true) { [weak self] in self?.presentDeleteFailure(error) }
+            return
+        }
+        let fail = UIAlertController(title: "Couldn't delete account", message: error.localizedDescription, preferredStyle: .alert)
+        fail.addAction(UIAlertAction(title: "OK", style: .default))
+        present(fail, animated: true)
+    }
+
     private func resetAfterDeletion() {
+        guard presentedViewController == nil else {
+            dismiss(animated: true) { [weak self] in self?.resetAfterDeletion() }
+            return
+        }
         AppSettings.hasOnboarded = false
         Task { await AICreditsManager.store.bootstrap() }
         guard let window = view.window else { return }
@@ -161,6 +176,28 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
 
     private func open(_ urlString: String) {
         guard let url = URL(string: urlString) else { return }
-        UIApplication.shared.open(url)
+        UIApplication.shared.open(url) { [weak self] success in
+            guard !success else { return }
+            self?.presentOpenFallback(for: url)
+        }
+    }
+
+    /// Shown when no handler exists for a URL (e.g. no Mail account configured):
+    /// surfaces the destination and a copy action so the user isn't stuck.
+    private func presentOpenFallback(for url: URL) {
+        let value = url.scheme == "mailto" ? String(url.absoluteString.dropFirst("mailto:".count)) : url.absoluteString
+        let alert = UIAlertController(
+            title: url.scheme == "mailto" ? "No mail app configured" : "Couldn't open link",
+            message: value,
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Copy", style: .default) { _ in
+            UIPasteboard.general.string = value
+        })
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+        guard presentedViewController == nil else {
+            dismiss(animated: true) { [weak self] in self?.present(alert, animated: true) }
+            return
+        }
+        present(alert, animated: true)
     }
 }

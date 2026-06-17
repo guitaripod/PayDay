@@ -147,7 +147,7 @@ final class InvoicePDFRenderer {
             }
             let qty = "\(decimalDisplay(line.quantity)) \(line.unit.label)"
             drawRight(qty, rightEdge: cols[2] - 8, y: y, font: .systemFont(ofSize: 11), color: Ink.secondary)
-            drawRight("\(Int((line.effectiveRate as NSDecimalNumber).doubleValue))%", rightEdge: cols[3] - 8, y: y,
+            drawRight(decimalDisplay(line.effectiveRate) + "%", rightEdge: cols[3] - 8, y: y,
                       font: .systemFont(ofSize: 11), color: Ink.secondary)
             drawRight(Format.money(net, locale: style.locale), rightEdge: margin + contentWidth, y: y,
                       font: .systemFont(ofSize: 12, weight: .semibold), color: Ink.primary)

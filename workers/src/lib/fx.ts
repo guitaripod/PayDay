@@ -25,15 +25,33 @@ export function crossRate(rates: Record<string, number>, base: string, quote: st
   return q / b
 }
 
+const FRESH_TTL = 12 * 60 * 60
+const LKG_TTL = 7 * 24 * 60 * 60
+
 export async function loadRates(
   cache: KVNamespace,
   fetchImpl: typeof fetch = fetch
 ): Promise<Record<string, number>> {
   const cached = await cache.get('ecb-daily', 'json')
   if (cached) return cached as Record<string, number>
-  const res = await fetchImpl(ECB_DAILY)
-  if (!res.ok) throw new Error(`ecb_unavailable_${res.status}`)
+  let res: Response
+  try {
+    res = await fetchImpl(ECB_DAILY)
+  } catch {
+    return await lastKnownGood(cache, 'ecb_unreachable')
+  }
+  if (!res.ok) return await lastKnownGood(cache, `ecb_unavailable_${res.status}`)
   const rates = parseEcbRates(await res.text())
-  await cache.put('ecb-daily', JSON.stringify(rates), { expirationTtl: 12 * 60 * 60 })
+  // ECB rates are display-only and never alter an invoice's monetary terms, so
+  // a slightly stale rate beats a hard failure (the project's degradation rule).
+  // Keep a long-lived last-known-good copy to serve through an ECB outage.
+  await cache.put('ecb-daily', JSON.stringify(rates), { expirationTtl: FRESH_TTL })
+  await cache.put('ecb-daily-lkg', JSON.stringify(rates), { expirationTtl: LKG_TTL })
   return rates
+}
+
+async function lastKnownGood(cache: KVNamespace, reason: string): Promise<Record<string, number>> {
+  const lkg = await cache.get('ecb-daily-lkg', 'json')
+  if (lkg) return lkg as Record<string, number>
+  throw new Error(reason)
 }

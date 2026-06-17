@@ -44,6 +44,9 @@ public enum InvoiceValidator {
         if invoice.seller.legalName.trimmed.isEmpty {
             error("BR-06", "An invoice must have the seller name (BT-27).")
         }
+        if invoice.seller.vatID.trimmed.isEmpty && invoice.seller.legalRegistrationID.trimmed.isEmpty {
+            error("BR-CO-26", "The seller must be identifiable by a VAT identifier (BT-31) or a legal registration (BT-30).")
+        }
         if invoice.buyer.legalName.trimmed.isEmpty {
             error("BR-07", "An invoice must have the buyer name (BT-44).")
         }
@@ -61,6 +64,9 @@ public enum InvoiceValidator {
         }
         if invoice.dueDate < invoice.issueDate {
             warning("BR-CO-25", "The payment due date (BT-9) is before the issue date (BT-2).")
+        }
+        if invoice.buyerReference.trimmed.isEmpty && invoice.purchaseOrderReference.trimmed.isEmpty {
+            warning("PEPPOL-EN16931-R003", "A buyer reference (BT-10) or a purchase order reference (BT-13) is required for delivery over the Peppol network.")
         }
 
         validateMonetarySummation(totals, into: &issues)
@@ -117,6 +123,10 @@ public enum InvoiceValidator {
             if cat.requiresZeroRate && rate != 0 {
                 issues.append(.init(severity: .error, rule: "BR-\(cat.rawValue)-05",
                     message: "A \(cat.displayName) line must have a VAT rate of 0% (BT-152)."))
+            }
+            if cat.requiresZeroRate && !breakdown.taxAmount.isZero {
+                issues.append(.init(severity: .error, rule: "BR-\(cat.rawValue)-09",
+                    message: "A \(cat.displayName) breakdown must have a VAT amount of 0 (BT-117)."))
             }
             if cat == .standard {
                 let expectedTax = Money(rounding: breakdown.taxableBase.amount * rate / 100, in: totals.currency)

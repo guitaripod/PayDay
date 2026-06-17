@@ -36,7 +36,7 @@ public protocol PeppolTransmitting: Sendable {
     /// Look up whether a participant is reachable on Peppol (SML/SMP).
     func lookup(endpointID: String, schemeID: String) async throws -> PeppolReachability
     /// Send a UBL document; emits progress until delivered or failed.
-    func send(ublXML: String, recipient: PeppolRecipient) -> AsyncThrowingStream<PeppolSendEvent, Error>
+    func send(ublXML: String, invoiceNumber: String, recipient: PeppolRecipient) -> AsyncThrowingStream<PeppolSendEvent, Error>
 }
 
 public struct PeppolRecipient: Sendable, Equatable, Hashable, Codable {

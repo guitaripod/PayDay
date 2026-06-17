@@ -200,13 +200,14 @@ final class InvoicePreviewViewController: UIViewController {
         present(hud, animated: true)
         let service = PeppolService()
         do {
-            for try await event in service.send(ublXML: ubl, recipient: recipient) {
+            for try await event in service.send(ublXML: ubl, invoiceNumber: invoice.number, recipient: recipient) {
                 switch event {
                 case .validating: hud.message = "Validating…"
                 case .submitting: hud.message = "Submitting to Peppol…"
                 case .accepted: hud.message = "Accepted by the network."
                 case .delivered(let id):
                     Haptics.success()
+                    await AICreditsManager.store.refresh()
                     hud.dismiss(animated: true) { self.presentAlert("Delivered", "Transmission \(id) accepted by Peppol.") }
                     return
                 case .failed(let reason):

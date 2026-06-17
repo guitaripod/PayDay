@@ -33,6 +33,18 @@ public struct PaymentMeans: Sendable, Equatable, Hashable, Codable {
     /// A structured creditor reference / payment remittance note (BT-83).
     public var remittanceReference: String
 
+    /// The IBAN stripped of the spaces banks print for readability and
+    /// uppercased — the only form an EN 16931 Schematron / Peppol access point
+    /// accepts on the wire (BT-84). Display keeps the user's spacing.
+    public var normalizedIBAN: String {
+        iban.filter { !$0.isWhitespace }.uppercased()
+    }
+
+    /// The BIC normalized the same way (BT-86).
+    public var normalizedBIC: String {
+        bic.filter { !$0.isWhitespace }.uppercased()
+    }
+
     public init(
         method: Method = .creditTransfer,
         iban: String = "",

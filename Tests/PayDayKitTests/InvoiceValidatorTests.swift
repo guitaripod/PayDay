@@ -61,4 +61,25 @@ struct InvoiceValidatorTests {
         #expect(issues.contains { $0.rule == "BR-CO-25" && $0.severity == .warning })
         #expect(InvoiceValidator.isCompliant(doc))
     }
+
+    @Test("Seller with no VAT id, registration or seller id fails BR-CO-26")
+    func sellerMustBeIdentifiable() {
+        var doc = DemoData.sampleInvoice()
+        doc.seller.vatID = ""
+        doc.seller.legalRegistrationID = ""
+        doc.seller.peppolEndpointID = ""
+        let issues = InvoiceValidator.validate(doc)
+        #expect(issues.contains { $0.rule == "BR-CO-26" && $0.severity == .error })
+        #expect(!InvoiceValidator.isCompliant(doc))
+    }
+
+    @Test("Missing buyer and order reference is an advisory Peppol R003 warning, not a block")
+    func peppolReferenceWarning() {
+        var doc = DemoData.sampleInvoice()
+        doc.buyerReference = ""
+        doc.purchaseOrderReference = ""
+        let issues = InvoiceValidator.validate(doc)
+        #expect(issues.contains { $0.rule == "PEPPOL-EN16931-R003" && $0.severity == .warning })
+        #expect(InvoiceValidator.isCompliant(doc))
+    }
 }

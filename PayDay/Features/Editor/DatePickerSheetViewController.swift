@@ -6,10 +6,20 @@ final class DatePickerSheetViewController: UIViewController {
     private let onPick: (CalendarDate) -> Void
     private let picker = UIDatePicker()
     private let initialDate: CalendarDate
+    private let minimumDate: CalendarDate?
+    private let maximumDate: CalendarDate?
 
-    init(title: String, date: CalendarDate, onPick: @escaping (CalendarDate) -> Void) {
+    init(
+        title: String,
+        date: CalendarDate,
+        minimumDate: CalendarDate? = nil,
+        maximumDate: CalendarDate? = nil,
+        onPick: @escaping (CalendarDate) -> Void
+    ) {
         self.onPick = onPick
         self.initialDate = date
+        self.minimumDate = minimumDate
+        self.maximumDate = maximumDate
         super.init(nibName: nil, bundle: nil)
         self.title = title
     }
@@ -25,9 +35,9 @@ final class DatePickerSheetViewController: UIViewController {
 
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .inline
-        var comps = DateComponents()
-        comps.year = initialDate.year; comps.month = initialDate.month; comps.day = initialDate.day
-        if let date = Calendar(identifier: .gregorian).date(from: comps) { picker.date = date }
+        picker.minimumDate = minimumDate.flatMap(Self.date(from:))
+        picker.maximumDate = maximumDate.flatMap(Self.date(from:))
+        if let date = Self.date(from: initialDate) { picker.date = date }
         picker.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(picker)
         NSLayoutConstraint.activate([
@@ -41,5 +51,13 @@ final class DatePickerSheetViewController: UIViewController {
     private func commit() {
         onPick(CalendarDate(picker.date))
         dismiss(animated: true)
+    }
+
+    private static func date(from calendarDate: CalendarDate) -> Date? {
+        var comps = DateComponents()
+        comps.year = calendarDate.year
+        comps.month = calendarDate.month
+        comps.day = calendarDate.day
+        return Calendar(identifier: .gregorian).date(from: comps)
     }
 }

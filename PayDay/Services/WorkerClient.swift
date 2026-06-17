@@ -14,7 +14,7 @@ final class WorkerClient: Sendable {
 
     init(
         baseURL: URL = Secrets.workerBaseURL,
-        session: URLSession = .shared,
+        session: URLSession = WorkerClient.advisorySession,
         identityProvider: @escaping @Sendable () async -> String? = {
             await AICreditsManager.shared.client.identity?.apiKey
         }
@@ -24,7 +24,16 @@ final class WorkerClient: Sendable {
         self.identityProvider = identityProvider
     }
 
-    enum WorkerError: Error { case http(Int), decoding, offline }
+    /// These calls are advisory (VIES/FX/Peppol lookup) and must degrade
+    /// promptly when an upstream is unreachable, so they use a short per-request
+    /// timeout rather than `URLSession.shared`'s 60s default.
+    private static let advisorySession: URLSession = {
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 12
+        return URLSession(configuration: configuration)
+    }()
+
+    enum WorkerError: Error { case http(Int, reason: String?), decoding, offline }
 
     func get<T: Decodable>(_ path: String, as type: T.Type) async throws -> T {
         try await send(path: path, method: "GET", body: nil, as: type)
@@ -50,11 +59,39 @@ final class WorkerClient: Sendable {
             throw WorkerError.offline
         }
         guard let http = response as? HTTPURLResponse else { throw WorkerError.decoding }
-        guard (200..<300).contains(http.statusCode) else { throw WorkerError.http(http.statusCode) }
+        guard (200..<300).contains(http.statusCode) else {
+            throw WorkerError.http(http.statusCode, reason: Self.decodeErrorReason(from: data))
+        }
         do {
             return try JSONDecoder().decode(T.self, from: data)
         } catch {
             throw WorkerError.decoding
+        }
+    }
+
+    private struct ErrorBody: Decodable {
+        let reason: String?
+        let error: String?
+    }
+
+    private static func decodeErrorReason(from data: Data) -> String? {
+        guard let body = try? JSONDecoder().decode(ErrorBody.self, from: data) else { return nil }
+        return body.reason ?? body.error
+    }
+}
+
+extension WorkerClient.WorkerError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .offline:
+            return "Couldn't reach the network. Check your connection and try again."
+        case .decoding:
+            return "The server returned an unexpected response."
+        case let .http(status, reason):
+            if let reason, !reason.isEmpty {
+                return reason
+            }
+            return "The server returned an error (\(status))."
         }
     }
 }

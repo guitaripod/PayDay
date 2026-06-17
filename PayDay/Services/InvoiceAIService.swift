@@ -60,7 +60,11 @@ final class InvoiceAIService: Sendable {
         """
         let request = CapabilityRequest.chat(messages: [ChatTurn(role: "user", content: prompt)])
         let result = try await client.run(request)
-        return Self.parseMessageContent(result.raw) ?? ""
+        guard let content = Self.parseMessageContent(result.raw) else {
+            AppLogger.shared.error("AI reminder parse failed; raw content: \(String(decoding: result.raw, as: UTF8.self))", category: .credits)
+            return ""
+        }
+        return content
     }
 
     // MARK: Response parsing (mako proxies an OpenAI-shaped chat completion)
@@ -82,13 +86,21 @@ final class InvoiceAIService: Sendable {
     }
 
     private static func parseMessageContent(_ data: Data) -> String? {
-        (try? JSONDecoder().decode(ChatCompletion.self, from: data))?.choices.first?.message.content
+        if let decoded = try? JSONDecoder().decode(ChatCompletion.self, from: data) {
+            return decoded.choices.first?.message.content
+        }
+        guard let envelope = extractJSONObject(from: String(decoding: data, as: UTF8.self)),
+              let decoded = try? JSONDecoder().decode(ChatCompletion.self, from: Data(envelope.utf8))
+        else { return nil }
+        return decoded.choices.first?.message.content
     }
 
     private static func parseLines(_ data: Data) -> [DraftedLine] {
-        guard let content = parseMessageContent(data),
-              let payload = try? JSONDecoder().decode(LinesPayload.self, from: Data(content.utf8))
-        else { return [] }
+        guard let content = parseMessageContent(data) else { return [] }
+        guard let payload = decodeLines(content) else {
+            AppLogger.shared.error("AI line-item parse failed; raw content: \(content)", category: .credits)
+            return []
+        }
         return payload.lines.map {
             DraftedLine(
                 name: $0.name,
@@ -98,12 +110,66 @@ final class InvoiceAIService: Sendable {
         }
     }
 
+    private static func decodeLines(_ content: String) -> LinesPayload? {
+        if let payload = try? JSONDecoder().decode(LinesPayload.self, from: Data(content.utf8)) {
+            return payload
+        }
+        guard let json = extractJSONObject(from: content) else { return nil }
+        return try? JSONDecoder().decode(LinesPayload.self, from: Data(json.utf8))
+    }
+
+    /// Models sometimes wrap JSON in markdown code fences or surround it with
+    /// prose; isolate the first balanced top-level `{...}` (or bare `[...]`) so a
+    /// usable result is never silently dropped over cosmetic framing.
+    private static func extractJSONObject(from text: String) -> String? {
+        let stripped = stripCodeFences(text)
+        return firstBalancedJSON(in: stripped, open: "{", close: "}")
+            ?? firstBalancedJSON(in: stripped, open: "[", close: "]")
+    }
+
+    private static func stripCodeFences(_ text: String) -> Substring {
+        guard let fenceStart = text.range(of: "```") else { return text[...] }
+        let afterOpen = text[fenceStart.upperBound...]
+        let body = afterOpen.first == "\n"
+            ? afterOpen.dropFirst()
+            : afterOpen.drop(while: { $0 != "\n" }).dropFirst()
+        guard let fenceEnd = body.range(of: "```") else { return body }
+        return body[..<fenceEnd.lowerBound]
+    }
+
+    private static func firstBalancedJSON(in text: Substring, open: Character, close: Character) -> String? {
+        guard let start = text.firstIndex(of: open) else { return nil }
+        var depth = 0
+        var inString = false
+        var escaped = false
+        var index = start
+        while index < text.endIndex {
+            let character = text[index]
+            if escaped {
+                escaped = false
+            } else if character == "\\" {
+                escaped = true
+            } else if character == "\"" {
+                inString.toggle()
+            } else if !inString {
+                if character == open {
+                    depth += 1
+                } else if character == close {
+                    depth -= 1
+                    if depth == 0 { return String(text[start...index]) }
+                }
+            }
+            index = text.index(after: index)
+        }
+        return nil
+    }
+
     /// LLM-decoded numbers are untrusted: a non-finite or absurd-magnitude value
     /// would poison `Money(rounding:)` into garbage minor units that round-trip
     /// into the PDF and EN 16931 XML. Clamp to a finite, sane range at the boundary.
     private static func sanitizedDecimal(_ value: Double?, default fallback: Decimal) -> Decimal {
         guard let value, value.isFinite else { return fallback }
         let bounded = min(max(value, -1_000_000_000), 1_000_000_000)
-        return Decimal(bounded)
+        return Decimal(string: String(format: "%.6f", bounded)) ?? fallback
     }
 }

@@ -24,8 +24,10 @@ export function makeFakeKV(): KVNamespace {
 type Row = Record<string, unknown>
 
 /// A tiny D1 fake that understands only the statements this worker issues
-/// (users insert/select/update, peppol_sends insert). It is deliberately not a
-/// SQL engine — just enough to verify route wiring and the send ledger write.
+/// (users insert/select/update, and the peppol_sends idempotency ledger:
+/// select-by-key, claim-insert, and the status/charged/transmission updates).
+/// It is deliberately not a SQL engine — just enough to verify route wiring and
+/// the exactly-once send/charge semantics.
 export function makeFakeD1(): D1Database {
   const users: Row[] = []
   const sends: Row[] = []
@@ -44,29 +46,48 @@ export function makeFakeD1(): D1Database {
         if (/FROM users WHERE id/.test(sql)) {
           return (users.find((u) => u.id === binds[0]) as T) ?? null
         }
+        if (/FROM peppol_sends WHERE user_id = \? AND idempotency_key = \? AND status = 'accepted'/.test(sql)) {
+          return (sends.find((s) => s.user_id === binds[0] && s.idempotency_key === binds[1] && s.status === 'accepted') as T) ?? null
+        }
         return null
       },
       async run() {
+        let changes = 0
         if (/INSERT INTO users/.test(sql)) {
           users.push({ id: binds[0], apple_sub: binds[1], email: binds[2], name: binds[3] })
+          changes = 1
         } else if (/UPDATE users/.test(sql)) {
           const u = users.find((x) => x.id === binds[2])
           if (u) {
             u.email = binds[0]
             u.name = binds[1]
+            changes = 1
           }
         } else if (/INSERT INTO peppol_sends/.test(sql)) {
-          sends.push({
-            id: binds[0],
-            user_id: binds[1],
-            invoice_number: binds[2],
-            recipient_endpoint: binds[3],
-            transmission_id: binds[4],
-            status: binds[5],
-            reason: binds[6],
-          })
+          const exists = sends.some((s) => s.user_id === binds[1] && s.idempotency_key === binds[2])
+          if (!exists) {
+            const accepted = /'accepted', 0\)/.test(sql)
+            sends.push({
+              id: binds[0],
+              user_id: binds[1],
+              idempotency_key: binds[2],
+              invoice_number: binds[3],
+              recipient_endpoint: binds[4],
+              transmission_id: binds[5] ?? null,
+              status: accepted ? 'accepted' : (binds[6] ?? 'failed'),
+              charged: 0,
+              reason: accepted ? null : (binds[7] ?? null),
+            })
+            changes = 1
+          }
+        } else if (/UPDATE peppol_sends SET charged = 1/.test(sql)) {
+          const row = sends.find((s) => s.id === binds[0])
+          if (row) {
+            row.charged = 1
+            changes = 1
+          }
         }
-        return { success: true, meta: {} }
+        return { success: true, meta: { changes } }
       },
       async all<T>() {
         return { results: [] as T[], success: true, meta: {} }

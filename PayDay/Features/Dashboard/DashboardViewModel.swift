@@ -14,7 +14,6 @@ final class DashboardViewModel {
     }
 
     let snapshotPublisher = PassthroughSubject<Snapshot, Never>()
-    let isProPublisher = PassthroughSubject<Bool, Never>()
 
     private let invoices: InvoiceRepository
     private let business: BusinessRepository
@@ -34,7 +33,7 @@ final class DashboardViewModel {
                 try? await invoices.refreshOverdue(today: Format.today())
                 let all = try await invoices.all()
                 let currency = Currency(currencyCode)
-                let outstanding = Money(minorUnits: try await invoices.outstandingMinorUnits(), currency: currency)
+                let outstanding = Money(minorUnits: try await invoices.outstandingMinorUnits(currencyCode: currencyCode), currency: currency)
                 let sellerConfigured = (try? await business.load().isConfigured) ?? true
                 let snapshot = Snapshot(
                     outstanding: outstanding,
@@ -48,6 +47,5 @@ final class DashboardViewModel {
                 AppLogger.shared.error("dashboard load failed: \(error)", category: .db)
             }
         }
-        Task { isProPublisher.send(await AICreditsManager.store.client.isPremium()) }
     }
 }

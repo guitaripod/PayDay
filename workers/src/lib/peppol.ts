@@ -193,7 +193,15 @@ export function makePeppolGateway(env: Env, fetchImpl: typeof fetch = fetch.bind
       fetchImpl
     )
   }
-  if (env.PEPPOL_API_KEY && env.PEPPOL_GATEWAY_BASE && env.PEPPOL_LEGAL_ENTITY_ID) {
+  // Storecove requires a numeric legal entity id; a non-numeric value (e.g. a
+  // Recommand-style company id copied into the env) would serialise to `null`
+  // and silently misroute the transmission. Fall back to the stub instead.
+  if (
+    env.PEPPOL_API_KEY &&
+    env.PEPPOL_GATEWAY_BASE &&
+    env.PEPPOL_LEGAL_ENTITY_ID &&
+    Number.isInteger(Number(env.PEPPOL_LEGAL_ENTITY_ID))
+  ) {
     return new StorecovePeppolGateway(
       env.PEPPOL_GATEWAY_BASE,
       env.PEPPOL_API_KEY,

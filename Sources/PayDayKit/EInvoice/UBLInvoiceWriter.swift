@@ -148,13 +148,13 @@ public struct UBLInvoiceWriter: Sendable {
             node.element("cbc:PaymentID", means.remittanceReference)
         }
         let account = XMLBuilder("cac:PayeeFinancialAccount")
-        account.element("cbc:ID", means.iban)
+        account.element("cbc:ID", means.normalizedIBAN)
         if !means.accountName.trimmed.isEmpty {
             account.element("cbc:Name", means.accountName)
         }
         if !means.bic.trimmed.isEmpty {
             let branch = XMLBuilder("cac:FinancialInstitutionBranch")
-            branch.element("cbc:ID", means.bic)
+            branch.element("cbc:ID", means.normalizedBIC)
             account.add(branch)
         }
         node.add(account)

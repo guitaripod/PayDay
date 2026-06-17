@@ -55,6 +55,13 @@ struct UBLInvoiceWriterTests {
         #expect(xml.contains("<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>"))
     }
 
+    @Test("IBAN is emitted without the user's display spaces (BT-84)")
+    func ibanNormalised() throws {
+        let xml = try UBLInvoiceWriter().xml(for: DemoData.sampleInvoice())
+        #expect(xml.contains("<cbc:ID>FI2112345600000785</cbc:ID>"))
+        #expect(!xml.contains("FI21 1234"))
+    }
+
     @Test("Intra-community supply carries delivery date and deliver-to country (BR-IC-11/12)")
     func intraCommunityDelivery() throws {
         let xml = try UBLInvoiceWriter().xml(for: DemoData.sampleIntraCommunityInvoice())

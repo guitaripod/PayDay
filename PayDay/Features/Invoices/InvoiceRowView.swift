@@ -35,8 +35,8 @@ final class InvoiceRowView: UIControl {
     private func build(_ invoice: Invoice) {
         let payable = Money(minorUnits: invoice.totals().summary.payableAmount.minorUnits, currency: invoice.currency)
 
-        let number = DesignSystem.label(invoice.number, font: .systemFont(ofSize: 15, weight: .semibold))
-        let client = DesignSystem.label(invoice.buyer.displayName, font: .systemFont(ofSize: 13), color: DesignSystem.Color.secondary)
+        let number = DesignSystem.label(invoice.number, font: DesignSystem.Typography.scaledSystem(15, .semibold, relativeTo: .subheadline))
+        let client = DesignSystem.label(invoice.buyer.displayName, font: DesignSystem.Typography.scaledSystem(13, .regular, relativeTo: .footnote), color: DesignSystem.Color.secondary)
         let leftStack = UIStackView(arrangedSubviews: [number, client])
         leftStack.axis = .vertical
         leftStack.spacing = 2

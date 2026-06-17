@@ -118,12 +118,40 @@ public struct CIIInvoiceWriter: Sendable {
         tax.element("ram:CategoryCode", line.vatCategory.rawValue)
         tax.element("ram:RateApplicablePercent", decimalString(line.effectiveRate, scale: 2))
         settlement.add(tax)
+
+        // A per-line discount is reconciled as a line allowance (BG-27), exactly
+        // as the UBL writer does: the net price (BT-146) stays the full unit
+        // price and the allowance amount is round(qty × price) − line net, so the
+        // CII line-calculation rule (BT-131 = BT-146 × BT-129 − allowances) holds
+        // by construction. Without this the embedded Factur-X XML fails EN 16931
+        // validation on any discounted line.
+        if let allowance = lineAllowance(line, net: net) {
+            settlement.add(allowance)
+        }
+
         let lineMon = XMLBuilder("ram:SpecifiedTradeSettlementLineMonetarySummation")
         lineMon.element("ram:LineTotalAmount", net.canonicalString)
         settlement.add(lineMon)
         item.add(settlement)
 
         return item
+    }
+
+    /// The BG-27 line allowance that represents a per-line discount, or `nil`
+    /// when the line is undiscounted. The amount is `round(qty × price) − net`,
+    /// computed from the engine's rounded values so the line calculation is exact.
+    private func lineAllowance(_ line: LineItem, net: Money) -> XMLBuilder? {
+        let grossRounded = Money(rounding: line.quantity * line.unitPrice, in: net.currency)
+        let allowanceMinor = grossRounded.minorUnits - net.minorUnits
+        guard allowanceMinor > 0 else { return nil }
+        let amount = Money(minorUnits: allowanceMinor, currency: net.currency)
+        let ac = XMLBuilder("ram:SpecifiedTradeAllowanceCharge")
+        let indicator = XMLBuilder("ram:ChargeIndicator")
+        indicator.element("udt:Indicator", "false")
+        ac.add(indicator)
+        ac.element("ram:ActualAmount", amount.canonicalString)
+        ac.element("ram:Reason", "Discount")
+        return ac
     }
 
     private func headerAgreement(_ invoice: Invoice) -> XMLBuilder {
@@ -145,13 +173,16 @@ public struct CIIInvoiceWriter: Sendable {
 
     private func headerSettlement(_ invoice: Invoice, totals: ComputedTotals, cur: String) -> XMLBuilder {
         let settlement = XMLBuilder("ram:ApplicableHeaderTradeSettlement")
+        if !invoice.paymentMeans.remittanceReference.trimmed.isEmpty {
+            settlement.element("ram:PaymentReference", invoice.paymentMeans.remittanceReference)
+        }
         settlement.element("ram:InvoiceCurrencyCode", cur)
 
         if !invoice.paymentMeans.iban.trimmed.isEmpty {
             let means = XMLBuilder("ram:SpecifiedTradeSettlementPaymentMeans")
             means.element("ram:TypeCode", invoice.paymentMeans.method.rawValue)
             let account = XMLBuilder("ram:PayeePartyCreditorFinancialAccount")
-            account.element("ram:IBANID", invoice.paymentMeans.iban)
+            account.element("ram:IBANID", invoice.paymentMeans.normalizedIBAN)
             if !invoice.paymentMeans.accountName.trimmed.isEmpty {
                 account.element("ram:AccountName", invoice.paymentMeans.accountName)
             }

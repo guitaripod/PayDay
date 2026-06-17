@@ -85,12 +85,19 @@ final class LineItemEditorViewController: UIViewController {
         let category = selectedCategory()
         line.name = nameField.text ?? ""
         line.details = detailField.text ?? ""
-        line.quantity = Decimal(string: quantityField.text ?? "") ?? 1
-        line.unitPrice = Decimal(string: priceField.text ?? "") ?? 0
+        line.quantity = Self.parseDecimal(quantityField.text) ?? 1
+        line.unitPrice = Self.parseDecimal(priceField.text) ?? 0
+        line.discountPercent = Self.clampPercent(line.discountPercent)
         line.vatCategory = category
-        line.vatRatePercent = category == .standard ? (Decimal(string: rateField.text ?? "") ?? 0) : 0
+        line.vatRatePercent = category == .standard ? (Self.parseDecimal(rateField.text) ?? 0) : 0
         onSave(line)
         dismiss(animated: true)
+    }
+
+    /// Constrain a per-line discount to a sane 0...100% so a >100% discount can
+    /// never produce a negative line net.
+    nonisolated static func clampPercent(_ value: Decimal) -> Decimal {
+        min(max(value, 0), 100)
     }
 
     private func selectedCategory() -> VATCategory { selectedVATCategory }
@@ -118,11 +125,32 @@ final class LineItemEditorViewController: UIViewController {
     }
 
     private func decimalText(_ value: Decimal) -> String {
-        (value as NSDecimalNumber).stringValue
+        Self.decimalFormatter().string(from: value as NSDecimalNumber) ?? (value as NSDecimalNumber).stringValue
+    }
+
+    /// Parse a user-entered number honouring the current locale's decimal
+    /// separator (EU users type "1,5"); falls back to a "."-separator reading so
+    /// a paste or hardware keyboard with a dot still works. Pure, so testable.
+    nonisolated static func parseDecimal(_ text: String?) -> Decimal? {
+        guard let text, !text.trimmingCharacters(in: .whitespaces).isEmpty else { return nil }
+        if let number = decimalFormatter().number(from: text) { return number.decimalValue }
+        let separator = Locale.current.decimalSeparator ?? "."
+        let normalized = text.replacingOccurrences(of: separator, with: ".")
+        return Decimal(string: normalized)
+    }
+
+    nonisolated private static func decimalFormatter() -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = .current
+        formatter.usesGroupingSeparator = false
+        formatter.generatesDecimalNumbers = true
+        formatter.maximumFractionDigits = 6
+        return formatter
     }
 
     private func labeled(_ caption: String, _ control: UIView) -> UIView {
-        let label = DesignSystem.label(caption, font: .systemFont(ofSize: 12, weight: .semibold), color: DesignSystem.Color.secondary)
+        let label = DesignSystem.label(caption, font: DesignSystem.Typography.scaledSystem(12, .semibold, relativeTo: .caption2), color: DesignSystem.Color.secondary)
         let stack = UIStackView(arrangedSubviews: [label, control])
         stack.axis = .vertical
         stack.spacing = 6

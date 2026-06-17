@@ -88,7 +88,7 @@ final class DashboardViewController: UIViewController {
     private func makeOutstandingCard() -> UIView {
         let card = DesignSystem.card()
         outstandingCaption.text = "Outstanding"
-        outstandingCaption.font = .systemFont(ofSize: 13, weight: .semibold)
+        outstandingCaption.font = DesignSystem.Typography.scaledSystem(13, .semibold, relativeTo: .footnote)
         outstandingCaption.textColor = DesignSystem.Color.secondary
         outstandingLabel.font = DesignSystem.Typography.mono(40, weight: .bold)
         outstandingLabel.textColor = DesignSystem.Color.label
@@ -114,7 +114,7 @@ final class DashboardViewController: UIViewController {
         NSLayoutConstraint.activate([icon.widthAnchor.constraint(equalToConstant: 28)])
 
         let title = DesignSystem.label("Finish setting up your business",
-            font: .systemFont(ofSize: 15, weight: .semibold))
+            font: DesignSystem.Typography.scaledSystem(15, .semibold, relativeTo: .subheadline))
         let subtitle = DesignSystem.label("Add your name, VAT ID, and IBAN so every invoice is complete.",
             font: DesignSystem.Typography.caption(), color: DesignSystem.Color.secondary)
         subtitle.numberOfLines = 0
@@ -204,12 +204,26 @@ final class DashboardViewController: UIViewController {
     }
 
     private func convert(_ estimate: Invoice) {
-        Haptics.success()
-        Task {
-            let number = (try? await BusinessRepository.shared.nextNumber(for: .invoice, on: Format.today())) ?? estimate.number
-            _ = try? await InvoiceRepository.shared.makeInvoice(fromEstimate: estimate, number: number, today: Format.today())
-            viewModel.load()
+        Task { [weak self] in
+            let today = Format.today()
+            guard let number = try? await BusinessRepository.shared.nextNumber(for: .invoice, on: today) else {
+                self?.presentNumberAllocationFailure()
+                return
+            }
+            Haptics.success()
+            _ = try? await InvoiceRepository.shared.makeInvoice(fromEstimate: estimate, number: number, today: today)
+            self?.viewModel.load()
         }
+    }
+
+    private func presentNumberAllocationFailure() {
+        Haptics.warning()
+        let alert = UIAlertController(
+            title: "Couldn't allocate a number",
+            message: "Couldn't allocate a number — try again.",
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 
     private func delete(_ invoice: Invoice) {

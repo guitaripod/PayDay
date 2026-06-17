@@ -31,6 +31,7 @@ final class PeppolService: PeppolTransmitting {
         let ublXML: String
         let recipient: PeppolRecipient
         let invoiceNumber: String
+        let idempotencyKey: String
     }
     private struct SendResponse: Decodable {
         let status: String
@@ -43,13 +44,17 @@ final class PeppolService: PeppolTransmitting {
         return try await client.post("v1/peppol/lookup", body: LookupBody(recipient: recipient), as: PeppolReachability.self)
     }
 
-    func send(ublXML: String, recipient: PeppolRecipient) -> AsyncThrowingStream<PeppolSendEvent, Error> {
+    func send(ublXML: String, invoiceNumber: String, recipient: PeppolRecipient) -> AsyncThrowingStream<PeppolSendEvent, Error> {
         AsyncThrowingStream { continuation in
             let task = Task {
                 continuation.yield(.validating)
                 continuation.yield(.submitting)
                 do {
-                    let body = SendBody(ublXML: ublXML, recipient: recipient, invoiceNumber: "")
+                    let body = SendBody(
+                        ublXML: ublXML,
+                        recipient: recipient,
+                        invoiceNumber: invoiceNumber,
+                        idempotencyKey: "\(invoiceNumber)|\(recipient.endpointID)")
                     let response = try await client.post("v1/peppol/send", body: body, as: SendResponse.self)
                     if response.status == "accepted", let id = response.transmissionID {
                         continuation.yield(.accepted(transmissionID: id))
@@ -57,6 +62,9 @@ final class PeppolService: PeppolTransmitting {
                     } else {
                         continuation.yield(.failed(reason: response.reason ?? "unknown"))
                     }
+                    continuation.finish()
+                } catch let WorkerClient.WorkerError.http(_, reason) where reason != nil {
+                    continuation.yield(.failed(reason: reason ?? "unknown"))
                     continuation.finish()
                 } catch {
                     continuation.yield(.failed(reason: error.localizedDescription))

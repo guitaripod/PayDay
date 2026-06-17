@@ -27,6 +27,8 @@ final class InvoiceListViewController: UIViewController {
             UIAction(title: "New Estimate", image: UIImage(systemName: "doc.plaintext")) { [weak self] _ in self?.create(.estimate) },
         ]))
         kindControl.selectedSegmentIndex = viewModel.kind == .estimate ? 1 : 0
+        kindControl.apportionsSegmentWidthsByContent = true
+        kindControl.accessibilityLabel = "Document type"
         kindControl.addAction(UIAction { [weak self] _ in self?.switchKind() }, for: .valueChanged)
         navigationItem.titleView = kindControl
         setupTable()
@@ -93,6 +95,16 @@ final class InvoiceListViewController: UIViewController {
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
+        viewModel.errorPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in self?.presentError(message) }
+            .store(in: &cancellables)
+    }
+
+    private func presentError(_ message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 
     private func create(_ kind: DocumentType) {
@@ -132,7 +144,20 @@ extension InvoiceListViewController: UITableViewDataSource, UITableViewDelegate 
         row.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(row)
         row.pinEdges(to: cell.contentView, insets: UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0))
+        cell.accessibilityCustomActions = accessibilityActions(for: invoice)
         return cell
+    }
+
+    /// VoiceOver mirror of the swipe/context actions, which are otherwise unreachable.
+    private func accessibilityActions(for invoice: Invoice) -> [UIAccessibilityCustomAction] {
+        var actions: [UIAccessibilityCustomAction] = []
+        if let primary = primaryAction(for: invoice) {
+            let title = primary.title == "Invoice" ? "Convert to Invoice" : primary.title
+            actions.append(UIAccessibilityCustomAction(name: title) { _ in primary.run(); return true })
+        }
+        actions.append(UIAccessibilityCustomAction(name: "Duplicate") { [weak self] _ in self?.duplicate(invoice); return true })
+        actions.append(UIAccessibilityCustomAction(name: "Delete") { [weak self] _ in self?.remove(invoice); return true })
+        return actions
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

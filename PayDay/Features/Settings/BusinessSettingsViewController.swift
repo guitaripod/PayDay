@@ -18,6 +18,7 @@ final class BusinessSettingsViewController: UIViewController {
     private let peppolField = BusinessSettingsViewController.field("Your Peppol ID (scheme:id)")
     private let vatRateField = BusinessSettingsViewController.field("Default VAT %", keyboard: .decimalPad)
     private let termsField = BusinessSettingsViewController.field("Default payment terms")
+    private let peppolStatusLabel = UILabel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,12 +53,16 @@ final class BusinessSettingsViewController: UIViewController {
     }
 
     private func build() {
+        peppolStatusLabel.font = .systemFont(ofSize: 12, weight: .medium)
+        peppolStatusLabel.textColor = DesignSystem.Color.secondary
+        peppolStatusLabel.numberOfLines = 0
+
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         let stack = UIStackView(arrangedSubviews: [
             section("Identity"), nameField, vatField, regField,
             section("Address"), line1Field, cityField, postalField, countryField,
-            section("Getting paid"), ibanField, bicField, peppolField,
+            section("Getting paid"), ibanField, bicField, peppolField, peppolStatusLabel,
             section("Defaults"), vatRateField, termsField,
         ])
         stack.axis = .vertical
@@ -77,24 +82,43 @@ final class BusinessSettingsViewController: UIViewController {
 
     private func commit() {
         profile.seller.legalName = nameField.text ?? ""
-        profile.seller.vatID = vatField.text ?? ""
+        profile.seller.vatID = (vatField.text ?? "").normalizedVATID
         profile.seller.legalRegistrationID = regField.text ?? ""
         profile.seller.address = PostalAddress(
             line1: line1Field.text ?? "", city: cityField.text ?? "",
             postalCode: postalField.text ?? "", countryCode: countryField.text ?? "")
         profile.paymentMeans = PaymentMeans(
-            method: .creditTransfer, iban: ibanField.text ?? "", bic: bicField.text ?? "",
-            accountName: profile.seller.legalName)
-        if let peppol = peppolField.text, let colon = peppol.firstIndex(of: ":") {
-            profile.seller.peppolSchemeID = String(peppol[..<colon]).trimmed
-            profile.seller.peppolEndpointID = String(peppol[peppol.index(after: colon)...]).trimmed
-        }
+            method: .creditTransfer,
+            iban: PaymentMeans(iban: ibanField.text ?? "").normalizedIBAN,
+            bic: bicField.text ?? "", accountName: profile.seller.legalName)
+        applyPeppol(peppolField.text ?? "")
         profile.defaultVATRatePercent = Double(vatRateField.text ?? "") ?? profile.defaultVATRatePercent
         profile.defaultPaymentTerms = termsField.text ?? ""
         AppSettings.defaultVATRatePercent = profile.defaultVATRatePercent
         Task {
             try? await BusinessRepository.shared.save(profile)
             await MainActor.run { self.navigationController?.popViewController(animated: true) }
+        }
+    }
+
+    /// Always rewrites the seller's Peppol address from the field, so clearing
+    /// it removes a stale endpoint instead of leaving one that would still be
+    /// used for real delivery. Colon-less, non-empty input is surfaced as an
+    /// advisory hint and the address is cleared (never blocks saving).
+    private func applyPeppol(_ raw: String) {
+        let input = raw.trimmed
+        if input.isEmpty {
+            profile.seller.peppolSchemeID = ""
+            profile.seller.peppolEndpointID = ""
+            peppolStatusLabel.text = nil
+        } else if let colon = input.firstIndex(of: ":") {
+            profile.seller.peppolSchemeID = String(input[..<colon]).trimmed
+            profile.seller.peppolEndpointID = String(input[input.index(after: colon)...]).trimmed
+            peppolStatusLabel.text = nil
+        } else {
+            profile.seller.peppolSchemeID = ""
+            profile.seller.peppolEndpointID = ""
+            peppolStatusLabel.text = "Use scheme:id, e.g. 0208:0123456789"
         }
     }
 

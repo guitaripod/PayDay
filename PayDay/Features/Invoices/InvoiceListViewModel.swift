@@ -5,6 +5,9 @@ import PayDayKit
 @MainActor
 final class InvoiceListViewModel {
     let documentsPublisher = PassthroughSubject<[Invoice], Never>()
+    let errorPublisher = PassthroughSubject<String, Never>()
+
+    private static let numberAllocationFailure = "Couldn't allocate a number — try again"
 
     var kind: DocumentType
     private let invoices: InvoiceRepository
@@ -28,8 +31,10 @@ final class InvoiceListViewModel {
 
     func convertToInvoice(_ estimate: Invoice) {
         Task {
-            let number = (try? await BusinessRepository.shared.nextNumber(for: .invoice, on: Format.today()))
-                ?? estimate.number
+            guard let number = try? await BusinessRepository.shared.nextNumber(for: .invoice, on: Format.today()) else {
+                errorPublisher.send(Self.numberAllocationFailure)
+                return
+            }
             _ = try? await invoices.makeInvoice(fromEstimate: estimate, number: number, today: Format.today())
             load()
         }
@@ -47,8 +52,11 @@ final class InvoiceListViewModel {
             var copy = invoice
             copy.id = UUID().uuidString
             copy.status = .draft
-            let number = try? await BusinessRepository.shared.nextNumber(for: copy.type, on: Format.today())
-            copy.number = number ?? invoice.number + "-copy"
+            guard let number = try? await BusinessRepository.shared.nextNumber(for: copy.type, on: Format.today()) else {
+                errorPublisher.send(Self.numberAllocationFailure)
+                return
+            }
+            copy.number = number
             try? await invoices.save(copy)
             load()
         }

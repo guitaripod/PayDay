@@ -119,7 +119,7 @@ as **integer minor units** (cents) + ISO-4217 currency code — never `Double` c
 
 - RevenueCat via the **AICredits** SPM package (`AICreditsCore`/`AICreditsRevenueCat`/`AICreditsUI`),
   exactly as Psybeam/DreamEater. Entitlement `pro`. Subscription group "Pay Day Pro": monthly
-  €4.99, annual €39.99 (7-day trial). Lifetime one-time also offered.
+  €4.99, annual €39.99 (7-day trial). (Lifetime was cut before 1.0 — an unreachable IAP is an App Review risk; the paywall sells annual + monthly only.)
 - Credits packs (consumable IAP) validated server-side by mako
   (`/v1/credits/purchase/revenuecat/validate`, product↔pack bound). Peppol send = N credits;
   AI action = N credits. Free tier never needs credits for local PDF export.

@@ -73,6 +73,40 @@ public enum DemoData {
             buyerReference: "PO-SAIMAA-2026-04")
     }
 
+    /// A draft estimate (quote) so the Estimates surface is never empty on first
+    /// run — App Review 2.1 completeness for the estimate flow.
+    public static func sampleEstimate() -> Invoice {
+        Invoice(
+            id: "doc-demo-3",
+            type: .estimate,
+            status: .draft,
+            number: "EST-2026-0003",
+            issueDate: CalendarDate(year: 2026, month: 6, day: 10),
+            dueDate: CalendarDate(year: 2026, month: 6, day: 24),
+            currency: .eur,
+            seller: sampleSeller(),
+            buyer: Party(
+                id: "buyer-estimate",
+                legalName: "Polar Mobile Oy",
+                email: "hankinta@polarmobile.example",
+                address: PostalAddress(line1: "Hämeenkatu 8", city: "Turku", postalCode: "20100", countryCode: "FI"),
+                vatID: "FI24681357"),
+            lines: [
+                LineItem(
+                    id: "l1", name: "App UX audit", details: "Heuristic review, 2 flows",
+                    quantity: 1, unit: .lumpSum, unitPrice: 1800, vatCategory: .standard, vatRatePercent: 25.5),
+                LineItem(
+                    id: "l2", name: "Design sprint facilitation", details: "On-site, 3 days",
+                    quantity: 3, unit: .day, unitPrice: 950, vatCategory: .standard, vatRatePercent: 25.5),
+            ],
+            paymentMeans: PaymentMeans(
+                method: .creditTransfer, iban: "FI21 1234 5600 0007 85", bic: "OKOYFIHH",
+                accountName: "Aurora Studio Oy"),
+            paymentTerms: "Estimate valid for 14 days.",
+            note: "Happy to adjust scope — let's talk.",
+            buyerReference: "RFQ-POLAR-2026-11")
+    }
+
     /// A cross-border B2B invoice using the intra-community reverse-charge
     /// category (0% VAT, both parties VAT-registered) — the EU compliance case.
     public static func sampleIntraCommunityInvoice() -> Invoice {

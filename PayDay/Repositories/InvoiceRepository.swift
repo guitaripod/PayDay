@@ -52,15 +52,18 @@ actor InvoiceRepository {
         }
     }
 
-    /// Outstanding receivables: sum of payable amounts on issued, unpaid invoices.
-    func outstandingMinorUnits() throws -> Int {
+    /// Outstanding receivables: sum of payable amounts on issued, unpaid invoices
+    /// in a single currency (summing mixed currencies would be meaningless).
+    func outstandingMinorUnits(currencyCode: String) throws -> Int {
         let unpaid: Set<String> = ["sent", "viewed", "partiallyPaid", "overdue"]
         return try dbQueue.read { db in
-            try DocumentRecord
-                .filter(Column("type") == DocumentType.invoice.rawValue)
-                .filter(unpaid.contains(Column("status")))
-                .fetchAll(db)
-                .reduce(0) { $0 + $1.payableMinor }
+            try Int.fetchOne(
+                db,
+                DocumentRecord
+                    .filter(Column("type") == DocumentType.invoice.rawValue)
+                    .filter(Column("currency") == currencyCode)
+                    .filter(unpaid.contains(Column("status")))
+                    .select(sum(Column("payableMinor")))) ?? 0
         }
     }
 
@@ -77,7 +80,7 @@ actor InvoiceRepository {
         try dbQueue.write { db in
             let candidates = try DocumentRecord
                 .filter(Column("type") == DocumentType.invoice.rawValue)
-                .filter([DocumentStatus.sent.rawValue, DocumentStatus.viewed.rawValue].contains(Column("status")))
+                .filter([DocumentStatus.sent.rawValue, DocumentStatus.viewed.rawValue, DocumentStatus.partiallyPaid.rawValue].contains(Column("status")))
                 .filter(Column("dueDate") < today.iso8601)
                 .fetchAll(db)
             var changed = 0

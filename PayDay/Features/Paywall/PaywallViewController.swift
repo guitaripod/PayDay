@@ -67,6 +67,10 @@ final class PaywallViewController: UIViewController {
         stack.addArrangedSubview(title)
         stack.addArrangedSubview(subtitle)
 
+        cardsStack.axis = .vertical
+        cardsStack.spacing = DesignSystem.Spacing.s
+        stack.addArrangedSubview(cardsStack)
+
         for (symbol, label, detail) in [
             ("checkmark.seal.fill", "EN 16931 e-invoices", "Factur-X / ZUGFeRD PDFs that pass tax-authority validation."),
             ("paperplane.fill", "Peppol delivery", "Send straight into your client's accounting system."),
@@ -77,12 +81,9 @@ final class PaywallViewController: UIViewController {
             stack.addArrangedSubview(benefitRow(symbol: symbol, title: label, detail: detail))
         }
 
-        cardsStack.axis = .vertical
-        cardsStack.spacing = DesignSystem.Spacing.s
-        stack.addArrangedSubview(cardsStack)
-
         ctaButton.addAction(UIAction { [weak self] _ in self?.purchaseSelected() }, for: .touchUpInside)
         stack.addArrangedSubview(ctaButton)
+        stack.addArrangedSubview(autoRenewDisclosure())
         stack.addArrangedSubview(legalFooter())
 
         view.addSubview(scroll)
@@ -186,27 +187,42 @@ final class PaywallViewController: UIViewController {
         column.axis = .vertical
         column.spacing = 4
         if let footnote = plan.footnote {
-            column.addArrangedSubview(DesignSystem.label(footnote, font: .systemFont(ofSize: 11), color: DesignSystem.Color.secondary))
+            column.addArrangedSubview(DesignSystem.label(
+                footnote,
+                font: DesignSystem.Typography.scaledSystem(11, .regular, relativeTo: .caption2),
+                color: DesignSystem.Color.secondary))
         }
         column.translatesAutoresizingMaskIntoConstraints = false
         column.isUserInteractionEnabled = false
         card.addSubview(column)
         column.pinEdges(to: card, insets: UIEdgeInsets(top: 14, left: 16, bottom: 14, right: 16))
+
+        card.isAccessibilityElement = true
+        card.accessibilityTraits = selected ? [.button, .selected] : [.button]
+        card.accessibilityLabel = accessibilityLabel(for: plan)
         return card
     }
 
-    private func legalFooter() -> UIView {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = 4
-        stack.alignment = .center
+    private func accessibilityLabel(for plan: PlanVM) -> String {
+        var parts = ["\(plan.title), \(plan.price) per \(plan.term)"]
+        if let footnote = plan.footnote { parts.append(footnote) }
+        return parts.joined(separator: ". ")
+    }
+
+    private func autoRenewDisclosure() -> UIView {
         let disclosure = DesignSystem.label(
             "Subscriptions auto-renew unless cancelled at least 24h before the period ends. Manage in Apple ID settings.",
-            font: .systemFont(ofSize: 10), color: DesignSystem.Color.tertiary)
+            font: DesignSystem.Typography.scaledSystem(11, .regular, relativeTo: .caption2),
+            color: DesignSystem.Color.tertiary)
         disclosure.textAlignment = .center
+        return disclosure
+    }
+
+    private func legalFooter() -> UIView {
         let links = UIStackView()
         links.axis = .horizontal
         links.spacing = 16
+        links.alignment = .center
         for (title, url) in [("Terms of Use", "https://mako.midgarcorp.cc/terms/payday"),
                              ("Privacy Policy", "https://mako.midgarcorp.cc/privacy/payday"),
                              ("Restore", "")] {
@@ -215,26 +231,44 @@ final class PaywallViewController: UIViewController {
             b.titleLabel?.font = .systemFont(ofSize: 11, weight: .medium)
             b.addAction(UIAction { [weak self] _ in
                 if url.isEmpty { self?.restore() }
-                else if let u = URL(string: url) { UIApplication.shared.open(u) }
+                else if let u = URL(string: url) { self?.openLink(u) }
             }, for: .touchUpInside)
             links.addArrangedSubview(b)
         }
-        stack.addArrangedSubview(disclosure)
-        stack.addArrangedSubview(links)
-        return stack
+        return links
+    }
+
+    private func openLink(_ url: URL) {
+        UIApplication.shared.open(url, options: [:]) { [weak self] success in
+            guard !success else { return }
+            self?.presentAlert("Couldn't open the link", message: "Please try again in a moment.")
+        }
     }
 
     private func purchaseSelected() {
         guard plans.indices.contains(selectedIndex) else { return }
         let id = plans[selectedIndex].id
-        Task {
-            let storePlans = store.plans
-            guard let plan = storePlans.first(where: { $0.id == id }) else {
-                // Test-store / pre-products fallback: nothing to purchase yet.
-                return
-            }
-            _ = await store.subscribe(plan)
+        guard let plan = store.plans.first(where: { $0.id == id }) else {
+            presentAlert("Plans are still loading", message: "Try again in a moment.")
+            return
         }
+        setPurchasing(true)
+        Task { [weak self] in
+            _ = await self?.store.subscribe(plan)
+            self?.setPurchasing(false)
+        }
+    }
+
+    private func setPurchasing(_ purchasing: Bool) {
+        ctaButton.isEnabled = !purchasing
+        ctaButton.configuration?.showsActivityIndicator = purchasing
+        cardViews.forEach { $0.isEnabled = !purchasing }
+    }
+
+    private func presentAlert(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 
     private func restore() {

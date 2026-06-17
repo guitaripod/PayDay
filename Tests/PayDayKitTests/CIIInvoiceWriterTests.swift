@@ -59,6 +59,33 @@ struct CIIInvoiceWriterTests {
         #expect(xml.contains("<ram:PersonName>Marcus Ziadé</ram:PersonName>"))
     }
 
+    @Test("Discounted line reconciles via a BG-27 line allowance (BT-131 = net price × qty − allowance)")
+    func discountedLineCalculation() throws {
+        // Demo line l2: 1 × 2400 with a 10% discount → net 2160.00, allowance 240.00.
+        // The net price (BT-146) stays the full 2400.00 and the allowance closes
+        // the gap, so the CII line-calculation rule holds exactly.
+        let xml = try CIIInvoiceWriter().xml(for: DemoData.sampleInvoice())
+        #expect(xml.contains("<ram:SpecifiedTradeAllowanceCharge>"))
+        #expect(xml.contains("<udt:Indicator>false</udt:Indicator>"))
+        #expect(xml.contains("<ram:ActualAmount>240.00</ram:ActualAmount>"))
+        #expect(xml.contains("<ram:Reason>Discount</ram:Reason>"))
+        #expect(xml.contains("<ram:ChargeAmount>2400.00</ram:ChargeAmount>"))
+        #expect(xml.contains("<ram:LineTotalAmount>2160.00</ram:LineTotalAmount>"))
+        // An undiscounted line carries no allowance noise.
+        var noDiscount = DemoData.sampleInvoice()
+        noDiscount.lines = [noDiscount.lines[0]]
+        let plain = try CIIInvoiceWriter().xml(for: noDiscount)
+        #expect(!plain.contains("<ram:SpecifiedTradeAllowanceCharge>"))
+    }
+
+    @Test("Payment means normalises the IBAN and carries the remittance reference (BT-83/BT-84)")
+    func paymentMeansNormalised() throws {
+        let xml = try CIIInvoiceWriter().xml(for: DemoData.sampleInvoice())
+        #expect(xml.contains("<ram:PaymentReference>RF18 0007</ram:PaymentReference>"))
+        #expect(xml.contains("<ram:IBANID>FI2112345600000785</ram:IBANID>"))
+        #expect(!xml.contains("FI21 1234"))
+    }
+
     @Test("Output is well-formed XML")
     func wellFormed() throws {
         let xml = try CIIInvoiceWriter().xml(for: DemoData.sampleInvoice())

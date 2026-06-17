@@ -14,6 +14,13 @@ final class InvoiceEditorViewModel {
     private(set) var invoice: Invoice
     let isNew: Bool
     private var numberReserved = false
+    /// The sequence number peeked on open. A `setNumber` that still equals this
+    /// is not a manual edit, so first save still reserves (advancing the counter
+    /// to the same value); only a genuinely different number is treated as manual.
+    private var peekedNumber = ""
+    /// Set once the user edits the number to something other than the peek, so the
+    /// auto-reserve on first save never overwrites a custom number.
+    private var numberIsManual = false
 
     private let invoices: InvoiceRepository
     private let clients: ClientRepository
@@ -62,6 +69,7 @@ final class InvoiceEditorViewModel {
                 let seq = (try? await business.sequence(for: invoice.type))
                     ?? NumberSequence(type: invoice.type, template: NumberSequence.defaultTemplate(for: invoice.type))
                 invoice.number = seq.peek(on: invoice.issueDate)
+                peekedNumber = invoice.number
             }
             publish()
         }
@@ -74,7 +82,11 @@ final class InvoiceEditorViewModel {
     }
 
     func setBuyer(_ party: Party) { invoice.buyer = party; publish() }
-    func setNumber(_ value: String) { invoice.number = value; publish() }
+    func setNumber(_ value: String) {
+        invoice.number = value
+        numberIsManual = value.trimmed != peekedNumber
+        publish()
+    }
     func setIssueDate(_ date: CalendarDate) {
         invoice.issueDate = date
         invoice.dueDate = date.adding(days: AppSettings.defaultPaymentTermDays)
@@ -138,12 +150,10 @@ final class InvoiceEditorViewModel {
                  vatCategory: .standard, vatRatePercent: Decimal(AppSettings.defaultVATRatePercent))
     }
 
-    func save() {
+    func save(completion: ((Invoice?) -> Void)? = nil) {
         Task {
             do {
-                if isNew && !numberReserved {
-                    // Reserve the real number atomically on first save (advances the
-                    // counter exactly once per persisted document).
+                if isNew && !numberReserved && !numberIsManual {
                     if let reserved = try? await business.nextNumber(for: invoice.type, on: invoice.issueDate) {
                         invoice.number = reserved
                     }
@@ -153,8 +163,10 @@ final class InvoiceEditorViewModel {
                 try await invoices.save(invoice)
                 publish()
                 savedPublisher.send(invoice)
+                completion?(invoice)
             } catch {
                 AppLogger.shared.error("save failed: \(error)", category: .db)
+                completion?(nil)
             }
         }
     }

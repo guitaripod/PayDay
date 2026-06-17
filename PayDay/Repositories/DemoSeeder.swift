@@ -27,12 +27,17 @@ enum DemoSeeder {
 
                 let invoice = DemoData.sampleInvoice()
                 let intra = DemoData.sampleIntraCommunityInvoice()
+                let estimate = DemoData.sampleEstimate()
                 try ClientRecord(invoice.buyer).insert(db)
                 try ClientRecord(intra.buyer).insert(db)
+                try ClientRecord(estimate.buyer).insert(db)
                 try DocumentRecord(invoice).insert(db)
                 try DocumentRecord(intra).insert(db)
+                try DocumentRecord(estimate).insert(db)
                 try SequenceRecord(NumberSequence(
                     type: .invoice, template: NumberSequence.defaultTemplate(for: .invoice), nextValue: 9)).insert(db)
+                try SequenceRecord(NumberSequence(
+                    type: .estimate, template: NumberSequence.defaultTemplate(for: .estimate), nextValue: 4)).insert(db)
             }
             AppSettings.didSeedDemo = true
             AppLogger.shared.info("seeded demo data", category: .db)
