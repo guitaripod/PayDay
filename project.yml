@@ -41,6 +41,9 @@ packages:
   AICredits:
     url: git@github.com:guitaripod/AICredits.git
     from: "1.3.0"
+  Midgar:
+    url: https://github.com/guitaripod/Midgar
+    from: "1.0.0"
 
 targets:
   PayDay:
@@ -62,6 +65,7 @@ targets:
         product: AICreditsRevenueCat
       - package: AICredits
         product: AICreditsUI
+      - package: Midgar
     info:
       path: PayDay/Info.plist
       properties:

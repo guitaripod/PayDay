@@ -1,16 +1,17 @@
 import Combine
 import UIKit
+import Midgar
 import PayDayKit
 
 /// Settings: business profile, defaults, appearance, Pro status, credit balance,
 /// and the legal/support links App Review expects.
 final class SettingsViewController: UIViewController {
-    private enum Row { case business, payment, defaults, appearance, pro, credits, privacy, terms, support, deleteAccount }
+    private enum Row { case business, payment, defaults, appearance, pro, credits, privacy, terms, support, moreApps, deleteAccount }
     private let sections: [(String, [Row])] = [
         ("Your business", [.business, .payment, .defaults]),
         ("Pay Day Pro", [.pro, .credits]),
         ("App", [.appearance]),
-        ("About", [.privacy, .terms, .support]),
+        ("About", [.privacy, .terms, .support, .moreApps]),
         ("Account", [.deleteAccount]),
     ]
 
@@ -75,6 +76,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case .privacy: config.text = "Privacy Policy"; config.image = UIImage(systemName: "hand.raised")
         case .terms: config.text = "Terms of Use"; config.image = UIImage(systemName: "doc.text")
         case .support: config.text = "Support"; config.image = UIImage(systemName: "envelope")
+        case .moreApps: config.text = "More Apps"; config.image = UIImage(systemName: "square.stack.3d.up")
         case .deleteAccount:
             config.text = "Delete account"
             config.textProperties.color = DesignSystem.Color.overdue
@@ -99,6 +101,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case .privacy: open("https://mako.midgarcorp.cc/privacy/payday")
         case .terms: open("https://mako.midgarcorp.cc/terms/payday")
         case .support: open("mailto:support@midgarcorp.cc")
+        case .moreApps: Midgar.present(from: self)
         case .deleteAccount: confirmDeleteAccount()
         }
     }
