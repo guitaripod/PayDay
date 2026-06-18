@@ -1,6 +1,6 @@
 import Combine
 import UIKit
-import Midgar
+import MidgarKit
 import PayDayKit
 
 /// Settings: business profile, defaults, appearance, Pro status, credit balance,
