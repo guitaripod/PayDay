@@ -76,6 +76,23 @@ public enum InvoiceValidator {
         return issues
     }
 
+    /// Peppol transmission preconditions checked before any network call:
+    /// PEPPOL-EN16931-R020/R010 require seller and buyer electronic addresses
+    /// (BT-34 / BT-49). Kept separate from `validate` so producing a compliant
+    /// Factur-X or UBL document never requires Peppol participants.
+    public static func peppolIssues(_ invoice: Invoice) -> [ValidationIssue] {
+        var issues: [ValidationIssue] = []
+        if invoice.seller.peppolParticipant.isEmpty {
+            issues.append(.init(severity: .error, rule: "PEPPOL-EN16931-R020",
+                message: "Delivery over the Peppol network requires the seller electronic address (BT-34)."))
+        }
+        if invoice.buyer.peppolParticipant.isEmpty {
+            issues.append(.init(severity: .error, rule: "PEPPOL-EN16931-R010",
+                message: "Delivery over the Peppol network requires the buyer electronic address (BT-49)."))
+        }
+        return issues
+    }
+
     /// Whether the invoice may be issued as a compliant e-invoice (no errors).
     public static func isCompliant(_ invoice: Invoice) -> Bool {
         !validate(invoice).contains { $0.severity == .error }

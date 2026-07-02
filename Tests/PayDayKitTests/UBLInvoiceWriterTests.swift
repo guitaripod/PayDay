@@ -80,6 +80,76 @@ struct UBLInvoiceWriterTests {
         #expect(xml.contains("<cbc:IdentificationCode>DE</cbc:IdentificationCode>"))
     }
 
+    @Test("Document allowances and charges are emitted and reconcile with BT-107/BT-108")
+    func documentAllowanceCharge() throws {
+        var doc = DemoData.sampleInvoice()
+        doc.adjustments = [
+            DocumentAdjustment(id: "a1", isCharge: false, reason: "Loyalty discount", amount: 100, vatCategory: .standard, vatRatePercent: 25.5),
+            DocumentAdjustment(id: "a2", isCharge: true, reason: "Freight", amount: 20, vatCategory: .standard, vatRatePercent: 25.5),
+        ]
+        let xml = try UBLInvoiceWriter().xml(for: doc)
+        #expect(xml.contains("<cbc:AllowanceChargeReason>Loyalty discount</cbc:AllowanceChargeReason>"))
+        #expect(xml.contains("<cbc:AllowanceChargeReason>Freight</cbc:AllowanceChargeReason>"))
+        #expect(xml.contains("<cbc:Amount currencyID=\"EUR\">100.00</cbc:Amount>"))
+        #expect(xml.contains("<cbc:Amount currencyID=\"EUR\">20.00</cbc:Amount>"))
+        #expect(xml.contains("<cbc:ChargeIndicator>true</cbc:ChargeIndicator>"))
+        #expect(xml.contains("<cbc:AllowanceTotalAmount currencyID=\"EUR\">100.00</cbc:AllowanceTotalAmount>"))
+        #expect(xml.contains("<cbc:ChargeTotalAmount currencyID=\"EUR\">20.00</cbc:ChargeTotalAmount>"))
+        let allowanceChargeIndex = try #require(xml.range(of: "<cac:AllowanceCharge>"))
+        let taxTotalIndex = try #require(xml.range(of: "<cac:TaxTotal>"))
+        #expect(allowanceChargeIndex.lowerBound < taxTotalIndex.lowerBound)
+    }
+
+    @Test("Credit note omits cbc:DueDate and carries BT-9 as cbc:PaymentDueDate")
+    func creditNoteDueDate() throws {
+        var doc = DemoData.sampleInvoice()
+        doc.type = .creditNote
+        doc.precedingInvoiceNumber = "INV-2026-0007"
+        let xml = try UBLInvoiceWriter().xml(for: doc)
+        #expect(!xml.contains("<cbc:DueDate>"))
+        #expect(xml.contains("<cbc:PaymentDueDate>2026-06-15</cbc:PaymentDueDate>"))
+        let invoiceXML = try UBLInvoiceWriter().xml(for: DemoData.sampleInvoice())
+        #expect(invoiceXML.contains("<cbc:DueDate>2026-06-15</cbc:DueDate>"))
+        #expect(!invoiceXML.contains("<cbc:PaymentDueDate>"))
+    }
+
+    @Test("Credit note without IBAN still carries BT-9 via PaymentMeans (BR-CO-25)")
+    func creditNoteWithoutIBANKeepsDueDate() throws {
+        var doc = DemoData.sampleInvoice()
+        doc.type = .creditNote
+        doc.precedingInvoiceNumber = "INV-2026-0007"
+        doc.paymentMeans.iban = ""
+        doc.paymentTerms = ""
+        let xml = try UBLInvoiceWriter().xml(for: doc)
+        #expect(xml.contains("<cbc:PaymentDueDate>2026-06-15</cbc:PaymentDueDate>"))
+        #expect(!xml.contains("<cac:PayeeFinancialAccount>"))
+    }
+
+    @Test("Discounted negative-quantity line reconciles via a line charge")
+    func negativeQuantityLineDiscount() throws {
+        var doc = DemoData.sampleInvoice()
+        doc.lines = [
+            LineItem(
+                id: "l1", name: "Correction", quantity: -1, unitPrice: 100,
+                discountPercent: 10, vatCategory: .standard, vatRatePercent: 25.5)
+        ]
+        let xml = try UBLInvoiceWriter().xml(for: doc)
+        #expect(xml.contains("<cbc:ChargeIndicator>true</cbc:ChargeIndicator>"))
+        #expect(xml.contains("<cbc:Amount currencyID=\"EUR\">10.00</cbc:Amount>"))
+        #expect(xml.contains("<cbc:LineExtensionAmount currencyID=\"EUR\">-90.00</cbc:LineExtensionAmount>"))
+    }
+
+    @Test("Outside-scope (O) documents carry no VAT rate anywhere (BR-O-5/BR-O-10)")
+    func outsideScopeOmitsRate() throws {
+        var doc = DemoData.sampleInvoice()
+        doc.lines = [
+            LineItem(id: "l1", name: "Out of scope service", quantity: 1, unitPrice: 500, vatCategory: .outsideScope)
+        ]
+        let xml = try UBLInvoiceWriter().xml(for: doc)
+        #expect(!xml.contains("<cbc:Percent>"))
+        #expect(xml.contains("<cbc:ID>O</cbc:ID>"))
+    }
+
     @Test("Output is well-formed XML")
     func wellFormed() throws {
         let xml = try UBLInvoiceWriter().xml(for: DemoData.sampleInvoice())

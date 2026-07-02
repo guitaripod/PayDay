@@ -66,6 +66,32 @@ final class ClientListViewController: UIViewController {
         let editor = ClientEditorViewController(party: party) { [weak self] _ in self?.reload() }
         navigationController?.pushViewController(editor, animated: true)
     }
+
+    private func remove(_ party: Party, done: ((Bool) -> Void)? = nil) {
+        Haptics.warning()
+        Task { @MainActor [weak self] in
+            guard let self else { done?(false); return }
+            do {
+                try await ClientRepository.shared.delete(id: party.id)
+                if let index = self.clients.firstIndex(where: { $0.id == party.id }) {
+                    self.clients.remove(at: index)
+                    self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                }
+                self.emptyView?.isHidden = !self.clients.isEmpty
+                done?(true)
+            } catch {
+                AppLogger.shared.error("client delete failed: \(error)", category: .db)
+                done?(false)
+                let alert = UIAlertController(title: "Couldn't Delete", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(alert, animated: true)
+            }
+        }
+    }
+
+    private func accessibilityActions(for party: Party) -> [UIAccessibilityCustomAction] {
+        [UIAccessibilityCustomAction(name: "Delete") { [weak self] _ in self?.remove(party); return true }]
+    }
 }
 
 extension ClientListViewController: UITableViewDataSource, UITableViewDelegate {
@@ -80,6 +106,7 @@ extension ClientListViewController: UITableViewDataSource, UITableViewDelegate {
         config.secondaryText = [party.address.countryCode, party.hasVATID ? party.vatID : ""].filter { !$0.isEmpty }.joined(separator: " · ")
         cell.contentConfiguration = config
         cell.accessoryType = selection == nil ? .detailButton : .none
+        cell.accessibilityCustomActions = accessibilityActions(for: party)
         return cell
     }
 
@@ -98,8 +125,8 @@ extension ClientListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard indexPath.row < clients.count else { return nil }
         let party = clients[indexPath.row]
-        let delete = UIContextualAction(style: .destructive, title: "Delete") { _, _, done in
-            Task { try? await ClientRepository.shared.delete(id: party.id); done(true) }
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, done in
+            self?.remove(party, done: done)
         }
         return UISwipeActionsConfiguration(actions: [delete])
     }

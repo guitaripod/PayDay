@@ -41,7 +41,7 @@ public enum TaxEngine {
         var chargeTotal = Money.zero(currency)
         for adjustment in invoice.adjustments {
             let rounded = Money(rounding: adjustment.amount, in: currency)
-            let rate = adjustment.vatCategory.allowsPositiveRate ? adjustment.vatRatePercent : 0
+            let rate = adjustment.effectiveRate
             let signed = adjustment.isCharge ? rounded : -rounded
             accumulate(
                 signed,

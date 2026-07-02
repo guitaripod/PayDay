@@ -62,6 +62,13 @@ final class InvoiceListViewModel {
         }
     }
 
+    func markSent(_ invoice: Invoice) {
+        Task {
+            try? await invoices.markSent(id: invoice.id)
+            load()
+        }
+    }
+
     func markPaid(_ invoice: Invoice) {
         Task {
             var updated = invoice

@@ -52,6 +52,35 @@ describe('peppol gateway', () => {
     expect(gw).toBeInstanceOf(StubPeppolGateway)
   })
 
+  it('returns null in production when credentials are incomplete', () => {
+    expect(makePeppolGateway(makeEnv({ ENVIRONMENT: 'production' }))).toBeNull()
+    expect(
+      makePeppolGateway(
+        makeEnv({
+          ENVIRONMENT: 'production',
+          PEPPOL_PROVIDER: 'recommand',
+          PEPPOL_API_KEY: 'k',
+          PEPPOL_GATEWAY_BASE: 'https://app.recommand.eu',
+          PEPPOL_LEGAL_ENTITY_ID: 'company_123',
+        })
+      )
+    ).toBeNull()
+  })
+
+  it('selects the configured gateway in production when credentials are complete', () => {
+    const gw = makePeppolGateway(
+      makeEnv({
+        ENVIRONMENT: 'production',
+        PEPPOL_PROVIDER: 'recommand',
+        PEPPOL_API_KEY: 'k',
+        PEPPOL_API_SECRET: 's',
+        PEPPOL_GATEWAY_BASE: 'https://app.recommand.eu',
+        PEPPOL_LEGAL_ENTITY_ID: 'company_123',
+      })
+    )
+    expect(gw).toBeInstanceOf(RecommandPeppolGateway)
+  })
+
   it('selects the Recommand gateway when provider=recommand and all vars set', () => {
     const gw = makePeppolGateway(
       makeEnv({

@@ -25,6 +25,7 @@ peppolRoutes.post('/v1/peppol/lookup', requireAuth, async (c) => {
   const recipient = parseRecipient(body.recipient)
   if (!recipient) return c.json({ error: 'recipient_required' }, 400)
   const gateway = makePeppolGateway(c.env)
+  if (!gateway) return c.json({ reachable: false, supportedDocumentTypes: [] })
   const reachability = await gateway.lookup(recipient)
   return c.json(reachability)
 })
@@ -55,8 +56,15 @@ peppolRoutes.post('/v1/peppol/send', requireAuth, async (c) => {
   }
 
   const userId = c.get('userId')
-  const invoiceNumber = (body.invoiceNumber ?? '').toString()
-  const key = (body.idempotencyKey ?? '').toString().trim() || `${invoiceNumber}|${recipient.endpointID}`
+  const invoiceNumber = (body.invoiceNumber ?? '').toString().trim()
+  const explicitKey = (body.idempotencyKey ?? '').toString().trim()
+  if (!explicitKey && !invoiceNumber) {
+    return c.json({ error: 'idempotencyKey_or_invoiceNumber_required' }, 400)
+  }
+  const key = explicitKey || `${invoiceNumber}|${recipient.endpointID}`
+
+  const gateway = makePeppolGateway(c.env)
+  if (!gateway) return c.json({ error: 'peppol_not_configured', retriable: true }, 503)
 
   const prior = await c.env.DB.prepare(
     `SELECT transmission_id FROM peppol_sends WHERE user_id = ? AND idempotency_key = ? AND status = 'accepted'`
@@ -67,7 +75,6 @@ peppolRoutes.post('/v1/peppol/send', requireAuth, async (c) => {
     return c.json({ status: 'accepted', transmissionID: prior.transmission_id ?? undefined, idempotent: true }, 200)
   }
 
-  const gateway = makePeppolGateway(c.env)
   let result: SendResult
   try {
     result = await gateway.send(ublXML, recipient)
@@ -80,18 +87,28 @@ peppolRoutes.post('/v1/peppol/send', requireAuth, async (c) => {
     return c.json(result, 502)
   }
 
-  const rowId = crypto.randomUUID()
   const claim = await c.env.DB.prepare(
     `INSERT INTO peppol_sends (id, user_id, idempotency_key, invoice_number, recipient_endpoint, transmission_id, status, charged)
-     VALUES (?, ?, ?, ?, ?, ?, 'accepted', 0) ON CONFLICT(user_id, idempotency_key) DO NOTHING`
+     VALUES (?, ?, ?, ?, ?, ?, 'accepted', 0)
+     ON CONFLICT(user_id, idempotency_key) DO UPDATE SET
+       transmission_id = excluded.transmission_id, status = 'accepted', reason = NULL, charged = 0
+     WHERE peppol_sends.status != 'accepted'`
   )
-    .bind(rowId, userId, key, invoiceNumber, recipient.endpointID, result.transmissionID ?? null)
+    .bind(crypto.randomUUID(), userId, key, invoiceNumber, recipient.endpointID, result.transmissionID ?? null)
     .run()
   if ((claim.meta?.changes ?? 0) !== 1) {
     return c.json({ ...result, idempotent: true }, 200)
   }
 
-  const balance = await meterSend(c.env, c.req.header('Authorization')!, key, userId, rowId)
+  const row = await c.env.DB.prepare(`SELECT id FROM peppol_sends WHERE user_id = ? AND idempotency_key = ?`)
+    .bind(userId, key)
+    .first<{ id: string }>()
+  if (!row) {
+    console.error(`peppol.send claimed row vanished (key=${key})`)
+    return c.json(result, 200)
+  }
+
+  const balance = await meterSend(c.env, c.req.header('Authorization')!, key, userId, row.id)
   return c.json(balance === undefined ? result : { ...result, balance }, 200)
 })
 

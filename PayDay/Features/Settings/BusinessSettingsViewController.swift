@@ -50,7 +50,7 @@ final class BusinessSettingsViewController: UIViewController {
         ibanField.text = profile.paymentMeans.iban
         bicField.text = profile.paymentMeans.bic
         peppolField.text = profile.seller.peppolEndpointID.isEmpty ? "" : "\(profile.seller.peppolSchemeID):\(profile.seller.peppolEndpointID)"
-        vatRateField.text = String(profile.defaultVATRatePercent)
+        vatRateField.text = DecimalInput.text(Decimal(profile.defaultVATRatePercent))
         termsField.text = profile.defaultPaymentTerms
         refreshPeppolAdvisory()
     }
@@ -103,12 +103,23 @@ final class BusinessSettingsViewController: UIViewController {
             iban: PaymentMeans(iban: ibanField.text ?? "").normalizedIBAN,
             bic: bicField.text ?? "", accountName: profile.seller.legalName)
         applyPeppol(peppolField.text ?? "")
-        profile.defaultVATRatePercent = Double(vatRateField.text ?? "") ?? profile.defaultVATRatePercent
+        profile.defaultVATRatePercent = DecimalInput.parse(vatRateField.text).map { NSDecimalNumber(decimal: $0).doubleValue } ?? profile.defaultVATRatePercent
         profile.defaultPaymentTerms = termsField.text ?? ""
         AppSettings.defaultVATRatePercent = profile.defaultVATRatePercent
-        Task {
-            try? await BusinessRepository.shared.save(profile)
-            await MainActor.run { self.navigationController?.popViewController(animated: true) }
+        let saved = profile
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                try await BusinessRepository.shared.save(saved)
+                self.navigationController?.popViewController(animated: true)
+            } catch {
+                AppLogger.shared.error("business profile save failed: \(error)", category: .db)
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                let alert = UIAlertController(title: "Couldn't Save", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(alert, animated: true)
+            }
         }
     }
 

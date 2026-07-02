@@ -86,6 +86,61 @@ struct CIIInvoiceWriterTests {
         #expect(!xml.contains("FI21 1234"))
     }
 
+    @Test("Document allowances and charges are emitted and reconcile with BT-107/BT-108")
+    func documentAllowanceCharge() throws {
+        var doc = DemoData.sampleInvoice()
+        doc.adjustments = [
+            DocumentAdjustment(id: "a1", isCharge: false, reason: "Loyalty discount", amount: 100, vatCategory: .standard, vatRatePercent: 25.5),
+            DocumentAdjustment(id: "a2", isCharge: true, reason: "Freight", amount: 20, vatCategory: .standard, vatRatePercent: 25.5),
+        ]
+        let xml = try CIIInvoiceWriter().xml(for: doc)
+        #expect(xml.contains("<ram:Reason>Loyalty discount</ram:Reason>"))
+        #expect(xml.contains("<ram:Reason>Freight</ram:Reason>"))
+        #expect(xml.contains("<ram:ActualAmount>100.00</ram:ActualAmount>"))
+        #expect(xml.contains("<ram:ActualAmount>20.00</ram:ActualAmount>"))
+        #expect(xml.contains("<udt:Indicator>true</udt:Indicator>"))
+        #expect(xml.contains("<ram:CategoryTradeTax>"))
+        #expect(xml.contains("<ram:AllowanceTotalAmount>100.00</ram:AllowanceTotalAmount>"))
+        #expect(xml.contains("<ram:ChargeTotalAmount>20.00</ram:ChargeTotalAmount>"))
+    }
+
+    @Test("Discounted negative-quantity line reconciles via a line charge")
+    func negativeQuantityLineDiscount() throws {
+        var doc = DemoData.sampleInvoice()
+        doc.lines = [
+            LineItem(
+                id: "l1", name: "Correction", quantity: -1, unitPrice: 100,
+                discountPercent: 10, vatCategory: .standard, vatRatePercent: 25.5)
+        ]
+        let xml = try CIIInvoiceWriter().xml(for: doc)
+        #expect(xml.contains("<udt:Indicator>true</udt:Indicator>"))
+        #expect(xml.contains("<ram:ActualAmount>10.00</ram:ActualAmount>"))
+        #expect(xml.contains("<ram:LineTotalAmount>-90.00</ram:LineTotalAmount>"))
+    }
+
+    @Test("Intra-community supply carries deliver-to country and delivery date (BR-IC-11/12)")
+    func intraCommunityDelivery() throws {
+        let xml = try CIIInvoiceWriter().xml(for: DemoData.sampleIntraCommunityInvoice())
+        #expect(xml.contains("<ram:ShipToTradeParty>"))
+        #expect(xml.contains("<ram:CountryID>DE</ram:CountryID>"))
+        #expect(xml.contains("<ram:ActualDeliverySupplyChainEvent>"))
+        #expect(xml.contains("<ram:OccurrenceDateTime>"))
+        let domestic = try CIIInvoiceWriter().xml(for: DemoData.sampleInvoice())
+        #expect(!domestic.contains("<ram:ShipToTradeParty>"))
+        #expect(!domestic.contains("<ram:ActualDeliverySupplyChainEvent>"))
+    }
+
+    @Test("Outside-scope (O) documents carry no VAT rate anywhere (BR-O-5/BR-O-10)")
+    func outsideScopeOmitsRate() throws {
+        var doc = DemoData.sampleInvoice()
+        doc.lines = [
+            LineItem(id: "l1", name: "Out of scope service", quantity: 1, unitPrice: 500, vatCategory: .outsideScope)
+        ]
+        let xml = try CIIInvoiceWriter().xml(for: doc)
+        #expect(!xml.contains("<ram:RateApplicablePercent>"))
+        #expect(xml.contains("<ram:CategoryCode>O</ram:CategoryCode>"))
+    }
+
     @Test("Output is well-formed XML")
     func wellFormed() throws {
         let xml = try CIIInvoiceWriter().xml(for: DemoData.sampleInvoice())

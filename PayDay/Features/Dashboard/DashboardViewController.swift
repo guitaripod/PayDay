@@ -180,6 +180,10 @@ final class DashboardViewController: UIViewController {
         var children: [UIMenuElement] = [
             UIAction(title: "Open", image: UIImage(systemName: "doc.text")) { [weak self] _ in self?.open(invoice) },
         ]
+        if invoice.type == .invoice && invoice.status == .draft {
+            children.append(UIAction(title: "Mark Sent", image: UIImage(systemName: "paperplane.fill")) { [weak self] _ in
+                self?.markSent(invoice) })
+        }
         if invoice.type == .invoice && invoice.status != .paid {
             children.append(UIAction(title: "Mark Paid", image: UIImage(systemName: "checkmark.circle.fill")) { [weak self] _ in
                 self?.markPaid(invoice) })
@@ -191,6 +195,14 @@ final class DashboardViewController: UIViewController {
         children.append(UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
             self?.delete(invoice) })
         return UIMenu(children: children)
+    }
+
+    private func markSent(_ invoice: Invoice) {
+        Haptics.success()
+        Task {
+            try? await InvoiceRepository.shared.markSent(id: invoice.id)
+            viewModel.load()
+        }
     }
 
     private func markPaid(_ invoice: Invoice) {

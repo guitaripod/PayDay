@@ -51,7 +51,39 @@ final class PaywallViewController: UIViewController {
         plans = Self.fallbackPlans
         #endif
         renderCards()
-        Task { await store.loadPlans() }
+        Task { await loadPlans() }
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self, self.plans.isEmpty else { return }
+                Task { await self.loadPlans() }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func loadPlans() async {
+        if plans.isEmpty { renderCards() }
+        await store.loadPlans()
+        if store.plans.isEmpty && plans.isEmpty { renderPlansLoadFailure() }
+    }
+
+    private func renderPlansLoadFailure() {
+        cardsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        cardViews = []
+        let message = DesignSystem.label(
+            "Couldn't load plans. Check your connection.",
+            font: DesignSystem.Typography.body(),
+            color: DesignSystem.Color.secondary)
+        let retry = UIButton(type: .system)
+        retry.setTitle("Try Again", for: .normal)
+        retry.titleLabel?.font = DesignSystem.Typography.scaledSystem(15, .semibold, relativeTo: .callout)
+        retry.titleLabel?.adjustsFontForContentSizeCategory = true
+        retry.addAction(UIAction { [weak self] _ in
+            guard let self else { return }
+            Task { await self.loadPlans() }
+        }, for: .touchUpInside)
+        cardsStack.addArrangedSubview(message)
+        cardsStack.addArrangedSubview(retry)
     }
 
     private func build() {
@@ -116,6 +148,15 @@ final class PaywallViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isPremium in if isPremium { self?.dismiss(animated: true) } }
             .store(in: &cancellables)
+        store.$error
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] error in
+                guard let self, self.presentedViewController == nil else { return }
+                self.presentAlert("Purchase Failed", message: error.localizedDescription)
+                self.store.error = nil
+            }
+            .store(in: &cancellables)
     }
 
     private func renderCards() {
@@ -152,7 +193,7 @@ final class PaywallViewController: UIViewController {
         guard plans.indices.contains(selectedIndex) else { return }
         ctaButton.configuration?.attributedTitle = AttributedString(
             plans[selectedIndex].cta,
-            attributes: AttributeContainer([.font: UIFont.systemFont(ofSize: 17, weight: .semibold)]))
+            attributes: AttributeContainer([.font: DesignSystem.Typography.scaledSystem(17, .semibold)]))
     }
 
     private func planCard(_ plan: PlanVM, selected: Bool) -> UIControl {
@@ -161,10 +202,14 @@ final class PaywallViewController: UIViewController {
         card.layer.cornerRadius = DesignSystem.Radius.card
         card.layer.cornerCurve = .continuous
         card.layer.borderWidth = selected ? 2 : 1
-        card.layer.borderColor = (selected ? DesignSystem.Color.accent : DesignSystem.Color.separator).cgColor
+        let borderColor = selected ? DesignSystem.Color.accent : DesignSystem.Color.separator
+        card.layer.borderColor = borderColor.resolvedColor(with: card.traitCollection).cgColor
+        card.registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (card: UIControl, _) in
+            card.layer.borderColor = borderColor.resolvedColor(with: card.traitCollection).cgColor
+        }
 
-        let priceLabel = DesignSystem.label("\(plan.price) / \(plan.term)", font: .systemFont(ofSize: 20, weight: .bold))
-        let titleLabel = DesignSystem.label(plan.title, font: .systemFont(ofSize: 13, weight: .medium), color: DesignSystem.Color.secondary)
+        let priceLabel = DesignSystem.label("\(plan.price) / \(plan.term)", font: DesignSystem.Typography.scaledSystem(20, .bold, relativeTo: .title3))
+        let titleLabel = DesignSystem.label(plan.title, font: DesignSystem.Typography.scaledSystem(13, .medium, relativeTo: .footnote), color: DesignSystem.Color.secondary)
         let left = UIStackView(arrangedSubviews: [priceLabel, titleLabel])
         left.axis = .vertical
         left.spacing = 2
@@ -220,15 +265,19 @@ final class PaywallViewController: UIViewController {
 
     private func legalFooter() -> UIView {
         let links = UIStackView()
-        links.axis = .horizontal
+        links.axis = traitCollection.preferredContentSizeCategory.isAccessibilityCategory ? .vertical : .horizontal
         links.spacing = 16
         links.alignment = .center
+        links.registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (links: UIStackView, _) in
+            links.axis = links.traitCollection.preferredContentSizeCategory.isAccessibilityCategory ? .vertical : .horizontal
+        }
         for (title, url) in [("Terms of Use", "https://mako.midgarcorp.cc/terms/payday"),
                              ("Privacy Policy", "https://mako.midgarcorp.cc/privacy/payday"),
                              ("Restore", "")] {
             let b = UIButton(type: .system)
             b.setTitle(title, for: .normal)
-            b.titleLabel?.font = .systemFont(ofSize: 11, weight: .medium)
+            b.titleLabel?.font = DesignSystem.Typography.scaledSystem(11, .medium, relativeTo: .caption2)
+            b.titleLabel?.adjustsFontForContentSizeCategory = true
             b.addAction(UIAction { [weak self] _ in
                 if url.isEmpty { self?.restore() }
                 else if let u = URL(string: url) { self?.openLink(u) }
@@ -260,7 +309,7 @@ final class PaywallViewController: UIViewController {
     }
 
     private func setPurchasing(_ purchasing: Bool) {
-        ctaButton.isEnabled = !purchasing
+        ctaButton.isEnabled = !purchasing && !plans.isEmpty
         ctaButton.configuration?.showsActivityIndicator = purchasing
         cardViews.forEach { $0.isEnabled = !purchasing }
     }
@@ -272,7 +321,17 @@ final class PaywallViewController: UIViewController {
     }
 
     private func restore() {
-        Task { await store.restore() }
+        setPurchasing(true)
+        Task { [weak self] in
+            guard let self else { return }
+            await self.store.restore()
+            self.setPurchasing(false)
+            if !self.store.isPremium && self.store.error == nil {
+                self.presentAlert(
+                    "No Purchases to Restore",
+                    message: "No active Pay Day Pro subscription was found for this Apple ID.")
+            }
+        }
     }
 
     private func benefitRow(symbol: String, title: String, detail: String) -> UIView {
@@ -281,7 +340,7 @@ final class PaywallViewController: UIViewController {
         icon.contentMode = .scaleAspectFit
         icon.setContentHuggingPriority(.required, for: .horizontal)
         icon.widthAnchor.constraint(equalToConstant: 28).isActive = true
-        let titleLabel = DesignSystem.label(title, font: .systemFont(ofSize: 16, weight: .semibold))
+        let titleLabel = DesignSystem.label(title, font: DesignSystem.Typography.scaledSystem(16, .semibold, relativeTo: .callout))
         let detailLabel = DesignSystem.label(detail, font: DesignSystem.Typography.caption(), color: DesignSystem.Color.secondary)
         let text = UIStackView(arrangedSubviews: [titleLabel, detailLabel])
         text.axis = .vertical

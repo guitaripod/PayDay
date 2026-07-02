@@ -34,7 +34,7 @@ fi
 echo "▸ xcodegen generate"
 xcodegen generate >/dev/null
 
-DEST="${1:-platform=iOS Simulator,name=iPhone 16}"
+DEST="${1:-platform=iOS Simulator,name=iPhone 17 Pro Max}"
 LOG=/tmp/payday-test.log
 echo "▸ xcodebuild test ($DEST)"
 xcodebuild \

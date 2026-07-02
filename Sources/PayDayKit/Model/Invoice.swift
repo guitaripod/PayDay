@@ -25,6 +25,12 @@ public struct DocumentAdjustment: Sendable, Equatable, Hashable, Codable, Identi
         self.vatCategory = vatCategory
         self.vatRatePercent = vatRatePercent
     }
+
+    /// The VAT rate the tax engine applies to this adjustment — the declared
+    /// rate for standard-rated adjustments, 0 for every other category.
+    public var effectiveRate: Decimal {
+        vatCategory.allowsPositiveRate ? vatRatePercent : 0
+    }
 }
 
 /// The invoice/estimate/credit-note aggregate — the single source of truth from

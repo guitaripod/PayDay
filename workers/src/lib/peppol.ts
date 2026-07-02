@@ -177,7 +177,19 @@ async function readError(res: Response): Promise<string> {
   }
 }
 
-export function makePeppolGateway(env: Env, fetchImpl: typeof fetch = fetch.bind(globalThis)): PeppolGateway {
+/// Selects the gateway for the current env. Returns the configured provider
+/// adapter when its credentials are complete; otherwise the stub in
+/// non-production, and `null` in production — a production worker must never
+/// fake "accepted" deliveries, so callers surface 503 peppol_not_configured
+/// (send) or reachable:false (lookup) instead.
+export function makePeppolGateway(env: Env, fetchImpl: typeof fetch = fetch.bind(globalThis)): PeppolGateway | null {
+  const configured = configuredPeppolGateway(env, fetchImpl)
+  if (configured) return configured
+  if (env.ENVIRONMENT === 'production') return null
+  return new StubPeppolGateway()
+}
+
+function configuredPeppolGateway(env: Env, fetchImpl: typeof fetch): PeppolGateway | null {
   if (
     env.PEPPOL_PROVIDER === 'recommand' &&
     env.PEPPOL_API_KEY &&
@@ -209,5 +221,5 @@ export function makePeppolGateway(env: Env, fetchImpl: typeof fetch = fetch.bind
       fetchImpl
     )
   }
-  return new StubPeppolGateway()
+  return null
 }

@@ -156,8 +156,10 @@ final class InvoiceEditorViewModel {
                 if isNew && !numberReserved && !numberIsManual {
                     if let reserved = try? await business.nextNumber(for: invoice.type, on: invoice.issueDate) {
                         invoice.number = reserved
+                        numberReserved = true
+                    } else {
+                        AppLogger.shared.error("invoice number reservation failed, will retry on next save", category: .db)
                     }
-                    numberReserved = true
                 }
                 if !invoice.buyer.id.isEmpty { try await clients.save(invoice.buyer) }
                 try await invoices.save(invoice)

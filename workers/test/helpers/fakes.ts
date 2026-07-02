@@ -49,6 +49,9 @@ export function makeFakeD1(): D1Database {
         if (/FROM peppol_sends WHERE user_id = \? AND idempotency_key = \? AND status = 'accepted'/.test(sql)) {
           return (sends.find((s) => s.user_id === binds[0] && s.idempotency_key === binds[1] && s.status === 'accepted') as T) ?? null
         }
+        if (/SELECT id FROM peppol_sends WHERE user_id = \? AND idempotency_key = \?/.test(sql)) {
+          return (sends.find((s) => s.user_id === binds[0] && s.idempotency_key === binds[1]) as T) ?? null
+        }
         return null
       },
       async run() {
@@ -64,9 +67,17 @@ export function makeFakeD1(): D1Database {
             changes = 1
           }
         } else if (/INSERT INTO peppol_sends/.test(sql)) {
-          const exists = sends.some((s) => s.user_id === binds[1] && s.idempotency_key === binds[2])
-          if (!exists) {
-            const accepted = /'accepted', 0\)/.test(sql)
+          const existing = sends.find((s) => s.user_id === binds[1] && s.idempotency_key === binds[2])
+          const accepted = /'accepted', 0\)/.test(sql)
+          if (existing) {
+            if (/DO UPDATE/.test(sql) && existing.status !== 'accepted') {
+              existing.transmission_id = binds[5] ?? null
+              existing.status = 'accepted'
+              existing.reason = null
+              existing.charged = 0
+              changes = 1
+            }
+          } else {
             sends.push({
               id: binds[0],
               user_id: binds[1],

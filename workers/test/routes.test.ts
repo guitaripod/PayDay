@@ -83,7 +83,7 @@ describe('worker routes', () => {
   })
 })
 
-type SendRow = { status: string; transmission_id: string | null; charged: number }
+type SendRow = { status: string; transmission_id: string | null; charged: number; reason: string | null }
 function ledger(env: ReturnType<typeof makeEnv>): SendRow[] {
   return (env.DB as unknown as { __sends: SendRow[] }).__sends
 }
@@ -175,5 +175,98 @@ describe('peppol send hardening', () => {
     const rows = ledger(env)
     expect(rows.length).toBe(1)
     expect(rows[0].status).toBe('accepted')
+  })
+
+  it('heals a failed row: a successful retry stores the transmission, charges once, and later replays are idempotent', async () => {
+    let charges = 0
+    vi.stubGlobal('fetch', async (input: RequestInfo | URL) => {
+      const url = input.toString()
+      if (url.endsWith('/v1/identity/me')) return new Response(JSON.stringify({ user_id: 'user-1' }), { status: 200 })
+      if (url.endsWith('/v1/credits/charge')) {
+        charges++
+        return new Response(JSON.stringify({ charged: 5, balance: 65 }), { status: 200 })
+      }
+      return new Response('not mocked', { status: 404 })
+    })
+    const env = makeEnv()
+    const failed = await sendRequest(env, {
+      idempotencyKey: 'retry-key',
+      recipient: { endpointID: 'unreachable', schemeID: '9930', countryCode: 'DE' },
+    })
+    expect(failed.status).toBe(502)
+    expect(ledger(env)[0].status).toBe('failed')
+    expect(charges).toBe(0)
+
+    const retry = await sendRequest(env, { idempotencyKey: 'retry-key' })
+    expect(retry.status).toBe(200)
+    const retryBody = await retry.json<{ status: string; idempotent?: boolean }>()
+    expect(retryBody.status).toBe('accepted')
+    expect(retryBody.idempotent).toBeUndefined()
+    const rows = ledger(env)
+    expect(rows.length).toBe(1)
+    expect(rows[0].status).toBe('accepted')
+    expect(rows[0].transmission_id).toBe('stub-9930:DE123456789')
+    expect(rows[0].reason).toBeNull()
+    expect(rows[0].charged).toBe(1)
+    expect(charges).toBe(1)
+
+    const third = await sendRequest(env, { idempotencyKey: 'retry-key' })
+    expect(third.status).toBe(200)
+    expect((await third.json<{ idempotent?: boolean }>()).idempotent).toBe(true)
+    expect(charges).toBe(1)
+    expect(ledger(env).length).toBe(1)
+  })
+
+  it('rejects a send with no idempotency key and a blank invoice number', async () => {
+    const env = makeEnv()
+    const res = await sendRequest(env, { invoiceNumber: '   ', idempotencyKey: '' })
+    expect(res.status).toBe(400)
+    expect((await res.json<{ error: string }>()).error).toBe('idempotencyKey_or_invoiceNumber_required')
+    expect(ledger(env).length).toBe(0)
+  })
+})
+
+describe('peppol in production without credentials', () => {
+  const prodEnv = () => makeEnv({ ENVIRONMENT: 'production' })
+
+  it('send returns 503 peppol_not_configured with no ledger row and no charge', async () => {
+    let charges = 0
+    vi.stubGlobal('fetch', async (input: RequestInfo | URL) => {
+      const url = input.toString()
+      if (url.endsWith('/v1/identity/me')) return new Response(JSON.stringify({ user_id: 'user-1' }), { status: 200 })
+      if (url.endsWith('/v1/credits/charge')) { charges++; return new Response(JSON.stringify({ balance: 60 }), { status: 200 }) }
+      return new Response('not mocked', { status: 404 })
+    })
+    const env = prodEnv()
+    const res = await sendRequest(env)
+    expect(res.status).toBe(503)
+    const body = await res.json<{ error: string; retriable: boolean }>()
+    expect(body.error).toBe('peppol_not_configured')
+    expect(body.retriable).toBe(true)
+    expect(ledger(env).length).toBe(0)
+    expect(charges).toBe(0)
+  })
+
+  it('lookup degrades gracefully to reachable:false', async () => {
+    const res = await app.request(
+      '/v1/peppol/lookup',
+      {
+        method: 'POST',
+        headers: { ...authHeader(), 'content-type': 'application/json' },
+        body: JSON.stringify({ recipient: { endpointID: '0037:12345678', schemeID: '0037', countryCode: 'FI' } }),
+      },
+      prodEnv()
+    )
+    expect(res.status).toBe(200)
+    const body = await res.json<{ reachable: boolean; supportedDocumentTypes: string[] }>()
+    expect(body.reachable).toBe(false)
+    expect(body.supportedDocumentTypes).toEqual([])
+  })
+
+  it('config reports peppol as unconfigured', async () => {
+    const res = await app.request('/v1/config', {}, prodEnv())
+    const body = await res.json<{ peppol: { enabled: boolean; mode: string } }>()
+    expect(body.peppol.enabled).toBe(false)
+    expect(body.peppol.mode).toBe('unconfigured')
   })
 })

@@ -41,11 +41,28 @@ final class OnboardingViewController: UIViewController {
         stack.spacing = DesignSystem.Spacing.l
         stack.setCustomSpacing(DesignSystem.Spacing.xl, after: subtitle)
         stack.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stack)
+
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        scrollView.addSubview(stack)
+
+        let content = scrollView.contentLayoutGuide
+        let frame = scrollView.frameLayoutGuide
+        let fillHeight = content.heightAnchor.constraint(equalTo: frame.heightAnchor)
+        fillHeight.priority = .defaultLow
         NSLayoutConstraint.activate([
-            stack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: DesignSystem.Spacing.l),
-            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -DesignSystem.Spacing.l),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            stack.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: DesignSystem.Spacing.l),
+            stack.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -DesignSystem.Spacing.l),
+            stack.widthAnchor.constraint(equalTo: frame.widthAnchor, constant: -DesignSystem.Spacing.l * 2),
+            stack.topAnchor.constraint(greaterThanOrEqualTo: content.topAnchor, constant: DesignSystem.Spacing.l),
+            stack.bottomAnchor.constraint(lessThanOrEqualTo: content.bottomAnchor, constant: -DesignSystem.Spacing.l),
+            stack.centerYAnchor.constraint(equalTo: content.centerYAnchor),
+            fillHeight,
         ])
     }
 

@@ -23,6 +23,12 @@ public enum VATCategory: String, Sendable, Equatable, Hashable, Codable, CaseIte
         self == .standard
     }
 
+    /// BR-O-5 / BR-O-10: an outside-scope (O) line or breakdown must not carry a
+    /// VAT rate at all — every other category emits one (0 or positive).
+    public var emitsRate: Bool {
+        self != .outsideScope
+    }
+
     public var requiresZeroRate: Bool {
         switch self {
         case .reverseCharge, .intraCommunity, .export, .outsideScope, .zeroRated, .exempt:

@@ -55,18 +55,12 @@ final class InvoicePreviewViewController: UIViewController {
         pdfView.translatesAutoresizingMaskIntoConstraints = false
         statusBar.translatesAutoresizingMaskIntoConstraints = false
 
-        let sendButton = DesignSystem.primaryButton("Send via Peppol", symbol: "paperplane.fill")
-        sendButton.addAction(UIAction { [weak self] _ in self?.sendPeppol() }, for: .touchUpInside)
-        sendButton.translatesAutoresizingMaskIntoConstraints = false
-        sendButton.isHidden = !invoice.type.isEInvoiceable
-
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.hidesWhenStopped = true
         spinner.color = DesignSystem.Color.secondary
 
         view.addSubview(statusBar)
         view.addSubview(pdfView)
-        view.addSubview(sendButton)
         view.addSubview(spinner)
         spinner.startAnimating()
         NSLayoutConstraint.activate([
@@ -78,11 +72,22 @@ final class InvoicePreviewViewController: UIViewController {
             pdfView.topAnchor.constraint(equalTo: statusBar.bottomAnchor),
             pdfView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             pdfView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            pdfView.bottomAnchor.constraint(equalTo: sendButton.topAnchor, constant: -12),
-            sendButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            sendButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
+
+        if invoice.type.isEInvoiceable {
+            let sendButton = DesignSystem.primaryButton("Send via Peppol", symbol: "paperplane.fill")
+            sendButton.addAction(UIAction { [weak self] _ in self?.sendPeppol() }, for: .touchUpInside)
+            sendButton.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(sendButton)
+            NSLayoutConstraint.activate([
+                pdfView.bottomAnchor.constraint(equalTo: sendButton.topAnchor, constant: -12),
+                sendButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+                sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                sendButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
+            ])
+        } else {
+            pdfView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        }
     }
 
     private func renderAsync() {
@@ -152,15 +157,39 @@ final class InvoicePreviewViewController: UIViewController {
 
     private func share() {
         guard let pdf = renderedPDF else { return }
-        let pdfURL = writeTemp(pdf, name: "\(invoice.number).pdf")
-        var items: [Any] = [pdfURL].compactMap { $0 }
+        var items: [Any] = []
+        if let pdfURL = writeTemp(pdf, name: "\(exportFilename()).pdf") {
+            items.append(pdfURL)
+        }
         if let sidecar = embed?.sidecarXML, !sidecar.isEmpty, embed?.embedded == false,
            let xmlURL = writeTemp(sidecar, name: FacturXEmbedder.attachmentName) {
             items.append(xmlURL)
         }
+        guard !items.isEmpty else {
+            presentAlert("Couldn't export", "The PDF couldn't be written for sharing. Try again.")
+            return
+        }
         let sheet = UIActivityViewController(activityItems: items, applicationActivities: nil)
         sheet.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        sheet.completionWithItemsHandler = { [weak self] _, completed, _, _ in
+            guard completed, let self, self.invoice.status == .draft else { return }
+            let id = self.invoice.id
+            Task {
+                if (try? await InvoiceRepository.shared.markSent(id: id)) != nil {
+                    AppLogger.shared.info("share completed: \(id) marked sent", category: .invoice)
+                }
+            }
+        }
         present(sheet, animated: true)
+    }
+
+    /// A filesystem-safe export name derived from the invoice number — "2026/014"
+    /// must not be treated as a directory path when writing the temp PDF.
+    private func exportFilename() -> String {
+        let disallowed = CharacterSet(charactersIn: "/\\:").union(.controlCharacters)
+        let sanitized = String(invoice.number.unicodeScalars.map { disallowed.contains($0) ? "-" : Character($0) })
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return sanitized.isEmpty ? "invoice-\(invoice.id.prefix(8))" : sanitized
     }
 
     private func sendPeppol() {
@@ -176,6 +205,10 @@ final class InvoicePreviewViewController: UIViewController {
             let peppolSendCost = 30
             if AICreditsManager.store.balance < peppolSendCost {
                 CreditStorePresenter.present(from: self, shortfall: peppolSendCost - AICreditsManager.store.balance)
+                return
+            }
+            guard !invoice.seller.peppolParticipant.isEmpty else {
+                presentAlert("No sender Peppol ID", "Add your Peppol ID in Business Settings before sending over the network.")
                 return
             }
             let buyerPeppol = invoice.buyer.peppolParticipant
@@ -208,6 +241,8 @@ final class InvoicePreviewViewController: UIViewController {
                 case .accepted: hud.message = "Accepted by the network."
                 case .delivered(let id):
                     Haptics.success()
+                    AppLogger.shared.info("delivered \(invoice.number): transmission \(id)", category: .peppol)
+                    try? await InvoiceRepository.shared.markSent(id: invoice.id)
                     await AICreditsManager.store.refresh()
                     hud.dismiss(animated: true) { self.presentAlert("Delivered", "Transmission \(id) accepted by Peppol.") }
                     return
@@ -236,6 +271,9 @@ final class InvoicePreviewViewController: UIViewController {
 
     private func writeTemp(_ data: Data, name: String) -> URL? {
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(name)
-        do { try data.write(to: url); return url } catch { return nil }
+        do { try data.write(to: url); return url } catch {
+            AppLogger.shared.error("temp export write failed for \(name): \(error)", category: .pdf)
+            return nil
+        }
     }
 }

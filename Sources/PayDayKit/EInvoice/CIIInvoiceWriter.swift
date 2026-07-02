@@ -116,7 +116,9 @@ public struct CIIInvoiceWriter: Sendable {
         let tax = XMLBuilder("ram:ApplicableTradeTax")
         tax.element("ram:TypeCode", "VAT")
         tax.element("ram:CategoryCode", line.vatCategory.rawValue)
-        tax.element("ram:RateApplicablePercent", decimalString(line.effectiveRate, scale: 2))
+        if line.vatCategory.emitsRate {
+            tax.element("ram:RateApplicablePercent", decimalString(line.effectiveRate, scale: 2))
+        }
         settlement.add(tax)
 
         // A per-line discount is reconciled as a line allowance (BG-27), exactly
@@ -143,11 +145,11 @@ public struct CIIInvoiceWriter: Sendable {
     private func lineAllowance(_ line: LineItem, net: Money) -> XMLBuilder? {
         let grossRounded = Money(rounding: line.quantity * line.unitPrice, in: net.currency)
         let allowanceMinor = grossRounded.minorUnits - net.minorUnits
-        guard allowanceMinor > 0 else { return nil }
-        let amount = Money(minorUnits: allowanceMinor, currency: net.currency)
+        guard allowanceMinor != 0 else { return nil }
+        let amount = Money(minorUnits: abs(allowanceMinor), currency: net.currency)
         let ac = XMLBuilder("ram:SpecifiedTradeAllowanceCharge")
         let indicator = XMLBuilder("ram:ChargeIndicator")
-        indicator.element("udt:Indicator", "false")
+        indicator.element("udt:Indicator", allowanceMinor < 0 ? "true" : "false")
         ac.add(indicator)
         ac.element("ram:ActualAmount", amount.canonicalString)
         ac.element("ram:Reason", "Discount")
@@ -167,8 +169,46 @@ public struct CIIInvoiceWriter: Sendable {
         return agreement
     }
 
+    /// BR-IC-11/12: an intra-Community supply must carry the deliver-to country
+    /// (BT-80, the buyer's country) and the actual delivery date (BT-72, issue
+    /// date as the accepted default) — mirroring the UBL writer's `cac:Delivery`.
     private func headerDelivery(_ invoice: Invoice) -> XMLBuilder {
-        XMLBuilder("ram:ApplicableHeaderTradeDelivery")
+        let delivery = XMLBuilder("ram:ApplicableHeaderTradeDelivery")
+        guard invoice.lines.contains(where: { $0.vatCategory == .intraCommunity }) else { return delivery }
+        let shipTo = XMLBuilder("ram:ShipToTradeParty")
+        let address = XMLBuilder("ram:PostalTradeAddress")
+        address.element("ram:CountryID", emptyToNil(invoice.buyer.address.countryCode))
+        shipTo.add(address)
+        delivery.add(shipTo)
+        let event = XMLBuilder("ram:ActualDeliverySupplyChainEvent")
+        let occurrence = XMLBuilder("ram:OccurrenceDateTime")
+        occurrence.add(XMLBuilder("udt:DateTimeString", text: invoice.issueDate.ciiString).attr("format", "102"))
+        event.add(occurrence)
+        delivery.add(event)
+        return delivery
+    }
+
+    /// BG-20 / BG-21 — a document-level allowance or charge, rounded exactly as
+    /// the `TaxEngine` folded it into the VAT base and totals (BR-CO-11/12).
+    /// Children follow the CII XSD sequence: ChargeIndicator → ActualAmount →
+    /// Reason → CategoryTradeTax.
+    private func documentAllowanceCharge(_ adjustment: DocumentAdjustment, currency: Currency) -> XMLBuilder {
+        let rounded = Money(rounding: adjustment.amount, in: currency)
+        let amount = Money(minorUnits: abs(rounded.minorUnits), currency: currency)
+        let ac = XMLBuilder("ram:SpecifiedTradeAllowanceCharge")
+        let indicator = XMLBuilder("ram:ChargeIndicator")
+        indicator.element("udt:Indicator", adjustment.isCharge ? "true" : "false")
+        ac.add(indicator)
+        ac.element("ram:ActualAmount", amount.canonicalString)
+        ac.element("ram:Reason", adjustment.reason.trimmed.isEmpty ? (adjustment.isCharge ? "Charge" : "Discount") : adjustment.reason)
+        let category = XMLBuilder("ram:CategoryTradeTax")
+        category.element("ram:TypeCode", "VAT")
+        category.element("ram:CategoryCode", adjustment.vatCategory.rawValue)
+        if adjustment.vatCategory.emitsRate {
+            category.element("ram:RateApplicablePercent", decimalString(adjustment.effectiveRate, scale: 2))
+        }
+        ac.add(category)
+        return ac
     }
 
     private func headerSettlement(_ invoice: Invoice, totals: ComputedTotals, cur: String) -> XMLBuilder {
@@ -199,8 +239,14 @@ public struct CIIInvoiceWriter: Sendable {
             }
             tax.element("ram:BasisAmount", breakdown.taxableBase.canonicalString)
             tax.element("ram:CategoryCode", breakdown.category.rawValue)
-            tax.element("ram:RateApplicablePercent", decimalString(breakdown.ratePercent, scale: 2))
+            if breakdown.category.emitsRate {
+                tax.element("ram:RateApplicablePercent", decimalString(breakdown.ratePercent, scale: 2))
+            }
             settlement.add(tax)
+        }
+
+        for adjustment in invoice.adjustments {
+            settlement.add(documentAllowanceCharge(adjustment, currency: invoice.currency))
         }
 
         let terms = XMLBuilder("ram:SpecifiedTradePaymentTerms")

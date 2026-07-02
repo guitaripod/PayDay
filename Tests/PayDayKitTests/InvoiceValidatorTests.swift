@@ -82,4 +82,26 @@ struct InvoiceValidatorTests {
         #expect(issues.contains { $0.rule == "PEPPOL-EN16931-R003" && $0.severity == .warning })
         #expect(InvoiceValidator.isCompliant(doc))
     }
+
+    @Test("Missing Peppol participants block transmission but not document compliance")
+    func peppolEndpointPreflight() {
+        var doc = DemoData.sampleInvoice()
+        doc.seller.peppolEndpointID = ""
+        doc.seller.peppolSchemeID = ""
+        doc.buyer.peppolEndpointID = ""
+        doc.buyer.peppolSchemeID = ""
+        let issues = InvoiceValidator.peppolIssues(doc)
+        #expect(issues.contains { $0.rule == "PEPPOL-EN16931-R020" && $0.severity == .error })
+        #expect(issues.contains { $0.rule == "PEPPOL-EN16931-R010" && $0.severity == .error })
+        #expect(InvoiceValidator.isCompliant(doc))
+    }
+
+    @Test("Buyer without a Peppol participant is flagged, seller with one is not")
+    func peppolBuyerOnlyMissing() {
+        let doc = DemoData.sampleInvoice()
+        let issues = InvoiceValidator.peppolIssues(doc)
+        #expect(issues.contains { $0.rule == "PEPPOL-EN16931-R010" })
+        #expect(!issues.contains { $0.rule == "PEPPOL-EN16931-R020" })
+        #expect(InvoiceValidator.peppolIssues(DemoData.sampleIntraCommunityInvoice()).isEmpty)
+    }
 }

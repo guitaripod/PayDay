@@ -356,10 +356,17 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
 
     private func editNote(row: Int) {
         if row == 0 {
-            promptText(title: "Payment terms", value: invoice?.paymentTerms ?? "") { [weak self] in self?.viewModel.setPaymentTerms($0) }
+            promptMultilineText(title: "Payment terms", value: invoice?.paymentTerms ?? "") { [weak self] in self?.viewModel.setPaymentTerms($0) }
         } else {
-            promptText(title: "Note", value: invoice?.note ?? "") { [weak self] in self?.viewModel.setNote($0) }
+            promptMultilineText(title: "Note", value: invoice?.note ?? "") { [weak self] in self?.viewModel.setNote($0) }
         }
+    }
+
+    private func promptMultilineText(title: String, value: String, onSave: @escaping (String) -> Void) {
+        let editor = TextEditorSheetViewController(title: title, text: value, onSave: onSave)
+        let nav = UINavigationController(rootViewController: editor)
+        nav.modalPresentationStyle = .pageSheet
+        present(nav, animated: true)
     }
 
     private func promptText(title: String, value: String, onSave: @escaping (String) -> Void) {

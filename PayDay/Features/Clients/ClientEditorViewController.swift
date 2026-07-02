@@ -129,6 +129,7 @@ final class ClientEditorViewController: UIViewController {
     }
 
     private func commit() {
+        guard navigationItem.rightBarButtonItem?.isEnabled != false else { return }
         party.legalName = nameField.text ?? ""
         party.email = (emailField.text ?? "").normalizedEmail
         party.address = PostalAddress(
@@ -137,12 +138,19 @@ final class ClientEditorViewController: UIViewController {
         party.vatID = (vatField.text ?? "").normalizedVATID
         applyPeppol(peppolField.text ?? "", into: &party)
         let saved = party
-        Task { [weak self] in
-            try? await ClientRepository.shared.save(saved)
-            await MainActor.run {
-                guard let self else { return }
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                try await ClientRepository.shared.save(saved)
                 self.onSave(saved)
                 self.navigationController?.popViewController(animated: true)
+            } catch {
+                AppLogger.shared.error("client save failed: \(error)", category: .db)
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                let alert = UIAlertController(title: "Couldn't Save", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(alert, animated: true)
             }
         }
     }

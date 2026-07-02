@@ -73,6 +73,19 @@ actor InvoiceRepository {
         }
     }
 
+    /// Mark a draft document as sent. A no-op for any other status so a share or
+    /// transmission can never regress a paid/overdue invoice back to `sent`.
+    @discardableResult
+    func markSent(id: String) throws -> Invoice? {
+        try dbQueue.write { db in
+            guard var invoice = try DocumentRecord.fetchOne(db, key: id)?.invoice,
+                  invoice.status == .draft else { return nil }
+            invoice.status = .sent
+            try DocumentRecord(invoice).update(db)
+            return invoice
+        }
+    }
+
     /// Flip issued-but-unpaid invoices whose due date has passed to `overdue`.
     /// Idempotent; safe to call on every foreground.
     @discardableResult
