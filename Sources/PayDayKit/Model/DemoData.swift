@@ -19,8 +19,8 @@ public enum DemoData {
                 countryCode: "FI"),
             vatID: "FI12345678",
             legalRegistrationID: "1234567-8",
-            peppolEndpointID: "12345678",
-            peppolSchemeID: "0037")
+            peppolEndpointID: "003712345678",
+            peppolSchemeID: "0216")
     }
 
     public static func sampleBuyer() -> Party {

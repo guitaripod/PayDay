@@ -103,8 +103,9 @@ public struct UBLInvoiceWriter: Sendable {
 
     private func partyNode(_ party: Party) -> XMLBuilder {
         let p = XMLBuilder("cac:Party")
-        if !party.peppolEndpointID.trimmed.isEmpty && !party.peppolSchemeID.trimmed.isEmpty {
-            p.add(XMLBuilder("cbc:EndpointID", text: party.peppolEndpointID).attr("schemeID", party.peppolSchemeID))
+        let peppol = party.peppolParticipant
+        if !peppol.isEmpty {
+            p.add(XMLBuilder("cbc:EndpointID", text: peppol.endpointID).attr("schemeID", peppol.schemeID))
         }
         let postal = XMLBuilder("cac:PostalAddress")
         postal.element("cbc:StreetName", emptyToNil(party.address.line1))

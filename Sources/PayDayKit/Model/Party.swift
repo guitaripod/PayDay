@@ -61,6 +61,14 @@ public struct Party: Sendable, Equatable, Hashable, Codable, Identifiable {
     public var displayName: String {
         tradingName.isEmpty ? legalName : tradingName
     }
+
+    /// The participant identifier as it must appear on the wire: a legacy Finnish
+    /// scheme is upgraded to the mandated `0216` (value unchanged), so an old
+    /// `0037:0037…` address never leaks into a transmitted document or lookup.
+    /// Empty parts stay empty.
+    public var peppolParticipant: PeppolID {
+        PeppolParticipant.normalized(PeppolID(schemeID: peppolSchemeID, endpointID: peppolEndpointID))
+    }
 }
 
 extension String {

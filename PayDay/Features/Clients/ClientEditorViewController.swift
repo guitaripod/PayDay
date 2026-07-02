@@ -18,6 +18,8 @@ final class ClientEditorViewController: UIViewController {
     private let peppolField = ClientEditorViewController.field("Peppol ID (scheme:id)")
     private let vatStatusLabel = UILabel()
     private let peppolStatusLabel = UILabel()
+    private let peppolFixButton = UIButton(type: .system)
+    private var peppolSuggestion: PeppolID?
 
     init(party: Party?, onSave: @escaping (Party) -> Void) {
         self.party = party ?? Party(id: UUID().uuidString, legalName: "")
@@ -37,6 +39,10 @@ final class ClientEditorViewController: UIViewController {
         populate()
         build()
         configureFieldChaining()
+        peppolField.addAction(UIAction { [weak self] _ in self?.refreshPeppolAdvisory() }, for: .editingChanged)
+        countryField.addAction(UIAction { [weak self] _ in self?.refreshPeppolAdvisory() }, for: .editingDidEnd)
+        vatField.addAction(UIAction { [weak self] _ in self?.refreshPeppolAdvisory() }, for: .editingDidEnd)
+        refreshPeppolAdvisory()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -74,11 +80,15 @@ final class ClientEditorViewController: UIViewController {
         peppolStatusLabel.font = .systemFont(ofSize: 12, weight: .medium)
         peppolStatusLabel.textColor = DesignSystem.Color.secondary
         peppolStatusLabel.numberOfLines = 0
+        peppolFixButton.titleLabel?.font = .systemFont(ofSize: 13, weight: .semibold)
+        peppolFixButton.contentHorizontalAlignment = .leading
+        peppolFixButton.isHidden = true
+        peppolFixButton.addAction(UIAction { [weak self] _ in self?.applyPeppolSuggestion() }, for: .touchUpInside)
 
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         let stack = UIStackView(arrangedSubviews: [
-            nameField, emailField, line1Field, cityField, postalField, countryField, vatField, vatStatusLabel, peppolField, peppolStatusLabel,
+            nameField, emailField, line1Field, cityField, postalField, countryField, vatField, vatStatusLabel, peppolField, peppolStatusLabel, peppolFixButton,
         ])
         stack.axis = .vertical
         stack.spacing = DesignSystem.Spacing.m
@@ -137,25 +147,51 @@ final class ClientEditorViewController: UIViewController {
         }
     }
 
-    /// Always rewrites the party's Peppol address from the field, so clearing
-    /// it removes a stale endpoint instead of leaving one that would still be
-    /// used for real delivery. Colon-less, non-empty input is surfaced as an
-    /// advisory hint and the address is cleared (never blocks saving).
+    /// Always rewrites the party's Peppol address from the field, so clearing it
+    /// removes a stale endpoint instead of leaving one that would still be used
+    /// for real delivery. A legacy Finnish `0037` OVT is upgraded to the mandated
+    /// `0216` on save. Colon-less input clears the address (never blocks saving).
     private func applyPeppol(_ raw: String, into party: inout Party) {
         let input = raw.trimmed
-        if input.isEmpty {
-            party.peppolSchemeID = ""
-            party.peppolEndpointID = ""
-            peppolStatusLabel.text = nil
-        } else if let colon = input.firstIndex(of: ":") {
-            party.peppolSchemeID = String(input[..<colon]).trimmed
-            party.peppolEndpointID = String(input[input.index(after: colon)...]).trimmed
-            peppolStatusLabel.text = nil
+        if input.contains(":") {
+            let id = PeppolParticipant.normalized(PeppolID(parsing: input))
+            party.peppolSchemeID = id.schemeID
+            party.peppolEndpointID = id.endpointID
         } else {
             party.peppolSchemeID = ""
             party.peppolEndpointID = ""
-            peppolStatusLabel.text = "Use scheme:id, e.g. 0208:0123456789"
         }
+    }
+
+    /// Live, country-aware guidance for the Peppol field — for Finnish parties it
+    /// steers a blank/legacy/malformed id toward a `0216` OVT and offers the
+    /// corrected value as a one-tap fix. Purely advisory; never blocks saving.
+    private func refreshPeppolAdvisory() {
+        let raw = (peppolField.text ?? "").trimmed
+        if !raw.isEmpty && !raw.contains(":") {
+            setPeppolHint("Use scheme:id — the scheme is a 4-digit code, e.g. 0216:003712345678.", warning: true, suggestion: nil)
+            return
+        }
+        let id = PeppolID(parsing: raw)
+        let advisory = PeppolParticipant.advisory(
+            schemeID: id.schemeID, endpointID: id.endpointID,
+            countryCode: countryField.text ?? "", vatID: vatField.text ?? "",
+            businessID: party.legalRegistrationID)
+        setPeppolHint(advisory?.message, warning: advisory?.level == .warning, suggestion: advisory?.suggestion)
+    }
+
+    private func setPeppolHint(_ text: String?, warning: Bool, suggestion: PeppolID?) {
+        peppolStatusLabel.text = text
+        peppolStatusLabel.textColor = warning ? DesignSystem.Color.overdue : DesignSystem.Color.secondary
+        peppolSuggestion = suggestion
+        peppolFixButton.isHidden = suggestion == nil
+        if let suggestion { peppolFixButton.setTitle("Use \(suggestion.wire)", for: .normal) }
+    }
+
+    private func applyPeppolSuggestion() {
+        guard let suggestion = peppolSuggestion else { return }
+        peppolField.text = suggestion.wire
+        refreshPeppolAdvisory()
     }
 
     private static func field(_ placeholder: String, keyboard: UIKeyboardType = .default) -> UITextField {

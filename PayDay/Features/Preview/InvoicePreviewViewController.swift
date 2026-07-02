@@ -178,7 +178,8 @@ final class InvoicePreviewViewController: UIViewController {
                 CreditStorePresenter.present(from: self, shortfall: peppolSendCost - AICreditsManager.store.balance)
                 return
             }
-            guard !invoice.buyer.peppolEndpointID.trimmed.isEmpty, !invoice.buyer.peppolSchemeID.trimmed.isEmpty else {
+            let buyerPeppol = invoice.buyer.peppolParticipant
+            guard !buyerPeppol.isEmpty else {
                 presentAlert("No Peppol address", "Add a Peppol ID to this client to send over the network.")
                 return
             }
@@ -187,8 +188,8 @@ final class InvoicePreviewViewController: UIViewController {
                 return
             }
             let recipient = PeppolRecipient(
-                endpointID: invoice.buyer.peppolEndpointID,
-                schemeID: invoice.buyer.peppolSchemeID,
+                endpointID: buyerPeppol.endpointID,
+                schemeID: buyerPeppol.schemeID,
                 countryCode: invoice.buyer.address.countryCode)
             await transmit(ubl: ubl, recipient: recipient)
         }

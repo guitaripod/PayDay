@@ -28,11 +28,20 @@ struct UBLInvoiceWriterTests {
     @Test("Endpoint id and party tax scheme")
     func parties() throws {
         let xml = try UBLInvoiceWriter().xml(for: DemoData.sampleIntraCommunityInvoice())
-        #expect(xml.contains("<cbc:EndpointID schemeID=\"0037\">12345678</cbc:EndpointID>"))
+        #expect(xml.contains("<cbc:EndpointID schemeID=\"0216\">003712345678</cbc:EndpointID>"))
         #expect(xml.contains("<cbc:EndpointID schemeID=\"9930\">DE123456789</cbc:EndpointID>"))
-        #expect(!xml.contains("0037:12345678"))
         #expect(xml.contains("<cbc:CompanyID>DE123456789</cbc:CompanyID>"))
         #expect(xml.contains("<cbc:TaxExemptionReason>Intra-Community supply</cbc:TaxExemptionReason>"))
+    }
+
+    @Test("Legacy Finnish 0037 OVT is upgraded to the mandated 0216 on the wire")
+    func finnishSchemeNormalization() throws {
+        var doc = DemoData.sampleInvoice()
+        doc.seller.peppolSchemeID = "0037"
+        doc.seller.peppolEndpointID = "003735595497"
+        let xml = try UBLInvoiceWriter().xml(for: doc)
+        #expect(xml.contains("<cbc:EndpointID schemeID=\"0216\">003735595497</cbc:EndpointID>"))
+        #expect(!xml.contains("schemeID=\"0037\""))
     }
 
     @Test("Credit note uses the CreditNote root and 381 type code")

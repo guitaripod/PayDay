@@ -19,6 +19,8 @@ final class BusinessSettingsViewController: UIViewController {
     private let vatRateField = BusinessSettingsViewController.field("Default VAT %", keyboard: .decimalPad)
     private let termsField = BusinessSettingsViewController.field("Default payment terms")
     private let peppolStatusLabel = UILabel()
+    private let peppolFixButton = UIButton(type: .system)
+    private var peppolSuggestion: PeppolID?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,19 +52,28 @@ final class BusinessSettingsViewController: UIViewController {
         peppolField.text = profile.seller.peppolEndpointID.isEmpty ? "" : "\(profile.seller.peppolSchemeID):\(profile.seller.peppolEndpointID)"
         vatRateField.text = String(profile.defaultVATRatePercent)
         termsField.text = profile.defaultPaymentTerms
+        refreshPeppolAdvisory()
     }
 
     private func build() {
         peppolStatusLabel.font = .systemFont(ofSize: 12, weight: .medium)
         peppolStatusLabel.textColor = DesignSystem.Color.secondary
         peppolStatusLabel.numberOfLines = 0
+        peppolFixButton.titleLabel?.font = .systemFont(ofSize: 13, weight: .semibold)
+        peppolFixButton.contentHorizontalAlignment = .leading
+        peppolFixButton.isHidden = true
+        peppolFixButton.addAction(UIAction { [weak self] _ in self?.applyPeppolSuggestion() }, for: .touchUpInside)
+        peppolField.addAction(UIAction { [weak self] _ in self?.refreshPeppolAdvisory() }, for: .editingChanged)
+        countryField.addAction(UIAction { [weak self] _ in self?.refreshPeppolAdvisory() }, for: .editingDidEnd)
+        vatField.addAction(UIAction { [weak self] _ in self?.refreshPeppolAdvisory() }, for: .editingDidEnd)
+        regField.addAction(UIAction { [weak self] _ in self?.refreshPeppolAdvisory() }, for: .editingDidEnd)
 
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         let stack = UIStackView(arrangedSubviews: [
             section("Identity"), nameField, vatField, regField,
             section("Address"), line1Field, cityField, postalField, countryField,
-            section("Getting paid"), ibanField, bicField, peppolField, peppolStatusLabel,
+            section("Getting paid"), ibanField, bicField, peppolField, peppolStatusLabel, peppolFixButton,
             section("Defaults"), vatRateField, termsField,
         ])
         stack.axis = .vertical
@@ -101,25 +112,51 @@ final class BusinessSettingsViewController: UIViewController {
         }
     }
 
-    /// Always rewrites the seller's Peppol address from the field, so clearing
-    /// it removes a stale endpoint instead of leaving one that would still be
-    /// used for real delivery. Colon-less, non-empty input is surfaced as an
-    /// advisory hint and the address is cleared (never blocks saving).
+    /// Always rewrites the seller's Peppol address from the field, so clearing it
+    /// removes a stale endpoint instead of leaving one that would still be used
+    /// for real delivery. A legacy Finnish `0037` OVT is upgraded to the mandated
+    /// `0216` on save. Colon-less input clears the address (never blocks saving).
     private func applyPeppol(_ raw: String) {
         let input = raw.trimmed
-        if input.isEmpty {
-            profile.seller.peppolSchemeID = ""
-            profile.seller.peppolEndpointID = ""
-            peppolStatusLabel.text = nil
-        } else if let colon = input.firstIndex(of: ":") {
-            profile.seller.peppolSchemeID = String(input[..<colon]).trimmed
-            profile.seller.peppolEndpointID = String(input[input.index(after: colon)...]).trimmed
-            peppolStatusLabel.text = nil
+        if input.contains(":") {
+            let id = PeppolParticipant.normalized(PeppolID(parsing: input))
+            profile.seller.peppolSchemeID = id.schemeID
+            profile.seller.peppolEndpointID = id.endpointID
         } else {
             profile.seller.peppolSchemeID = ""
             profile.seller.peppolEndpointID = ""
-            peppolStatusLabel.text = "Use scheme:id, e.g. 0208:0123456789"
         }
+    }
+
+    /// Live, country-aware guidance for the seller's own Peppol id. A Finnish
+    /// business is steered toward its `0216` OVT — derived from the VAT ID or
+    /// company registration number — with a one-tap fix. Advisory only.
+    private func refreshPeppolAdvisory() {
+        let raw = (peppolField.text ?? "").trimmed
+        if !raw.isEmpty && !raw.contains(":") {
+            setPeppolHint("Use scheme:id — the scheme is a 4-digit code, e.g. 0216:003712345678.", warning: true, suggestion: nil)
+            return
+        }
+        let id = PeppolID(parsing: raw)
+        let advisory = PeppolParticipant.advisory(
+            schemeID: id.schemeID, endpointID: id.endpointID,
+            countryCode: countryField.text ?? "", vatID: vatField.text ?? "",
+            businessID: regField.text ?? "")
+        setPeppolHint(advisory?.message, warning: advisory?.level == .warning, suggestion: advisory?.suggestion)
+    }
+
+    private func setPeppolHint(_ text: String?, warning: Bool, suggestion: PeppolID?) {
+        peppolStatusLabel.text = text
+        peppolStatusLabel.textColor = warning ? DesignSystem.Color.overdue : DesignSystem.Color.secondary
+        peppolSuggestion = suggestion
+        peppolFixButton.isHidden = suggestion == nil
+        if let suggestion { peppolFixButton.setTitle("Use \(suggestion.wire)", for: .normal) }
+    }
+
+    private func applyPeppolSuggestion() {
+        guard let suggestion = peppolSuggestion else { return }
+        peppolField.text = suggestion.wire
+        refreshPeppolAdvisory()
     }
 
     private func section(_ title: String) -> UILabel {
