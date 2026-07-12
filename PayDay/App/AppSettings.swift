@@ -20,6 +20,7 @@ enum AppSettings {
         static let defaultPaymentTermDays = "payday.defaultPaymentTermDays"
         static let defaultEInvoiceProfile = "payday.defaultEInvoiceProfile"
         static let ratingPromptShownVersion = "payday.ratingPromptShownVersion"
+        static let aiConsentGranted = "payday.aiConsentGranted"
     }
 
     static var appearance: AppearanceMode {
@@ -61,5 +62,12 @@ enum AppSettings {
     static var ratingPromptShownVersion: String? {
         get { defaults.string(forKey: Key.ratingPromptShownVersion) }
         set { defaults.set(newValue, forKey: Key.ratingPromptShownVersion) }
+    }
+
+    /// Whether the user has explicitly consented to Pay Day sending AI-drafting
+    /// content to its third-party AI provider. Gates every AI call.
+    static var aiConsentGranted: Bool {
+        get { defaults.bool(forKey: Key.aiConsentGranted) }
+        set { defaults.set(newValue, forKey: Key.aiConsentGranted) }
     }
 }

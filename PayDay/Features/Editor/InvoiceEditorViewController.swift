@@ -123,6 +123,18 @@ final class InvoiceEditorViewController: UIViewController {
     }
 
     private func aiAssist() {
+        guard AppSettings.aiConsentGranted else {
+            let consent = AIConsentViewController { [weak self] granted in
+                AppSettings.aiConsentGranted = granted
+                if granted { self?.presentAIDraftOptions() }
+            }
+            present(UINavigationController(rootViewController: consent), animated: true)
+            return
+        }
+        presentAIDraftOptions()
+    }
+
+    private func presentAIDraftOptions() {
         let sheet = UIAlertController(title: "Draft line items", message: "Pay Day turns words or a photo into billable lines.", preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: "Describe in words", style: .default) { [weak self] _ in self?.aiFromText() })
         sheet.addAction(UIAlertAction(title: "Choose a photo or receipt", style: .default) { [weak self] _ in self?.aiFromPhoto() })

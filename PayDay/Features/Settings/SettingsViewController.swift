@@ -6,11 +6,11 @@ import PayDayKit
 /// Settings: business profile, defaults, appearance, Pro status, credit balance,
 /// and the legal/support links App Review expects.
 final class SettingsViewController: UIViewController {
-    private enum Row { case business, payment, defaults, appearance, pro, credits, privacy, terms, support, moreApps, deleteAccount }
+    private enum Row { case business, payment, defaults, appearance, aiDrafting, pro, credits, privacy, terms, support, moreApps, deleteAccount }
     private let sections: [(String, [Row])] = [
         ("Your business", [.business, .payment, .defaults]),
         ("Pay Day Pro", [.pro, .credits]),
-        ("App", [.appearance]),
+        ("App", [.appearance, .aiDrafting]),
         ("About", [.privacy, .terms, .support, .moreApps]),
         ("Account", [.deleteAccount]),
     ]
@@ -65,6 +65,10 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case .payment: config.text = "Payment & IBAN"; config.image = UIImage(systemName: "creditcard")
         case .defaults: config.text = "Invoice defaults"; config.image = UIImage(systemName: "slider.horizontal.3")
         case .appearance: config.text = "Appearance"; config.image = UIImage(systemName: "circle.lefthalf.filled")
+        case .aiDrafting:
+            config.text = "AI drafting"
+            config.secondaryText = AppSettings.aiConsentGranted ? "Allowed" : "Off"
+            config.image = UIImage(systemName: "sparkles")
         case .pro:
             config.text = isPremium ? "Pay Day Pro — Active" : "Upgrade to Pro"
             config.image = UIImage(systemName: isPremium ? "checkmark.seal.fill" : "seal")
@@ -94,6 +98,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case .business, .payment, .defaults:
             navigationController?.pushViewController(BusinessSettingsViewController(), animated: true)
         case .appearance: presentAppearance()
+        case .aiDrafting: presentAIConsent()
         case .pro:
             if !isPremium { present(UINavigationController(rootViewController: PaywallViewController()), animated: true) }
         case .credits:
@@ -175,6 +180,18 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alert.popoverPresentationController?.sourceView = view
         present(alert, animated: true)
+    }
+
+    /// Lets the user review the AI-drafting disclosure and grant or withdraw
+    /// consent at any time, satisfying the "obtain permission" requirement with
+    /// a persistent, reversible control.
+    private func presentAIConsent() {
+        let granted = AppSettings.aiConsentGranted
+        let consent = AIConsentViewController(showsDecline: !granted) { [weak self] decision in
+            AppSettings.aiConsentGranted = decision
+            self?.tableView.reloadData()
+        }
+        present(UINavigationController(rootViewController: consent), animated: true)
     }
 
     private func open(_ urlString: String) {
