@@ -27,11 +27,23 @@ struct PayDayCreditStoreView: View {
                     }
                 }
                 Section("Credit packs") {
-                    ForEach(store.catalog?.packs ?? []) { pack in
-                        Button { Task { if await store.purchase(pack) { dismiss() } } } label: {
-                            packRow(pack)
+                    let packs = store.catalog?.packs ?? []
+                    if store.catalog == nil {
+                        HStack(spacing: 10) {
+                            ProgressView()
+                            Text("Loading packs…").foregroundStyle(.secondary)
                         }
-                        .disabled(store.isWorking)
+                    } else if packs.allSatisfy({ $0.storePackageID == nil }) {
+                        Text("Credit packs are temporarily unavailable from the App Store. You can keep using the app fully — please try again later.")
+                            .font(.callout).foregroundStyle(.secondary)
+                    } else {
+                        ForEach(packs) { pack in
+                            let available = pack.storePackageID != nil
+                            Button { Task { if await store.purchase(pack) { dismiss() } } } label: {
+                                packRow(pack, available: available)
+                            }
+                            .disabled(store.isWorking || !available)
+                        }
                     }
                 }
                 Section {
@@ -61,7 +73,7 @@ struct PayDayCreditStoreView: View {
     }
 
     @ViewBuilder
-    private func packRow(_ pack: PurchasablePack) -> some View {
+    private func packRow(_ pack: PurchasablePack, available: Bool) -> some View {
         HStack(spacing: 14) {
             Image("pack-\(pack.id)")
                 .resizable()
@@ -75,7 +87,10 @@ struct PayDayCreditStoreView: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
-            Text(pack.localizedPrice ?? "—").font(.callout.weight(.semibold))
+            Text(available ? (pack.localizedPrice ?? "—") : "Unavailable")
+                .font(.callout.weight(.semibold))
+                .foregroundStyle(available ? Color.primary : Color.secondary)
         }
+        .opacity(available ? 1 : 0.5)
     }
 }
