@@ -70,7 +70,8 @@ targets:
       path: PayDay/Info.plist
       properties:
         CFBundleDisplayName: Pay Day
-        CFBundleShortVersionString: "1.0.0"
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         UILaunchScreen:
           UIColorName: LaunchBackground
         UIApplicationSceneManifest:
