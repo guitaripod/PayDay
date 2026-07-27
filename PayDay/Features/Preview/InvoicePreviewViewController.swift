@@ -172,13 +172,16 @@ final class InvoicePreviewViewController: UIViewController {
         let sheet = UIActivityViewController(activityItems: items, applicationActivities: nil)
         sheet.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
         sheet.completionWithItemsHandler = { [weak self] _, completed, _, _ in
-            guard completed, let self, self.invoice.status == .draft else { return }
+            guard completed, let self else { return }
             let id = self.invoice.id
-            Task {
-                if (try? await InvoiceRepository.shared.markSent(id: id)) != nil {
-                    AppLogger.shared.info("share completed: \(id) marked sent", category: .invoice)
+            if self.invoice.status == .draft {
+                Task {
+                    if (try? await InvoiceRepository.shared.markSent(id: id)) != nil {
+                        AppLogger.shared.info("share completed: \(id) marked sent", category: .invoice)
+                    }
                 }
             }
+            ReviewPrompt.recordDelivery(from: self)
         }
         present(sheet, animated: true)
     }
@@ -244,7 +247,11 @@ final class InvoicePreviewViewController: UIViewController {
                     AppLogger.shared.info("delivered \(invoice.number): transmission \(id)", category: .peppol)
                     try? await InvoiceRepository.shared.markSent(id: invoice.id)
                     await AICreditsManager.store.refresh()
-                    hud.dismiss(animated: true) { self.presentAlert("Delivered", "Transmission \(id) accepted by Peppol.") }
+                    hud.dismiss(animated: true) {
+                        self.presentAlert("Delivered", "Transmission \(id) accepted by Peppol.") {
+                            ReviewPrompt.recordDelivery(from: self)
+                        }
+                    }
                     return
                 case .failed(let reason):
                     Haptics.error()
@@ -263,9 +270,9 @@ final class InvoicePreviewViewController: UIViewController {
         present(UINavigationController(rootViewController: paywall), animated: true)
     }
 
-    private func presentAlert(_ title: String, _ message: String) {
+    private func presentAlert(_ title: String, _ message: String, onDismiss: (() -> Void)? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in onDismiss?() })
         present(alert, animated: true)
     }
 

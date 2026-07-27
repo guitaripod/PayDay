@@ -20,6 +20,7 @@ enum AppSettings {
         static let defaultPaymentTermDays = "payday.defaultPaymentTermDays"
         static let defaultEInvoiceProfile = "payday.defaultEInvoiceProfile"
         static let ratingPromptShownVersion = "payday.ratingPromptShownVersion"
+        static let deliveredDocumentCount = "payday.deliveredDocumentCount"
         static let aiConsentGranted = "payday.aiConsentGranted"
     }
 
@@ -62,6 +63,13 @@ enum AppSettings {
     static var ratingPromptShownVersion: String? {
         get { defaults.string(forKey: Key.ratingPromptShownVersion) }
         set { defaults.set(newValue, forKey: Key.ratingPromptShownVersion) }
+    }
+
+    /// Invoices the user has actually delivered — shared or transmitted over
+    /// Peppol. Gates the rating prompt.
+    static var deliveredDocumentCount: Int {
+        get { defaults.integer(forKey: Key.deliveredDocumentCount) }
+        set { defaults.set(newValue, forKey: Key.deliveredDocumentCount) }
     }
 
     /// Whether the user has explicitly consented to Pay Day sending AI-drafting
