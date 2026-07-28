@@ -52,18 +52,18 @@ final class InvoiceListViewController: UIViewController {
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
 
-    private let kindControl = UISegmentedControl(items: ["Invoices", "Estimates"])
+    private let kindControl = UISegmentedControl(items: [String(localized: "Invoices"), String(localized: "Estimates")])
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .add, menu: UIMenu(children: [
-            UIAction(title: "New Invoice", image: UIImage(systemName: "doc.text")) { [weak self] _ in self?.create(.invoice) },
-            UIAction(title: "New Estimate", image: UIImage(systemName: "doc.plaintext")) { [weak self] _ in self?.create(.estimate) },
+            UIAction(title: String(localized: "New Invoice"), image: UIImage(systemName: "doc.text")) { [weak self] _ in self?.create(.invoice) },
+            UIAction(title: String(localized: "New Estimate"), image: UIImage(systemName: "doc.plaintext")) { [weak self] _ in self?.create(.estimate) },
         ]))
         kindControl.selectedSegmentIndex = viewModel.kind == .estimate ? 1 : 0
         kindControl.apportionsSegmentWidthsByContent = true
-        kindControl.accessibilityLabel = "Document type"
+        kindControl.accessibilityLabel = String(localized: "Document type")
         kindControl.addAction(UIAction { [weak self] _ in self?.switchKind() }, for: .valueChanged)
         navigationItem.titleView = kindControl
         setupTable()
@@ -73,7 +73,7 @@ final class InvoiceListViewController: UIViewController {
 
     private func switchKind() {
         viewModel.kind = kindControl.selectedSegmentIndex == 1 ? .estimate : .invoice
-        title = viewModel.kind == .estimate ? "Estimates" : "Invoices"
+        title = viewModel.kind == .estimate ? String(localized: "Estimates") : String(localized: "Invoices")
         setupEmpty()
         viewModel.load()
     }
@@ -102,11 +102,11 @@ final class InvoiceListViewController: UIViewController {
         let kind = viewModel.kind
         let empty = DesignSystem.emptyState(
             symbol: isEstimate ? "doc.plaintext" : "doc.text.badge.plus",
-            title: "No \(viewModel.kind.noun)s yet",
+            title: isEstimate ? String(localized: "No estimates yet") : String(localized: "No invoices yet"),
             subtitle: isEstimate
-                ? "Create an estimate to send a quote — convert it to an invoice when it's accepted."
-                : "Create your first invoice. It's free, unlimited, and ready for EU e-invoicing.",
-            ctaTitle: "Create \(viewModel.kind.noun)",
+                ? String(localized: "Create an estimate to send a quote — convert it to an invoice when it's accepted.")
+                : String(localized: "Create your first invoice. It's free, unlimited, and ready for EU e-invoicing."),
+            ctaTitle: isEstimate ? String(localized: "Create estimate") : String(localized: "Create invoice"),
             ctaAction: { [weak self] in self?.create(kind) })
         empty.translatesAutoresizingMaskIntoConstraints = false
         empty.isHidden = true
@@ -159,7 +159,7 @@ final class InvoiceListViewController: UIViewController {
 
     private func presentError(_ message: String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
         present(alert, animated: true)
     }
 
@@ -168,7 +168,7 @@ final class InvoiceListViewController: UIViewController {
         if kind != viewModel.kind {
             viewModel.kind = kind
             kindControl.selectedSegmentIndex = kind == .estimate ? 1 : 0
-            title = kind == .estimate ? "Estimates" : "Invoices"
+            title = kind == .estimate ? String(localized: "Estimates") : String(localized: "Invoices")
         }
         let editor = InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(kind: kind))
         navigationController?.pushViewController(editor, animated: true)
@@ -190,14 +190,14 @@ extension InvoiceListViewController: UITableViewDelegate {
     private func accessibilityActions(for invoice: Invoice) -> [UIAccessibilityCustomAction] {
         var actions: [UIAccessibilityCustomAction] = []
         if let primary = primaryAction(for: invoice) {
-            let title = primary.title == "Invoice" ? "Convert to Invoice" : primary.title
+            let title = invoice.type == .estimate ? String(localized: "Convert to Invoice") : primary.title
             actions.append(UIAccessibilityCustomAction(name: title) { _ in primary.run(); return true })
         }
         if let sent = sentAction(for: invoice) {
             actions.append(UIAccessibilityCustomAction(name: sent.title) { _ in sent.run(); return true })
         }
-        actions.append(UIAccessibilityCustomAction(name: "Duplicate") { [weak self] _ in self?.duplicate(invoice); return true })
-        actions.append(UIAccessibilityCustomAction(name: "Delete") { [weak self] _ in self?.remove(invoice); return true })
+        actions.append(UIAccessibilityCustomAction(name: String(localized: "Duplicate")) { [weak self] _ in self?.duplicate(invoice); return true })
+        actions.append(UIAccessibilityCustomAction(name: String(localized: "Delete")) { [weak self] _ in self?.remove(invoice); return true })
         return actions
     }
 
@@ -215,17 +215,17 @@ extension InvoiceListViewController: UITableViewDelegate {
     /// The natural "primary" gesture per document type: pay an invoice, convert an estimate.
     private func primaryAction(for invoice: Invoice) -> (title: String, symbol: String, color: UIColor, run: () -> Void)? {
         if invoice.type == .invoice && invoice.status != .paid {
-            return ("Mark Paid", "checkmark.circle.fill", DesignSystem.Color.paid, { [weak self] in self?.markPaid(invoice) })
+            return (String(localized: "Mark Paid"), "checkmark.circle.fill", DesignSystem.Color.paid, { [weak self] in self?.markPaid(invoice) })
         }
         if invoice.type == .estimate {
-            return ("Invoice", "arrow.right.circle.fill", DesignSystem.Color.accent, { [weak self] in self?.convert(invoice) })
+            return (String(localized: "Invoice"), "arrow.right.circle.fill", DesignSystem.Color.accent, { [weak self] in self?.convert(invoice) })
         }
         return nil
     }
 
     private func sentAction(for invoice: Invoice) -> (title: String, symbol: String, color: UIColor, run: () -> Void)? {
         guard invoice.type == .invoice, invoice.status == .draft else { return nil }
-        return ("Mark Sent", "paperplane.fill", DesignSystem.Color.sent, { [weak self] in self?.markSent(invoice) })
+        return (String(localized: "Mark Sent"), "paperplane.fill", DesignSystem.Color.sent, { [weak self] in self?.markSent(invoice) })
     }
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -251,10 +251,10 @@ extension InvoiceListViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let invoice = invoice(at: indexPath) else { return nil }
-        let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, done in
+        let delete = UIContextualAction(style: .destructive, title: String(localized: "Delete")) { [weak self] _, _, done in
             self?.remove(invoice); done(true)
         }
-        let duplicate = UIContextualAction(style: .normal, title: "Duplicate") { [weak self] _, _, done in
+        let duplicate = UIContextualAction(style: .normal, title: String(localized: "Duplicate")) { [weak self] _, _, done in
             self?.duplicate(invoice); done(true)
         }
         duplicate.backgroundColor = DesignSystem.Color.sent
@@ -266,17 +266,17 @@ extension InvoiceListViewController: UITableViewDelegate {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
             guard let self else { return nil }
             var children: [UIMenuElement] = [
-                UIAction(title: "Open", image: UIImage(systemName: "doc.text")) { _ in self.open(invoice) },
-                UIAction(title: "Duplicate", image: UIImage(systemName: "plus.square.on.square")) { _ in self.duplicate(invoice) },
+                UIAction(title: String(localized: "Open"), image: UIImage(systemName: "doc.text")) { _ in self.open(invoice) },
+                UIAction(title: String(localized: "Duplicate"), image: UIImage(systemName: "plus.square.on.square")) { _ in self.duplicate(invoice) },
             ]
             if let primary = self.primaryAction(for: invoice) {
-                children.append(UIAction(title: primary.title == "Invoice" ? "Convert to Invoice" : primary.title,
+                children.append(UIAction(title: invoice.type == .estimate ? String(localized: "Convert to Invoice") : primary.title,
                                          image: UIImage(systemName: primary.symbol)) { _ in primary.run() })
             }
             if let sent = self.sentAction(for: invoice) {
                 children.append(UIAction(title: sent.title, image: UIImage(systemName: sent.symbol)) { _ in sent.run() })
             }
-            children.append(UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in self.remove(invoice) })
+            children.append(UIAction(title: String(localized: "Delete"), image: UIImage(systemName: "trash"), attributes: .destructive) { _ in self.remove(invoice) })
             return UIMenu(children: children)
         }
     }

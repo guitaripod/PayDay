@@ -84,14 +84,15 @@ extension WorkerClient.WorkerError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .offline:
-            return "Couldn't reach the network. Check your connection and try again."
+            return String(localized: "Couldn't reach the network. Check your connection and try again.")
         case .decoding:
-            return "The server returned an unexpected response."
+            return String(localized: "The server returned an unexpected response.")
         case let .http(status, reason):
             if let reason, !reason.isEmpty {
                 return reason
             }
-            return "The server returned an error (\(status))."
+            return String(localized: "The server returned an error (\(status)).",
+                          comment: "Generic HTTP failure with the numeric status code")
         }
     }
 }

@@ -17,23 +17,23 @@ final class OnboardingViewController: UIViewController {
         icon.contentMode = .scaleAspectFit
         icon.heightAnchor.constraint(equalToConstant: 64).isActive = true
 
-        let title = DesignSystem.label("Pay Day", font: DesignSystem.Typography.largeTitle())
+        let title = DesignSystem.label(String(localized: "Pay Day", comment: "App name shown on the welcome screen"), font: DesignSystem.Typography.largeTitle())
         title.textAlignment = .center
         let subtitle = DesignSystem.label(
-            "Beautiful invoices for free — and EU-compliant e-invoices (Factur-X, Peppol) when you need them.",
+            String(localized: "Beautiful invoices for free — and EU-compliant e-invoices (Factur-X, Peppol) when you need them."),
             font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary)
         subtitle.textAlignment = .center
 
         let features = UIStackView(arrangedSubviews: [
-            feature("doc.text.fill", "Unlimited invoices & estimates, your logo, any currency"),
-            feature("checkmark.seal.fill", "One tap to a tax-authority-ready e-invoice"),
-            feature("paperplane.fill", "Send over the Peppol network across the EU"),
-            feature("sparkles", "Draft line items from a photo or a sentence"),
+            feature("doc.text.fill", String(localized: "Unlimited invoices & estimates, your logo, any currency")),
+            feature("checkmark.seal.fill", String(localized: "One tap to a tax-authority-ready e-invoice")),
+            feature("paperplane.fill", String(localized: "Send over the Peppol network across the EU")),
+            feature("sparkles", String(localized: "Draft line items from a photo or a sentence")),
         ])
         features.axis = .vertical
         features.spacing = DesignSystem.Spacing.m
 
-        let cta = DesignSystem.primaryButton("Get started")
+        let cta = DesignSystem.primaryButton(String(localized: "Get started"))
         cta.addAction(UIAction { [weak self] _ in self?.onFinish?() }, for: .touchUpInside)
 
         let stack = UIStackView(arrangedSubviews: [icon, title, subtitle, features, cta])

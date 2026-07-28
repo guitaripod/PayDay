@@ -30,7 +30,7 @@ final class DashboardViewController: UIViewController {
         let compose = UIBarButtonItem(
             image: UIImage(systemName: "square.and.pencil"),
             primaryAction: UIAction { [weak self] _ in self?.newInvoice() })
-        compose.accessibilityLabel = "New invoice"
+        compose.accessibilityLabel = String(localized: "New invoice")
         navigationItem.rightBarButtonItem = compose
         buildLayout()
         bind()
@@ -74,11 +74,11 @@ final class DashboardViewController: UIViewController {
         statsRow.spacing = DesignSystem.Spacing.m
         stack.addArrangedSubview(statsRow)
 
-        let cta = DesignSystem.primaryButton("New Invoice", symbol: "plus")
+        let cta = DesignSystem.primaryButton(String(localized: "New Invoice"), symbol: "plus")
         cta.addAction(UIAction { [weak self] _ in self?.newInvoice() }, for: .touchUpInside)
         stack.addArrangedSubview(cta)
 
-        let recentTitle = DesignSystem.label("Recent", font: DesignSystem.Typography.title())
+        let recentTitle = DesignSystem.label(String(localized: "Recent"), font: DesignSystem.Typography.title())
         stack.addArrangedSubview(recentTitle)
         recentStack.axis = .vertical
         recentStack.spacing = DesignSystem.Spacing.s
@@ -87,7 +87,7 @@ final class DashboardViewController: UIViewController {
 
     private func makeOutstandingCard() -> UIView {
         let card = DesignSystem.card()
-        outstandingCaption.text = "Outstanding"
+        outstandingCaption.text = String(localized: "Outstanding")
         outstandingCaption.font = DesignSystem.Typography.scaledSystem(13, .semibold, relativeTo: .footnote)
         outstandingCaption.textColor = DesignSystem.Color.secondary
         outstandingLabel.font = DesignSystem.Typography.mono(40, weight: .bold)
@@ -113,9 +113,9 @@ final class DashboardViewController: UIViewController {
         icon.setContentHuggingPriority(.required, for: .horizontal)
         NSLayoutConstraint.activate([icon.widthAnchor.constraint(equalToConstant: 28)])
 
-        let title = DesignSystem.label("Finish setting up your business",
+        let title = DesignSystem.label(String(localized: "Finish setting up your business"),
             font: DesignSystem.Typography.scaledSystem(15, .semibold, relativeTo: .subheadline))
-        let subtitle = DesignSystem.label("Add your name, VAT ID, and IBAN so every invoice is complete.",
+        let subtitle = DesignSystem.label(String(localized: "Add your name, VAT ID, and IBAN so every invoice is complete."),
             font: DesignSystem.Typography.caption(), color: DesignSystem.Color.secondary)
         subtitle.numberOfLines = 0
         let textStack = UIStackView(arrangedSubviews: [title, subtitle])
@@ -137,8 +137,8 @@ final class DashboardViewController: UIViewController {
 
         card.isAccessibilityElement = true
         card.accessibilityTraits = .button
-        card.accessibilityLabel = "Finish setting up your business"
-        card.accessibilityHint = "Add your name, VAT ID, and IBAN"
+        card.accessibilityLabel = String(localized: "Finish setting up your business")
+        card.accessibilityHint = String(localized: "Add your name, VAT ID, and IBAN")
         card.addGestureRecognizer(UITapGestureRecognizer(actionHandler: { [weak self] in
             Haptics.tap()
             self?.navigationController?.pushViewController(BusinessSettingsViewController(), animated: true)
@@ -149,23 +149,23 @@ final class DashboardViewController: UIViewController {
     private func apply(_ snapshot: DashboardViewModel.Snapshot) {
         setupBanner.isHidden = snapshot.sellerConfigured
         outstandingLabel.text = Format.money(snapshot.outstanding)
-        outstandingLabel.accessibilityLabel = "Outstanding balance"
+        outstandingLabel.accessibilityLabel = String(localized: "Outstanding balance")
         outstandingLabel.accessibilityValue = Format.money(snapshot.outstanding)
         statsRow.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        statsRow.addArrangedSubview(statTile("\(snapshot.invoiceCount)", "Invoices"))
-        statsRow.addArrangedSubview(statTile("\(snapshot.estimateCount)", "Estimates"))
+        statsRow.addArrangedSubview(statTile("\(snapshot.invoiceCount)", String(localized: "Invoices")))
+        statsRow.addArrangedSubview(statTile("\(snapshot.estimateCount)", String(localized: "Estimates")))
         let overdueTap: (() -> Void)? = snapshot.overdueCount > 0 ? { [weak self] in
             Haptics.tap(); self?.tabBarController?.selectedIndex = 1
         } : nil
-        statsRow.addArrangedSubview(statTile("\(snapshot.overdueCount)", "Overdue",
+        statsRow.addArrangedSubview(statTile("\(snapshot.overdueCount)", String(localized: "Overdue"),
             tint: snapshot.overdueCount > 0 ? DesignSystem.Color.overdue : DesignSystem.Color.label,
             onTap: overdueTap))
 
         recentStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         if snapshot.recent.isEmpty {
             recentStack.addArrangedSubview(DesignSystem.emptyState(
-                symbol: "tray", title: "Nothing here yet",
-                subtitle: "Your recent invoices and estimates will show up here."))
+                symbol: "tray", title: String(localized: "Nothing here yet"),
+                subtitle: String(localized: "Your recent invoices and estimates will show up here.")))
         } else {
             for invoice in snapshot.recent {
                 let row = InvoiceRowView(invoice: invoice,
@@ -178,21 +178,21 @@ final class DashboardViewController: UIViewController {
 
     private func recentMenu(for invoice: Invoice) -> UIMenu {
         var children: [UIMenuElement] = [
-            UIAction(title: "Open", image: UIImage(systemName: "doc.text")) { [weak self] _ in self?.open(invoice) },
+            UIAction(title: String(localized: "Open"), image: UIImage(systemName: "doc.text")) { [weak self] _ in self?.open(invoice) },
         ]
         if invoice.type == .invoice && invoice.status == .draft {
-            children.append(UIAction(title: "Mark Sent", image: UIImage(systemName: "paperplane.fill")) { [weak self] _ in
+            children.append(UIAction(title: String(localized: "Mark Sent"), image: UIImage(systemName: "paperplane.fill")) { [weak self] _ in
                 self?.markSent(invoice) })
         }
         if invoice.type == .invoice && invoice.status != .paid {
-            children.append(UIAction(title: "Mark Paid", image: UIImage(systemName: "checkmark.circle.fill")) { [weak self] _ in
+            children.append(UIAction(title: String(localized: "Mark Paid"), image: UIImage(systemName: "checkmark.circle.fill")) { [weak self] _ in
                 self?.markPaid(invoice) })
         }
         if invoice.type == .estimate {
-            children.append(UIAction(title: "Convert to Invoice", image: UIImage(systemName: "arrow.right.circle.fill")) { [weak self] _ in
+            children.append(UIAction(title: String(localized: "Convert to Invoice"), image: UIImage(systemName: "arrow.right.circle.fill")) { [weak self] _ in
                 self?.convert(invoice) })
         }
-        children.append(UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
+        children.append(UIAction(title: String(localized: "Delete"), image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
             self?.delete(invoice) })
         return UIMenu(children: children)
     }
@@ -231,10 +231,10 @@ final class DashboardViewController: UIViewController {
     private func presentNumberAllocationFailure() {
         Haptics.warning()
         let alert = UIAlertController(
-            title: "Couldn't allocate a number",
-            message: "Couldn't allocate a number — try again.",
+            title: String(localized: "Couldn't allocate a number"),
+            message: String(localized: "Couldn't allocate a number — try again."),
             preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
         present(alert, animated: true)
     }
 
@@ -263,7 +263,7 @@ final class DashboardViewController: UIViewController {
         card.accessibilityValue = value
         if let onTap {
             card.accessibilityTraits = .button
-            card.accessibilityHint = "Shows overdue invoices"
+            card.accessibilityHint = String(localized: "Shows overdue invoices")
             let tap = UITapGestureRecognizer(actionHandler: onTap)
             card.addGestureRecognizer(tap)
         }

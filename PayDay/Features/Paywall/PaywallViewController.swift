@@ -23,12 +23,12 @@ final class PaywallViewController: UIViewController {
     private let store = AICreditsManager.store
     private var cancellables = Set<AnyCancellable>()
     private let cardsStack = UIStackView()
-    private let ctaButton = DesignSystem.primaryButton("Continue")
+    private let ctaButton = DesignSystem.primaryButton(String(localized: "Continue"))
     private var plans: [PlanVM] = []
     private var selectedIndex = 0
     private var cardViews: [UIControl] = []
 
-    init(reason: String = "Unlock compliant e-invoicing and Peppol delivery.") {
+    init(reason: String = String(localized: "Unlock compliant e-invoicing and Peppol delivery.")) {
         self.reason = reason
         super.init(nibName: nil, bundle: nil)
     }
@@ -39,9 +39,9 @@ final class PaywallViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
-        title = "Pay Day Pro"
+        title = String(localized: "Pay Day Pro")
         navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction { [weak self] _ in self?.dismiss(animated: true) })
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Restore", primaryAction: UIAction { [weak self] _ in self?.restore() })
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: String(localized: "Restore"), primaryAction: UIAction { [weak self] _ in self?.restore() })
         build()
         bindStore()
         // Never show fabricated prices in release — they could drift from App
@@ -71,11 +71,11 @@ final class PaywallViewController: UIViewController {
         cardsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         cardViews = []
         let message = DesignSystem.label(
-            "Couldn't load plans. Check your connection.",
+            String(localized: "Couldn't load plans. Check your connection."),
             font: DesignSystem.Typography.body(),
             color: DesignSystem.Color.secondary)
         let retry = UIButton(type: .system)
-        retry.setTitle("Try Again", for: .normal)
+        retry.setTitle(String(localized: "Try Again"), for: .normal)
         retry.titleLabel?.font = DesignSystem.Typography.scaledSystem(15, .semibold, relativeTo: .callout)
         retry.titleLabel?.adjustsFontForContentSizeCategory = true
         retry.addAction(UIAction { [weak self] _ in
@@ -94,7 +94,7 @@ final class PaywallViewController: UIViewController {
         stack.spacing = DesignSystem.Spacing.l
         stack.translatesAutoresizingMaskIntoConstraints = false
 
-        let title = DesignSystem.label("Get paid, compliantly.", font: DesignSystem.Typography.largeTitle())
+        let title = DesignSystem.label(String(localized: "Get paid, compliantly."), font: DesignSystem.Typography.largeTitle())
         let subtitle = DesignSystem.label(reason, font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary)
         stack.addArrangedSubview(title)
         stack.addArrangedSubview(subtitle)
@@ -104,11 +104,21 @@ final class PaywallViewController: UIViewController {
         stack.addArrangedSubview(cardsStack)
 
         for (symbol, label, detail) in [
-            ("checkmark.seal.fill", "EN 16931 e-invoices", "Factur-X / ZUGFeRD PDFs that pass tax-authority validation."),
-            ("paperplane.fill", "Peppol delivery", "Send straight into your client's accounting system."),
-            ("arrow.triangle.2.circlepath", "Recurring invoices", "Set it once, get paid every month."),
-            ("paintbrush.fill", "Your branding", "Logo, accent colour, custom templates."),
-            ("checkmark.circle.fill", "VAT validation", "Live VIES checks on every client."),
+            ("checkmark.seal.fill",
+             String(localized: "EN 16931 e-invoices"),
+             String(localized: "Factur-X / ZUGFeRD PDFs that pass tax-authority validation.")),
+            ("paperplane.fill",
+             String(localized: "Peppol delivery"),
+             String(localized: "Send straight into your client's accounting system.")),
+            ("arrow.triangle.2.circlepath",
+             String(localized: "Recurring invoices"),
+             String(localized: "Set it once, get paid every month.")),
+            ("paintbrush.fill",
+             String(localized: "Your branding"),
+             String(localized: "Logo, accent colour, custom templates.")),
+            ("checkmark.circle.fill",
+             String(localized: "VAT validation"),
+             String(localized: "Live VIES checks on every client.")),
         ] {
             stack.addArrangedSubview(benefitRow(symbol: symbol, title: label, detail: detail))
         }
@@ -153,7 +163,7 @@ final class PaywallViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
                 guard let self, self.presentedViewController == nil else { return }
-                self.presentAlert("Purchase Failed", message: error.localizedDescription)
+                self.presentAlert(String(localized: "Purchase Failed"), message: error.localizedDescription)
                 self.store.error = nil
             }
             .store(in: &cancellables)
@@ -163,7 +173,7 @@ final class PaywallViewController: UIViewController {
         cardsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         cardViews = []
         guard !plans.isEmpty else {
-            let loading = DesignSystem.label("Loading plans…", font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary)
+            let loading = DesignSystem.label(String(localized: "Loading plans…"), font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary)
             cardsStack.addArrangedSubview(loading)
             ctaButton.isEnabled = false
             ctaButton.alpha = 0.5
@@ -208,7 +218,10 @@ final class PaywallViewController: UIViewController {
             card.layer.borderColor = borderColor.resolvedColor(with: card.traitCollection).cgColor
         }
 
-        let priceLabel = DesignSystem.label("\(plan.price) / \(plan.term)", font: DesignSystem.Typography.scaledSystem(20, .bold, relativeTo: .title3))
+        let priceLabel = DesignSystem.label(
+            String(localized: "\(plan.price) / \(plan.term)",
+                   comment: "Plan card headline: localized price then the billing term, e.g. €39.99 / year"),
+            font: DesignSystem.Typography.scaledSystem(20, .bold, relativeTo: .title3))
         let titleLabel = DesignSystem.label(plan.title, font: DesignSystem.Typography.scaledSystem(13, .medium, relativeTo: .footnote), color: DesignSystem.Color.secondary)
         let left = UIStackView(arrangedSubviews: [priceLabel, titleLabel])
         left.axis = .vertical
@@ -249,14 +262,15 @@ final class PaywallViewController: UIViewController {
     }
 
     private func accessibilityLabel(for plan: PlanVM) -> String {
-        var parts = ["\(plan.title), \(plan.price) per \(plan.term)"]
+        var parts = [String(localized: "\(plan.title), \(plan.price) per \(plan.term)",
+                            comment: "VoiceOver label for a plan card: plan title, price, billing term")]
         if let footnote = plan.footnote { parts.append(footnote) }
         return parts.joined(separator: ". ")
     }
 
     private func autoRenewDisclosure() -> UIView {
         let disclosure = DesignSystem.label(
-            "Subscriptions auto-renew unless cancelled at least 24h before the period ends. Manage in Apple ID settings.",
+            String(localized: "Subscriptions auto-renew unless cancelled at least 24h before the period ends. Manage in Apple ID settings."),
             font: DesignSystem.Typography.scaledSystem(11, .regular, relativeTo: .caption2),
             color: DesignSystem.Color.tertiary)
         disclosure.textAlignment = .center
@@ -271,9 +285,9 @@ final class PaywallViewController: UIViewController {
         links.registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (links: UIStackView, _) in
             links.axis = links.traitCollection.preferredContentSizeCategory.isAccessibilityCategory ? .vertical : .horizontal
         }
-        for (title, url) in [("Terms of Use", "https://mako.midgarcorp.cc/terms/payday"),
-                             ("Privacy Policy", "https://mako.midgarcorp.cc/privacy/payday"),
-                             ("Restore", "")] {
+        for (title, url) in [(String(localized: "Terms of Use"), "https://mako.midgarcorp.cc/terms/payday"),
+                             (String(localized: "Privacy Policy"), "https://mako.midgarcorp.cc/privacy/payday"),
+                             (String(localized: "Restore"), "")] {
             let b = UIButton(type: .system)
             b.setTitle(title, for: .normal)
             b.titleLabel?.font = DesignSystem.Typography.scaledSystem(11, .medium, relativeTo: .caption2)
@@ -290,7 +304,7 @@ final class PaywallViewController: UIViewController {
     private func openLink(_ url: URL) {
         UIApplication.shared.open(url, options: [:]) { [weak self] success in
             guard !success else { return }
-            self?.presentAlert("Couldn't open the link", message: "Please try again in a moment.")
+            self?.presentAlert(String(localized: "Couldn't open the link"), message: String(localized: "Please try again in a moment."))
         }
     }
 
@@ -298,7 +312,7 @@ final class PaywallViewController: UIViewController {
         guard plans.indices.contains(selectedIndex) else { return }
         let id = plans[selectedIndex].id
         guard let plan = store.plans.first(where: { $0.id == id }) else {
-            presentAlert("Plans are still loading", message: "Try again in a moment.")
+            presentAlert(String(localized: "Plans are still loading"), message: String(localized: "Try again in a moment."))
             return
         }
         setPurchasing(true)
@@ -316,7 +330,7 @@ final class PaywallViewController: UIViewController {
 
     private func presentAlert(_ title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
         present(alert, animated: true)
     }
 
@@ -328,8 +342,8 @@ final class PaywallViewController: UIViewController {
             self.setPurchasing(false)
             if !self.store.isPremium && self.store.error == nil {
                 self.presentAlert(
-                    "No Purchases to Restore",
-                    message: "No active Pay Day Pro subscription was found for this Apple ID.")
+                    String(localized: "No Purchases to Restore"),
+                    message: String(localized: "No active Pay Day Pro subscription was found for this Apple ID."))
             }
         }
     }
@@ -355,23 +369,25 @@ final class PaywallViewController: UIViewController {
     private static func map(_ plan: SubscriptionPlan) -> PlanVM {
         let term: String
         switch plan.period {
-        case .annual: term = "year"
-        case .monthly: term = "month"
-        case .weekly: term = "week"
+        case .annual: term = String(localized: "year", comment: "Billing term shown after a price, e.g. €39.99 / year")
+        case .monthly: term = String(localized: "month", comment: "Billing term shown after a price, e.g. €4.99 / month")
+        case .weekly: term = String(localized: "week", comment: "Billing term shown after a price, e.g. €1.99 / week")
         }
         let trial = (plan.trialEligible && (plan.trialDays ?? 0) > 0)
-            ? "\(plan.trialDays!) days free, then \(plan.localizedPrice)/\(term). Auto-renews. Cancel anytime."
+            ? String(localized: "\(plan.trialDays!) days free, then \(plan.localizedPrice)/\(term). Auto-renews. Cancel anytime.")
             : nil
         return PlanVM(id: plan.id, title: planTitle(plan.period), price: plan.localizedPrice, term: term,
-                      badge: plan.period == .annual ? "Save 33%" : nil, footnote: trial,
-                      cta: plan.period == .annual && trial != nil ? "Start \(plan.trialDays ?? 7)-day free trial" : "Subscribe")
+                      badge: plan.period == .annual ? String(localized: "Save 33%") : nil, footnote: trial,
+                      cta: plan.period == .annual && trial != nil
+                          ? String(localized: "Start \(plan.trialDays ?? 7)-day free trial")
+                          : String(localized: "Subscribe"))
     }
 
     private static func planTitle(_ period: SubscriptionPlan.Period) -> String {
         switch period {
-        case .weekly: return "Weekly"
-        case .monthly: return "Billed monthly"
-        case .annual: return "Billed annually"
+        case .weekly: return String(localized: "Weekly")
+        case .monthly: return String(localized: "Billed monthly")
+        case .annual: return String(localized: "Billed annually")
         }
     }
 

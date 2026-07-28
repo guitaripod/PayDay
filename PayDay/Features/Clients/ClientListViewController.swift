@@ -19,7 +19,7 @@ final class ClientListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = selection == nil ? "Clients" : "Choose client"
+        title = selection == nil ? String(localized: "Clients") : String(localized: "Choose client")
         view.backgroundColor = DesignSystem.Color.background
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             systemItem: .add, primaryAction: UIAction { [weak self] _ in self?.edit(nil) })
@@ -31,9 +31,9 @@ final class ClientListViewController: UIViewController {
         tableView.pinEdges(to: view)
 
         let empty = DesignSystem.emptyState(
-            symbol: "person.crop.circle.badge.plus", title: "No clients yet",
-            subtitle: "Add the businesses you invoice. Their VAT ID and Peppol address power compliant e-invoices.",
-            ctaTitle: "Add client", ctaAction: { [weak self] in self?.edit(nil) })
+            symbol: "person.crop.circle.badge.plus", title: String(localized: "No clients yet"),
+            subtitle: String(localized: "Add the businesses you invoice. Their VAT ID and Peppol address power compliant e-invoices."),
+            ctaTitle: String(localized: "Add client"), ctaAction: { [weak self] in self?.edit(nil) })
         empty.translatesAutoresizingMaskIntoConstraints = false
         empty.isHidden = true
         view.addSubview(empty)
@@ -82,15 +82,15 @@ final class ClientListViewController: UIViewController {
             } catch {
                 AppLogger.shared.error("client delete failed: \(error)", category: .db)
                 done?(false)
-                let alert = UIAlertController(title: "Couldn't Delete", message: error.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                let alert = UIAlertController(title: String(localized: "Couldn't Delete"), message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
                 self.present(alert, animated: true)
             }
         }
     }
 
     private func accessibilityActions(for party: Party) -> [UIAccessibilityCustomAction] {
-        [UIAccessibilityCustomAction(name: "Delete") { [weak self] _ in self?.remove(party); return true }]
+        [UIAccessibilityCustomAction(name: String(localized: "Delete")) { [weak self] _ in self?.remove(party); return true }]
     }
 }
 
@@ -125,7 +125,7 @@ extension ClientListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard indexPath.row < clients.count else { return nil }
         let party = clients[indexPath.row]
-        let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, done in
+        let delete = UIContextualAction(style: .destructive, title: String(localized: "Delete")) { [weak self] _, _, done in
             self?.remove(party, done: done)
         }
         return UISwipeActionsConfiguration(actions: [delete])

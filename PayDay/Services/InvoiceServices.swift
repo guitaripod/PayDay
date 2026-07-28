@@ -39,6 +39,10 @@ final class PeppolService: PeppolTransmitting {
         let reason: String?
     }
 
+    private static var unknownFailureReason: String {
+        String(localized: "unknown", comment: "Fallback shown in a Peppol send-failure alert when the gateway states no reason")
+    }
+
     func lookup(endpointID: String, schemeID: String) async throws -> PeppolReachability {
         let recipient = PeppolRecipient(endpointID: endpointID, schemeID: schemeID, countryCode: "")
         return try await client.post("v1/peppol/lookup", body: LookupBody(recipient: recipient), as: PeppolReachability.self)
@@ -60,11 +64,11 @@ final class PeppolService: PeppolTransmitting {
                         continuation.yield(.accepted(transmissionID: id))
                         continuation.yield(.delivered(transmissionID: id))
                     } else {
-                        continuation.yield(.failed(reason: response.reason ?? "unknown"))
+                        continuation.yield(.failed(reason: response.reason ?? Self.unknownFailureReason))
                     }
                     continuation.finish()
                 } catch let WorkerClient.WorkerError.http(_, reason) where reason != nil {
-                    continuation.yield(.failed(reason: reason ?? "unknown"))
+                    continuation.yield(.failed(reason: reason ?? Self.unknownFailureReason))
                     continuation.finish()
                 } catch {
                     continuation.yield(.failed(reason: error.localizedDescription))

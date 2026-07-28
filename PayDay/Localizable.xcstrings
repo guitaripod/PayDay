@@ -1,0 +1,935 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ %@" : {
+      "comment" : "Invoice PDF quantity cell: amount then unit of measure, e.g. 8 hour",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ %@ on %@" : {
+      "comment" : "Invoice PDF VAT breakdown line: category, rate, taxable base amount",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@ on %3$@"
+          }
+        }
+      }
+    },
+    "%@ %@, %@" : {
+      "comment" : "VoiceOver label for a document row: document kind, document number, client name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@, %3$@"
+          }
+        }
+      }
+    },
+    "%@ (%@)" : {
+      "comment" : "VAT category name followed by its EN 16931 code, e.g. Reverse charge (AE)",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "%@ / %@" : {
+      "comment" : "Plan card headline: localized price then the billing term, e.g. €39.99 / year",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ / %2$@"
+          }
+        }
+      }
+    },
+    "%@ no." : {
+      "comment" : "Invoice PDF meta caption, e.g. Invoice no."
+    },
+    "%@, %@" : {
+      "comment" : "VoiceOver value for a document row: payable amount, document status",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "%@, %@ per %@" : {
+      "comment" : "VoiceOver label for a plan card: plan title, price, billing term",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@ per %3$@"
+          }
+        }
+      }
+    },
+    "%lld compliance issues" : {
+      "comment" : "Count of EN 16931 validation errors blocking a compliant e-invoice",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld compliance issue"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld compliance issues"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld credits" : {
+
+    },
+    "%lld credits (+%lld bonus)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld credits (+%2$lld bonus)"
+          }
+        }
+      }
+    },
+    "%lld days free, then %@/%@. Auto-renews. Cancel anytime." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld days free, then %2$@/%3$@. Auto-renews. Cancel anytime."
+          }
+        }
+      }
+    },
+    "8h design at €90, plus €200 hosting" : {
+
+    },
+    "AI Drafting" : {
+
+    },
+    "AI drafting" : {
+
+    },
+    "AMOUNT" : {
+      "comment" : "Invoice PDF table column header for the line net, rendered in capitals"
+    },
+    "About" : {
+
+    },
+    "Accepted by the network." : {
+
+    },
+    "Account" : {
+
+    },
+    "Add a Peppol ID to this client to send over the network." : {
+
+    },
+    "Add client" : {
+
+    },
+    "Add line item" : {
+
+    },
+    "Add the businesses you invoice. Their VAT ID and Peppol address power compliant e-invoices." : {
+
+    },
+    "Add your Peppol ID in Business Settings before sending over the network." : {
+
+    },
+    "Add your name, VAT ID, and IBAN" : {
+
+    },
+    "Add your name, VAT ID, and IBAN so every invoice is complete." : {
+
+    },
+    "Address" : {
+
+    },
+    "Agree & Continue" : {
+
+    },
+    "Allowed" : {
+
+    },
+    "App" : {
+
+    },
+    "Appearance" : {
+
+    },
+    "BIC" : {
+      "comment" : "Bank Identifier Code (SWIFT); keep the acronym"
+    },
+    "BIC  %@" : {
+      "comment" : "Invoice PDF payment line; BIC/SWIFT is an international acronym"
+    },
+    "Beautiful invoices for free — and EU-compliant e-invoices (Factur-X, Peppol) when you need them." : {
+
+    },
+    "Bill to" : {
+      "comment" : "Invoice PDF caption above the buyer party block\nInvoice section header for the buyer party"
+    },
+    "Billed annually" : {
+
+    },
+    "Billed monthly" : {
+
+    },
+    "Business" : {
+
+    },
+    "Business details" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Charges" : {
+      "comment" : "Invoice PDF total: document-level charges, EN 16931 BT-108"
+    },
+    "Checking VAT…" : {
+
+    },
+    "Choose a photo or receipt" : {
+
+    },
+    "Choose client" : {
+
+    },
+    "City" : {
+
+    },
+    "Client" : {
+
+    },
+    "Clients" : {
+
+    },
+    "Close" : {
+
+    },
+    "Company registration no." : {
+      "comment" : "Seller legal registration identifier, EN 16931 BT-30"
+    },
+    "Continue" : {
+
+    },
+    "Convert to Invoice" : {
+
+    },
+    "Copy" : {
+
+    },
+    "Couldn't Delete" : {
+
+    },
+    "Couldn't Save" : {
+
+    },
+    "Couldn't allocate a number" : {
+
+    },
+    "Couldn't allocate a number — try again" : {
+
+    },
+    "Couldn't allocate a number — try again." : {
+
+    },
+    "Couldn't delete account" : {
+
+    },
+    "Couldn't draft" : {
+
+    },
+    "Couldn't export" : {
+
+    },
+    "Couldn't extract line items — try describing them instead." : {
+
+    },
+    "Couldn't load plans. Check your connection." : {
+
+    },
+    "Couldn't open link" : {
+
+    },
+    "Couldn't open the link" : {
+
+    },
+    "Couldn't reach VIES — you can still issue." : {
+      "comment" : "VIES is the EU VAT Information Exchange System; keep the acronym"
+    },
+    "Couldn't reach the network. Check your connection and try again." : {
+
+    },
+    "Couldn't render this document. Try again." : {
+
+    },
+    "Couldn't save" : {
+
+    },
+    "Country code" : {
+      "comment" : "ISO 3166 two-letter country code"
+    },
+    "Country code (e.g. DE)" : {
+      "comment" : "Placeholder for the ISO 3166 two-letter country code"
+    },
+    "Create an estimate to send a quote — convert it to an invoice when it's accepted." : {
+
+    },
+    "Create estimate" : {
+
+    },
+    "Create invoice" : {
+
+    },
+    "Create your first invoice. It's free, unlimited, and ready for EU e-invoicing." : {
+
+    },
+    "Credit packs" : {
+
+    },
+    "Credit packs are temporarily unavailable from the App Store. You can keep using the app fully — please try again later." : {
+
+    },
+    "Credits" : {
+
+    },
+    "Credits cover each invoice you send over Peppol and optional AI drafting. The app is fully usable without them." : {
+
+    },
+    "DESCRIPTION" : {
+      "comment" : "Invoice PDF table column header, rendered in capitals"
+    },
+    "Dark" : {
+
+    },
+    "Default VAT %" : {
+
+    },
+    "Default payment terms" : {
+
+    },
+    "Defaults" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Delete account" : {
+
+    },
+    "Delete account?" : {
+
+    },
+    "Delete line" : {
+
+    },
+    "Deleting…" : {
+
+    },
+    "Delivered" : {
+
+    },
+    "Describe in words" : {
+
+    },
+    "Describe the work" : {
+
+    },
+    "Description" : {
+
+    },
+    "Details" : {
+
+    },
+    "Details (optional)" : {
+
+    },
+    "Discounts" : {
+      "comment" : "Invoice PDF total: document-level allowances, EN 16931 BT-107"
+    },
+    "Document type" : {
+
+    },
+    "Done" : {
+
+    },
+    "Draft" : {
+
+    },
+    "Draft line items" : {
+
+    },
+    "Draft line items from a photo or a sentence" : {
+
+    },
+    "Draft with AI" : {
+
+    },
+    "Due" : {
+      "comment" : "Invoice PDF meta caption for the payment due date\nRow label for the payment due date"
+    },
+    "Due date" : {
+
+    },
+    "Duplicate" : {
+
+    },
+    "EN 16931 e-invoices" : {
+
+    },
+    "EN 16931 ready" : {
+
+    },
+    "Edit" : {
+
+    },
+    "Email" : {
+
+    },
+    "Estimate — not an e-invoice." : {
+
+    },
+    "Estimates" : {
+
+    },
+    "Factur-X / ZUGFeRD PDFs that pass tax-authority validation." : {
+
+    },
+    "Finish setting up your business" : {
+
+    },
+    "From" : {
+      "comment" : "Invoice PDF caption above the seller party block"
+    },
+    "Generated by Pay Day" : {
+
+    },
+    "Generated by Pay Day · EN 16931-valid e-invoice available" : {
+
+    },
+    "Get Credits" : {
+
+    },
+    "Get paid, compliantly." : {
+
+    },
+    "Get started" : {
+
+    },
+    "Getting paid" : {
+
+    },
+    "Home" : {
+
+    },
+    "How it is used" : {
+
+    },
+    "IBAN" : {
+      "comment" : "International Bank Account Number; keep the acronym"
+    },
+    "IBAN  %@" : {
+      "comment" : "Invoice PDF payment line; IBAN is an international acronym"
+    },
+    "Identity" : {
+
+    },
+    "Invoice" : {
+
+    },
+    "Invoice defaults" : {
+
+    },
+    "Invoice number" : {
+
+    },
+    "Invoices" : {
+
+    },
+    "Issue date" : {
+
+    },
+    "Issued" : {
+      "comment" : "Invoice PDF meta caption for the issue date\nRow label for the invoice issue date"
+    },
+    "Legal name" : {
+
+    },
+    "Light" : {
+
+    },
+    "Line item" : {
+
+    },
+    "Line items" : {
+
+    },
+    "Live VIES checks on every client." : {
+
+    },
+    "Loading packs…" : {
+
+    },
+    "Loading plans…" : {
+
+    },
+    "Logo, accent colour, custom templates." : {
+
+    },
+    "Mark Paid" : {
+
+    },
+    "Mark Sent" : {
+
+    },
+    "More Apps" : {
+
+    },
+    "New %@" : {
+      "comment" : "Editor title for a new document, e.g. New Invoice"
+    },
+    "New Estimate" : {
+
+    },
+    "New Invoice" : {
+
+    },
+    "New invoice" : {
+
+    },
+    "No Peppol address" : {
+
+    },
+    "No Purchases to Restore" : {
+
+    },
+    "No active Pay Day Pro subscription was found for this Apple ID." : {
+
+    },
+    "No clients yet" : {
+
+    },
+    "No estimates yet" : {
+
+    },
+    "No invoices yet" : {
+
+    },
+    "No mail app configured" : {
+
+    },
+    "No sender Peppol ID" : {
+
+    },
+    "None" : {
+
+    },
+    "Not Now" : {
+
+    },
+    "Not valid yet" : {
+
+    },
+    "Note" : {
+
+    },
+    "Notes & terms" : {
+
+    },
+    "Nothing found" : {
+
+    },
+    "Nothing here yet" : {
+
+    },
+    "Number" : {
+
+    },
+    "OK" : {
+
+    },
+    "Off" : {
+
+    },
+    "One tap to a tax-authority-ready e-invoice" : {
+
+    },
+    "Only the text you type or the photo you choose, plus the invoice currency. Your client list and saved invoices are not sent." : {
+
+    },
+    "Open" : {
+
+    },
+    "Outstanding" : {
+
+    },
+    "Outstanding balance" : {
+
+    },
+    "Overdue" : {
+
+    },
+    "PAYMENT" : {
+      "comment" : "Invoice PDF section header for bank payment details, rendered in capitals"
+    },
+    "Pay Day" : {
+      "comment" : "App name shown on the welcome screen"
+    },
+    "Pay Day Pro" : {
+
+    },
+    "Pay Day Pro — Active" : {
+
+    },
+    "Pay Day turns words or a photo into billable lines." : {
+
+    },
+    "Payment & IBAN" : {
+
+    },
+    "Payment terms" : {
+
+    },
+    "Peppol ID (scheme:id)" : {
+      "comment" : "Placeholder for the Peppol participant identifier; scheme and id are literal"
+    },
+    "Peppol delivery" : {
+
+    },
+    "Peppol delivery is a Pay Day Pro feature." : {
+
+    },
+    "Plans are still loading" : {
+
+    },
+    "Please try again in a moment." : {
+
+    },
+    "Postal code" : {
+
+    },
+    "Preview" : {
+
+    },
+    "Privacy Policy" : {
+
+    },
+    "Purchase Failed" : {
+
+    },
+    "QTY" : {
+      "comment" : "Invoice PDF table column header for quantity, rendered in capitals"
+    },
+    "Qty" : {
+      "comment" : "Short placeholder for the line-item quantity field"
+    },
+    "Quantity" : {
+
+    },
+    "Read the Privacy Policy" : {
+
+    },
+    "Recent" : {
+
+    },
+    "Recurring invoices" : {
+
+    },
+    "Reference  %@" : {
+      "comment" : "Invoice PDF payment line: remittance reference, EN 16931 BT-83"
+    },
+    "Resolve the EN 16931 issues shown above before sending." : {
+
+    },
+    "Restore" : {
+
+    },
+    "Restore Purchases" : {
+
+    },
+    "Save" : {
+
+    },
+    "Save 33%" : {
+
+    },
+    "Select a client" : {
+
+    },
+    "Send failed" : {
+
+    },
+    "Send over the Peppol network across the EU" : {
+
+    },
+    "Send straight into your client's accounting system." : {
+
+    },
+    "Send via Peppol" : {
+
+    },
+    "Sending…" : {
+
+    },
+    "Set it once, get paid every month." : {
+
+    },
+    "Settings" : {
+
+    },
+    "Share" : {
+
+    },
+    "Shows overdue invoices" : {
+
+    },
+    "Something Went Wrong" : {
+
+    },
+    "Start %lld-day free trial" : {
+
+    },
+    "Street address" : {
+
+    },
+    "Submitting to Peppol…" : {
+
+    },
+    "Subscribe" : {
+
+    },
+    "Subscriptions auto-renew unless cancelled at least 24h before the period ends. Manage in Apple ID settings." : {
+
+    },
+    "Subtotal" : {
+      "comment" : "Invoice PDF total: tax-exclusive amount, EN 16931 BT-109"
+    },
+    "Support" : {
+
+    },
+    "System" : {
+
+    },
+    "Terms of Use" : {
+
+    },
+    "The AI request failed — check your connection and try again." : {
+
+    },
+    "The PDF couldn't be written for sharing. Try again." : {
+
+    },
+    "The content is used only to generate your draft. It is not stored by us after the response, not used to train AI models, and never used for advertising. You review and edit every draft." : {
+
+    },
+    "The invoice couldn't be saved. Please try again." : {
+
+    },
+    "The request goes over an encrypted connection to Pay Day's backend (operated by Midgar Oy), which forwards it to OpenAI for processing." : {
+
+    },
+    "The server couldn't delete the account (%lld). Try again." : {
+      "comment" : "Account deletion failure with the numeric HTTP status code"
+    },
+    "The server returned an error (%lld)." : {
+      "comment" : "Generic HTTP failure with the numeric status code"
+    },
+    "The server returned an unexpected response." : {
+
+    },
+    "This permanently deletes your account, credit balance, and every invoice, estimate, and client on this device. This cannot be undone." : {
+
+    },
+    "To turn your words or a photo into line items, Pay Day sends the content you provide to a third-party AI service. You control when this happens — nothing is sent until you tap an AI action." : {
+
+    },
+    "Total due" : {
+      "comment" : "Invoice PDF total: amount due for payment, EN 16931 BT-115"
+    },
+    "Total due %@" : {
+
+    },
+    "Transmission %@ accepted by Peppol." : {
+      "comment" : "Peppol transmission identifier returned by the access point"
+    },
+    "Try Again" : {
+
+    },
+    "Try again in a moment." : {
+
+    },
+    "Unavailable" : {
+
+    },
+    "Unit price" : {
+
+    },
+    "Unit price (%@)" : {
+      "comment" : "Field caption with the ISO 4217 currency code, e.g. Unit price (EUR)"
+    },
+    "Unlimited invoices & estimates, your logo, any currency" : {
+
+    },
+    "Unlock compliant e-invoicing and Peppol delivery." : {
+
+    },
+    "Untitled" : {
+
+    },
+    "Upgrade to Pro" : {
+
+    },
+    "Use %@" : {
+      "comment" : "Button offering a corrected Peppol participant id"
+    },
+    "Use scheme:id — the scheme is a 4-digit code, e.g. 0216:003712345678." : {
+      "comment" : "Peppol participant id format hint; \"scheme:id\" is literal syntax"
+    },
+    "VAT" : {
+      "comment" : "Value-added tax; invoice PDF table column header"
+    },
+    "VAT %" : {
+      "comment" : "Placeholder for the VAT rate percentage field"
+    },
+    "VAT %@" : {
+      "comment" : "Invoice PDF line showing a party VAT identifier"
+    },
+    "VAT BREAKDOWN" : {
+      "comment" : "Invoice PDF section header for the EN 16931 VAT breakdown, rendered in capitals"
+    },
+    "VAT ID" : {
+      "comment" : "Seller VAT identifier, EN 16931 BT-31"
+    },
+    "VAT ID (e.g. DE123456789)" : {
+      "comment" : "Placeholder for the buyer VAT identifier, EN 16931 BT-48"
+    },
+    "VAT category" : {
+      "comment" : "EN 16931 VAT category (UNCL 5305) selector caption"
+    },
+    "VAT rate %" : {
+
+    },
+    "VAT validation" : {
+
+    },
+    "Validating…" : {
+
+    },
+    "Weekly" : {
+
+    },
+    "What is sent" : {
+
+    },
+    "Who it is sent to" : {
+
+    },
+    "Withdraw Consent" : {
+
+    },
+    "You need %lld more credits to send this invoice." : {
+
+    },
+    "You need a connection to delete your account — try again when online." : {
+
+    },
+    "Your Peppol ID (scheme:id)" : {
+      "comment" : "Placeholder for the seller Peppol participant identifier; \"scheme:id\" is literal syntax"
+    },
+    "Your balance" : {
+
+    },
+    "Your branding" : {
+
+    },
+    "Your business" : {
+
+    },
+    "Your recent invoices and estimates will show up here." : {
+
+    },
+    "month" : {
+      "comment" : "Billing term shown after a price, e.g. €4.99 / month"
+    },
+    "unknown" : {
+      "comment" : "Fallback shown in a Peppol send-failure alert when the gateway states no reason"
+    },
+    "week" : {
+      "comment" : "Billing term shown after a price, e.g. €1.99 / week"
+    },
+    "year" : {
+      "comment" : "Billing term shown after a price, e.g. €39.99 / year"
+    },
+    "⚠︎ %lld issues before this is a valid e-invoice:" : {
+      "comment" : "Count of EN 16931 validation errors, followed by a bulleted list of them",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "⚠︎ %lld issue before this is a valid e-invoice:"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "⚠︎ %lld issues before this is a valid e-invoice:"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "✓ EN 16931 valid · Factur-X embedded in PDF" : {
+
+    },
+    "✓ EN 16931 valid · structured XML attached on export" : {
+
+    },
+    "✓ This invoice is EN 16931 valid — unlock Pro to export a Factur-X / Peppol e-invoice." : {
+
+    },
+    "✓ Valid VAT number" : {
+
+    },
+    "✓ Valid VAT number · %@" : {
+      "comment" : "Successful VIES check followed by the registered company name"
+    },
+    "✗ Not a valid VAT number" : {
+
+    }
+  },
+  "version" : "1.0"
+}

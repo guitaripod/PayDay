@@ -9,8 +9,9 @@ enum AccountService {
         case serverError(Int)
         var errorDescription: String? {
             switch self {
-            case .offline: return "You need a connection to delete your account — try again when online."
-            case .serverError(let code): return "The server couldn't delete the account (\(code)). Try again."
+            case .offline: return String(localized: "You need a connection to delete your account — try again when online.")
+            case .serverError(let code): return String(localized: "The server couldn't delete the account (\(code)). Try again.",
+                                                       comment: "Account deletion failure with the numeric HTTP status code")
             }
         }
     }

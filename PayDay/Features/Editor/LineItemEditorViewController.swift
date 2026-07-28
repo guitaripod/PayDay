@@ -9,11 +9,11 @@ final class LineItemEditorViewController: UIViewController {
     private let onSave: (LineItem) -> Void
     private let onDelete: (() -> Void)?
 
-    private let nameField = LineItemEditorViewController.makeField(placeholder: "Description")
-    private let detailField = LineItemEditorViewController.makeField(placeholder: "Details (optional)")
-    private let quantityField = LineItemEditorViewController.makeField(placeholder: "Qty", keyboard: .decimalPad)
-    private let priceField = LineItemEditorViewController.makeField(placeholder: "Unit price", keyboard: .decimalPad)
-    private let rateField = LineItemEditorViewController.makeField(placeholder: "VAT %", keyboard: .decimalPad)
+    private let nameField = LineItemEditorViewController.makeField(placeholder: String(localized: "Description"))
+    private let detailField = LineItemEditorViewController.makeField(placeholder: String(localized: "Details (optional)"))
+    private let quantityField = LineItemEditorViewController.makeField(placeholder: String(localized: "Qty", comment: "Short placeholder for the line-item quantity field"), keyboard: .decimalPad)
+    private let priceField = LineItemEditorViewController.makeField(placeholder: String(localized: "Unit price"), keyboard: .decimalPad)
+    private let rateField = LineItemEditorViewController.makeField(placeholder: String(localized: "VAT %", comment: "Placeholder for the VAT rate percentage field"), keyboard: .decimalPad)
     private let categoryButton = UIButton(type: .system)
     private var selectedVATCategory: VATCategory = .standard
     private let vatCategories: [VATCategory] = [.standard, .intraCommunity, .reverseCharge, .zeroRated, .exempt]
@@ -32,7 +32,7 @@ final class LineItemEditorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
-        title = "Line item"
+        title = String(localized: "Line item")
         navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [weak self] _ in self?.dismiss(animated: true) })
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .done, primaryAction: UIAction { [weak self] _ in self?.commit() })
         build()
@@ -48,12 +48,13 @@ final class LineItemEditorViewController: UIViewController {
         configureCategoryButton()
 
         let rows: [UIView] = [
-            labeled("Description", nameField),
-            labeled("Details", detailField),
-            labeled("Quantity", quantityField),
-            labeled("Unit price (\(currency.code))", priceField),
-            labeled("VAT category", categoryButton),
-            labeled("VAT rate %", rateField),
+            labeled(String(localized: "Description"), nameField),
+            labeled(String(localized: "Details"), detailField),
+            labeled(String(localized: "Quantity"), quantityField),
+            labeled(String(localized: "Unit price (\(currency.code))",
+                           comment: "Field caption with the ISO 4217 currency code, e.g. Unit price (EUR)"), priceField),
+            labeled(String(localized: "VAT category", comment: "EN 16931 VAT category (UNCL 5305) selector caption"), categoryButton),
+            labeled(String(localized: "VAT rate %"), rateField),
         ]
         let stack = UIStackView(arrangedSubviews: rows)
         stack.axis = .vertical
@@ -61,7 +62,7 @@ final class LineItemEditorViewController: UIViewController {
         stack.translatesAutoresizingMaskIntoConstraints = false
 
         if onDelete != nil {
-            let delete = DesignSystem.secondaryButton("Delete line", symbol: "trash")
+            let delete = DesignSystem.secondaryButton(String(localized: "Delete line"), symbol: "trash")
             delete.tintColor = DesignSystem.Color.overdue
             delete.addAction(UIAction { [weak self] _ in self?.onDelete?(); self?.dismiss(animated: true) }, for: .touchUpInside)
             stack.addArrangedSubview(delete)
@@ -105,7 +106,9 @@ final class LineItemEditorViewController: UIViewController {
     private func configureCategoryButton() {
         var config = UIButton.Configuration.gray()
         config.baseForegroundColor = DesignSystem.Color.label
-        config.title = "\(selectedVATCategory.displayName) (\(selectedVATCategory.rawValue))"
+        config.title = String(
+            localized: "\(selectedVATCategory.displayName) (\(selectedVATCategory.rawValue))",
+            comment: "VAT category name followed by its EN 16931 code, e.g. Reverse charge (AE)")
         config.image = UIImage(systemName: "chevron.up.chevron.down")
         config.imagePlacement = .trailing
         config.imagePadding = 8
@@ -114,7 +117,8 @@ final class LineItemEditorViewController: UIViewController {
         categoryButton.configuration = config
         categoryButton.contentHorizontalAlignment = .leading
         categoryButton.menu = UIMenu(children: vatCategories.map { cat in
-            UIAction(title: "\(cat.displayName) (\(cat.rawValue))",
+            UIAction(title: String(localized: "\(cat.displayName) (\(cat.rawValue))",
+                                   comment: "VAT category name followed by its EN 16931 code, e.g. Reverse charge (AE)"),
                      state: cat == selectedVATCategory ? .on : .off) { [weak self] _ in
                 self?.selectedVATCategory = cat
                 self?.configureCategoryButton()

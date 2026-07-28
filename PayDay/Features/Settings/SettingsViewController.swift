@@ -8,11 +8,11 @@ import PayDayKit
 final class SettingsViewController: UIViewController {
     private enum Row { case business, payment, defaults, appearance, aiDrafting, pro, credits, privacy, terms, support, moreApps, deleteAccount }
     private let sections: [(String, [Row])] = [
-        ("Your business", [.business, .payment, .defaults]),
-        ("Pay Day Pro", [.pro, .credits]),
-        ("App", [.appearance, .aiDrafting]),
-        ("About", [.privacy, .terms, .support, .moreApps]),
-        ("Account", [.deleteAccount]),
+        (String(localized: "Your business"), [.business, .payment, .defaults]),
+        (String(localized: "Pay Day Pro"), [.pro, .credits]),
+        (String(localized: "App"), [.appearance, .aiDrafting]),
+        (String(localized: "About"), [.privacy, .terms, .support, .moreApps]),
+        (String(localized: "Account"), [.deleteAccount]),
     ]
 
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -22,7 +22,7 @@ final class SettingsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Settings"
+        title = String(localized: "Settings")
         view.backgroundColor = DesignSystem.Color.background
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
@@ -61,28 +61,28 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         var config = cell.defaultContentConfiguration()
         cell.accessoryType = .disclosureIndicator
         switch sections[indexPath.section].1[indexPath.row] {
-        case .business: config.text = "Business details"; config.image = UIImage(systemName: "building.2")
-        case .payment: config.text = "Payment & IBAN"; config.image = UIImage(systemName: "creditcard")
-        case .defaults: config.text = "Invoice defaults"; config.image = UIImage(systemName: "slider.horizontal.3")
-        case .appearance: config.text = "Appearance"; config.image = UIImage(systemName: "circle.lefthalf.filled")
+        case .business: config.text = String(localized: "Business details"); config.image = UIImage(systemName: "building.2")
+        case .payment: config.text = String(localized: "Payment & IBAN"); config.image = UIImage(systemName: "creditcard")
+        case .defaults: config.text = String(localized: "Invoice defaults"); config.image = UIImage(systemName: "slider.horizontal.3")
+        case .appearance: config.text = String(localized: "Appearance"); config.image = UIImage(systemName: "circle.lefthalf.filled")
         case .aiDrafting:
-            config.text = "AI drafting"
-            config.secondaryText = AppSettings.aiConsentGranted ? "Allowed" : "Off"
+            config.text = String(localized: "AI drafting")
+            config.secondaryText = AppSettings.aiConsentGranted ? String(localized: "Allowed") : String(localized: "Off")
             config.image = UIImage(systemName: "sparkles")
         case .pro:
-            config.text = isPremium ? "Pay Day Pro — Active" : "Upgrade to Pro"
+            config.text = isPremium ? String(localized: "Pay Day Pro — Active") : String(localized: "Upgrade to Pro")
             config.image = UIImage(systemName: isPremium ? "checkmark.seal.fill" : "seal")
             config.imageProperties.tintColor = DesignSystem.Color.accent
         case .credits:
-            config.text = "Credits"; config.secondaryText = "\(balance)"
+            config.text = String(localized: "Credits"); config.secondaryText = "\(balance)"
             config.image = UIImage(systemName: "bolt.fill")
             cell.accessoryType = .disclosureIndicator
-        case .privacy: config.text = "Privacy Policy"; config.image = UIImage(systemName: "hand.raised")
-        case .terms: config.text = "Terms of Use"; config.image = UIImage(systemName: "doc.text")
-        case .support: config.text = "Support"; config.image = UIImage(systemName: "envelope")
-        case .moreApps: config.text = "More Apps"; config.image = UIImage(systemName: "square.stack.3d.up")
+        case .privacy: config.text = String(localized: "Privacy Policy"); config.image = UIImage(systemName: "hand.raised")
+        case .terms: config.text = String(localized: "Terms of Use"); config.image = UIImage(systemName: "doc.text")
+        case .support: config.text = String(localized: "Support"); config.image = UIImage(systemName: "envelope")
+        case .moreApps: config.text = String(localized: "More Apps"); config.image = UIImage(systemName: "square.stack.3d.up")
         case .deleteAccount:
-            config.text = "Delete account"
+            config.text = String(localized: "Delete account")
             config.textProperties.color = DesignSystem.Color.overdue
             config.image = UIImage(systemName: "trash")
             config.imageProperties.tintColor = DesignSystem.Color.overdue
@@ -113,18 +113,18 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
 
     private func confirmDeleteAccount() {
         let alert = UIAlertController(
-            title: "Delete account?",
-            message: "This permanently deletes your account, credit balance, and every invoice, estimate, and client on this device. This cannot be undone.",
+            title: String(localized: "Delete account?"),
+            message: String(localized: "This permanently deletes your account, credit balance, and every invoice, estimate, and client on this device. This cannot be undone."),
             preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Delete account", style: .destructive) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
+        alert.addAction(UIAlertAction(title: String(localized: "Delete account"), style: .destructive) { [weak self] _ in
             self?.performDeleteAccount()
         })
         present(alert, animated: true)
     }
 
     private func performDeleteAccount() {
-        let progress = UIAlertController(title: "Deleting…", message: nil, preferredStyle: .alert)
+        let progress = UIAlertController(title: String(localized: "Deleting…"), message: nil, preferredStyle: .alert)
         present(progress, animated: true)
         Task { [weak self] in
             do {
@@ -146,8 +146,8 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             dismiss(animated: true) { [weak self] in self?.presentDeleteFailure(error) }
             return
         }
-        let fail = UIAlertController(title: "Couldn't delete account", message: error.localizedDescription, preferredStyle: .alert)
-        fail.addAction(UIAlertAction(title: "OK", style: .default))
+        let fail = UIAlertController(title: String(localized: "Couldn't delete account"), message: error.localizedDescription, preferredStyle: .alert)
+        fail.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
         present(fail, animated: true)
     }
 
@@ -170,14 +170,18 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     private func presentAppearance() {
-        let alert = UIAlertController(title: "Appearance", message: nil, preferredStyle: .actionSheet)
-        for (title, mode) in [("System", AppearanceMode.system), ("Light", .light), ("Dark", .dark)] {
+        let alert = UIAlertController(title: String(localized: "Appearance"), message: nil, preferredStyle: .actionSheet)
+        for (title, mode) in [
+            (String(localized: "System"), AppearanceMode.system),
+            (String(localized: "Light"), .light),
+            (String(localized: "Dark"), .dark),
+        ] {
             alert.addAction(UIAlertAction(title: title, style: .default) { _ in
                 AppSettings.appearance = mode
                 self.view.window?.overrideUserInterfaceStyle = UIUserInterfaceStyle(rawValue: mode.rawValue) ?? .unspecified
             })
         }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
         alert.popoverPresentationController?.sourceView = view
         present(alert, animated: true)
     }
@@ -207,13 +211,13 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     private func presentOpenFallback(for url: URL) {
         let value = url.scheme == "mailto" ? String(url.absoluteString.dropFirst("mailto:".count)) : url.absoluteString
         let alert = UIAlertController(
-            title: url.scheme == "mailto" ? "No mail app configured" : "Couldn't open link",
+            title: url.scheme == "mailto" ? String(localized: "No mail app configured") : String(localized: "Couldn't open link"),
             message: value,
             preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Copy", style: .default) { _ in
+        alert.addAction(UIAlertAction(title: String(localized: "Copy"), style: .default) { _ in
             UIPasteboard.general.string = value
         })
-        alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .cancel))
         guard presentedViewController == nil else {
             dismiss(animated: true) { [weak self] in self?.present(alert, animated: true) }
             return

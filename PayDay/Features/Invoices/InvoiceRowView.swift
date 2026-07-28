@@ -53,8 +53,12 @@ final class InvoiceRowView: UIControl {
         let newPill = DesignSystem.statusPill(invoice.status.rawValue, title: invoice.status.displayName)
         rightStack.addArrangedSubview(newPill)
         pill = newPill
-        accessibilityLabel = "\(invoice.type.displayName) \(invoice.number), \(invoice.buyer.displayName)"
-        accessibilityValue = "\(Format.money(payable)), \(invoice.status.displayName)"
+        accessibilityLabel = String(
+            localized: "\(invoice.type.displayName) \(invoice.number), \(invoice.buyer.displayName)",
+            comment: "VoiceOver label for a document row: document kind, document number, client name")
+        accessibilityValue = String(
+            localized: "\(Format.money(payable)), \(invoice.status.displayName)",
+            comment: "VoiceOver value for a document row: payable amount, document status")
     }
 
     private func build() {

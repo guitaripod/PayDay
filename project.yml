@@ -55,6 +55,8 @@ targets:
           - "Secrets.example.swift"
       - path: PayDay/Secrets.swift
         optional: true
+      - path: PayDay/Localizable.xcstrings
+        buildPhase: resources
     dependencies:
       - package: PayDayKit
         product: PayDayKit

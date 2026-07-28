@@ -15,26 +15,26 @@ struct PayDayCreditStoreView: View {
             List {
                 if let shortfall, shortfall > 0 {
                     Section {
-                        Text("You need \(shortfall) more credits to send this invoice.")
+                        Text(String(localized: "You need \(shortfall) more credits to send this invoice."))
                             .font(.callout)
                     }
                 }
-                Section("Your balance") {
+                Section(String(localized: "Your balance")) {
                     HStack {
-                        Text("\(store.balance) credits").font(.title3.weight(.semibold))
+                        Text(String(localized: "\(store.balance) credits")).font(.title3.weight(.semibold))
                         Spacer()
                         if store.isWorking { ProgressView() }
                     }
                 }
-                Section("Credit packs") {
+                Section(String(localized: "Credit packs")) {
                     let packs = store.catalog?.packs ?? []
                     if store.catalog == nil {
                         HStack(spacing: 10) {
                             ProgressView()
-                            Text("Loading packs…").foregroundStyle(.secondary)
+                            Text(String(localized: "Loading packs…")).foregroundStyle(.secondary)
                         }
                     } else if packs.allSatisfy({ $0.storePackageID == nil }) {
-                        Text("Credit packs are temporarily unavailable from the App Store. You can keep using the app fully — please try again later.")
+                        Text(String(localized: "Credit packs are temporarily unavailable from the App Store. You can keep using the app fully — please try again later."))
                             .font(.callout).foregroundStyle(.secondary)
                     } else {
                         ForEach(packs) { pack in
@@ -47,25 +47,25 @@ struct PayDayCreditStoreView: View {
                     }
                 }
                 Section {
-                    Button("Restore Purchases") { Task { await store.restore() } }
+                    Button(String(localized: "Restore Purchases")) { Task { await store.restore() } }
                     AppleWalletLinkSection()
                 }
                 Section {
-                    Text("Credits cover each invoice you send over Peppol and optional AI drafting. The app is fully usable without them.")
+                    Text(String(localized: "Credits cover each invoice you send over Peppol and optional AI drafting. The app is fully usable without them."))
                         .font(.footnote).foregroundStyle(.secondary)
                 }
             }
-            .navigationTitle("Get Credits")
+            .navigationTitle(String(localized: "Get Credits"))
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Done") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Done")) { dismiss() } }
             }
             .task { await store.loadCatalog() }
             .alert(
-                "Something Went Wrong",
+                String(localized: "Something Went Wrong"),
                 isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } }),
                 presenting: store.error
             ) { _ in
-                Button("OK", role: .cancel) {}
+                Button(String(localized: "OK"), role: .cancel) {}
             } message: { error in
                 Text(error.localizedDescription)
             }
@@ -82,12 +82,13 @@ struct PayDayCreditStoreView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             VStack(alignment: .leading, spacing: 2) {
                 Text(pack.pack.name).font(.headline)
-                Text("\(pack.pack.totalCredits) credits"
-                    + (pack.pack.bonusCredits > 0 ? " (+\(pack.pack.bonusCredits) bonus)" : ""))
+                Text(pack.pack.bonusCredits > 0
+                    ? String(localized: "\(pack.pack.totalCredits) credits (+\(pack.pack.bonusCredits) bonus)")
+                    : String(localized: "\(pack.pack.totalCredits) credits"))
                     .font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
-            Text(available ? (pack.localizedPrice ?? "—") : "Unavailable")
+            Text(available ? (pack.localizedPrice ?? "—") : String(localized: "Unavailable"))
                 .font(.callout.weight(.semibold))
                 .foregroundStyle(available ? Color.primary : Color.secondary)
         }

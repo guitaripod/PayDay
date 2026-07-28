@@ -83,8 +83,10 @@ final class InvoicePDFRenderer {
 
     private func drawParties(_ invoice: Invoice, top: CGFloat) -> CGFloat {
         let columnWidth = (pageSize.width - margin * 2) / 2 - 12
-        let sellerHeight = drawPartyBlock("From", party: invoice.seller, x: margin, y: top, width: columnWidth)
-        let buyerHeight = drawPartyBlock("Bill to", party: invoice.buyer, x: margin + columnWidth + 24, y: top, width: columnWidth)
+        let sellerHeight = drawPartyBlock(String(localized: "From", comment: "Invoice PDF caption above the seller party block"),
+                                          party: invoice.seller, x: margin, y: top, width: columnWidth)
+        let buyerHeight = drawPartyBlock(String(localized: "Bill to", comment: "Invoice PDF caption above the buyer party block"),
+                                         party: invoice.buyer, x: margin + columnWidth + 24, y: top, width: columnWidth)
         return top + max(sellerHeight, buyerHeight)
     }
 
@@ -95,7 +97,8 @@ final class InvoicePDFRenderer {
         cursor += 16
         cursor += drawWrapped(party.legalName, x: x, y: cursor, width: width,
                               font: .systemFont(ofSize: 14, weight: .semibold), color: Ink.primary)
-        let lines = [party.address.singleLine, party.email, party.hasVATID ? "VAT \(party.vatID)" : ""]
+        let lines = [party.address.singleLine, party.email,
+                     party.hasVATID ? String(localized: "VAT \(party.vatID)", comment: "Invoice PDF line showing a party VAT identifier") : ""]
             .filter { !$0.isEmpty }
         for line in lines {
             cursor += drawWrapped(line, x: x, y: cursor, width: width,
@@ -106,9 +109,9 @@ final class InvoicePDFRenderer {
 
     private func drawMeta(_ invoice: Invoice, top: CGFloat) -> CGFloat {
         let items: [(String, String)] = [
-            ("\(invoice.type.displayName) no.", invoice.number),
-            ("Issued", Format.date(invoice.issueDate, locale: style.locale)),
-            ("Due", Format.date(invoice.dueDate, locale: style.locale)),
+            (String(localized: "\(invoice.type.displayName) no.", comment: "Invoice PDF meta caption, e.g. Invoice no."), invoice.number),
+            (String(localized: "Issued", comment: "Invoice PDF meta caption for the issue date"), Format.date(invoice.issueDate, locale: style.locale)),
+            (String(localized: "Due", comment: "Invoice PDF meta caption for the payment due date"), Format.date(invoice.dueDate, locale: style.locale)),
         ]
         var x = margin
         let columnWidth = (pageSize.width - margin * 2) / CGFloat(items.count)
@@ -145,7 +148,8 @@ final class InvoicePDFRenderer {
                 rowBottom += drawWrapped(line.details, x: cols[0], y: rowBottom, width: cols[1] - cols[0] - 8,
                                          font: .systemFont(ofSize: 10), color: Ink.secondary)
             }
-            let qty = "\(decimalDisplay(line.quantity)) \(line.unit.label)"
+            let qty = String(localized: "\(decimalDisplay(line.quantity)) \(line.unit.label)",
+                             comment: "Invoice PDF quantity cell: amount then unit of measure, e.g. 8 hour")
             drawRight(qty, rightEdge: cols[2] - 8, y: y, font: .systemFont(ofSize: 11), color: Ink.secondary)
             drawRight(decimalDisplay(line.effectiveRate) + "%", rightEdge: cols[3] - 8, y: y,
                       font: .systemFont(ofSize: 11), color: Ink.secondary)
@@ -159,10 +163,14 @@ final class InvoicePDFRenderer {
 
     private func drawTableHeader(at y: CGFloat, cols: [CGFloat], contentWidth: CGFloat) {
         let font = UIFont.systemFont(ofSize: 9, weight: .bold)
-        draw("DESCRIPTION", at: CGPoint(x: cols[0], y: y), font: font, color: Ink.secondary)
-        drawRight("QTY", rightEdge: cols[2] - 8, y: y, font: font, color: Ink.secondary)
-        drawRight("VAT", rightEdge: cols[3] - 8, y: y, font: font, color: Ink.secondary)
-        drawRight("AMOUNT", rightEdge: margin + contentWidth, y: y, font: font, color: Ink.secondary)
+        draw(String(localized: "DESCRIPTION", comment: "Invoice PDF table column header, rendered in capitals"),
+             at: CGPoint(x: cols[0], y: y), font: font, color: Ink.secondary)
+        drawRight(String(localized: "QTY", comment: "Invoice PDF table column header for quantity, rendered in capitals"),
+                  rightEdge: cols[2] - 8, y: y, font: font, color: Ink.secondary)
+        drawRight(String(localized: "VAT", comment: "Value-added tax; invoice PDF table column header"),
+                  rightEdge: cols[3] - 8, y: y, font: font, color: Ink.secondary)
+        drawRight(String(localized: "AMOUNT", comment: "Invoice PDF table column header for the line net, rendered in capitals"),
+                  rightEdge: margin + contentWidth, y: y, font: font, color: Ink.secondary)
         drawSeparator(at: y + 16, width: contentWidth)
     }
 
@@ -180,24 +188,26 @@ final class InvoicePDFRenderer {
                       color: bold ? .label : Ink.primary)
             y += bold ? 24 : 19
         }
-        row("Subtotal", s.taxExclusiveTotal)
-        if !s.allowanceTotal.isZero { row("Discounts", -s.allowanceTotal) }
-        if !s.chargeTotal.isZero { row("Charges", s.chargeTotal) }
-        row("VAT", s.taxTotal)
+        row(String(localized: "Subtotal", comment: "Invoice PDF total: tax-exclusive amount, EN 16931 BT-109"), s.taxExclusiveTotal)
+        if !s.allowanceTotal.isZero { row(String(localized: "Discounts", comment: "Invoice PDF total: document-level allowances, EN 16931 BT-107"), -s.allowanceTotal) }
+        if !s.chargeTotal.isZero { row(String(localized: "Charges", comment: "Invoice PDF total: document-level charges, EN 16931 BT-108"), s.chargeTotal) }
+        row(String(localized: "VAT", comment: "Value-added tax; invoice PDF table column header"), s.taxTotal)
         drawSeparator(at: y - 2, width: contentWidth * 0.45, x: labelX)
         y += 6
-        row("Total due", s.payableAmount, bold: true)
+        row(String(localized: "Total due", comment: "Invoice PDF total: amount due for payment, EN 16931 BT-115"), s.payableAmount, bold: true)
         return y
     }
 
     private func drawVATBreakdown(_ totals: ComputedTotals, top: CGFloat) -> CGFloat {
         guard totals.breakdowns.count > 1 || totals.breakdowns.contains(where: { $0.category != .standard }) else { return top }
         var y = top
-        draw("VAT BREAKDOWN", at: CGPoint(x: margin, y: y), font: .systemFont(ofSize: 9, weight: .bold), color: Ink.secondary)
+        draw(String(localized: "VAT BREAKDOWN", comment: "Invoice PDF section header for the EN 16931 VAT breakdown, rendered in capitals"),
+             at: CGPoint(x: margin, y: y), font: .systemFont(ofSize: 9, weight: .bold), color: Ink.secondary)
         y += 15
         for b in totals.breakdowns {
             let rate = "\(decimalDisplay(b.ratePercent))%"
-            let label = "\(b.category.displayName) \(rate) on \(Format.money(b.taxableBase, locale: style.locale))"
+            let label = String(localized: "\(b.category.displayName) \(rate) on \(Format.money(b.taxableBase, locale: style.locale))",
+                               comment: "Invoice PDF VAT breakdown line: category, rate, taxable base amount")
             draw(label, at: CGPoint(x: margin, y: y), font: .systemFont(ofSize: 10), color: Ink.secondary)
             drawRight(Format.money(b.taxAmount, locale: style.locale), rightEdge: margin + 240, y: y,
                       font: .systemFont(ofSize: 10, weight: .medium), color: Ink.primary)
@@ -214,12 +224,13 @@ final class InvoicePDFRenderer {
         var y = top
         let means = invoice.paymentMeans
         if !means.iban.isEmpty {
-            draw("PAYMENT", at: CGPoint(x: margin, y: y), font: .systemFont(ofSize: 9, weight: .bold), color: Ink.secondary)
+            draw(String(localized: "PAYMENT", comment: "Invoice PDF section header for bank payment details, rendered in capitals"),
+                 at: CGPoint(x: margin, y: y), font: .systemFont(ofSize: 9, weight: .bold), color: Ink.secondary)
             y += 15
             let lines = [
-                "IBAN  \(means.iban)",
-                means.bic.isEmpty ? "" : "BIC  \(means.bic)",
-                means.remittanceReference.isEmpty ? "" : "Reference  \(means.remittanceReference)",
+                String(localized: "IBAN  \(means.iban)", comment: "Invoice PDF payment line; IBAN is an international acronym"),
+                means.bic.isEmpty ? "" : String(localized: "BIC  \(means.bic)", comment: "Invoice PDF payment line; BIC/SWIFT is an international acronym"),
+                means.remittanceReference.isEmpty ? "" : String(localized: "Reference  \(means.remittanceReference)", comment: "Invoice PDF payment line: remittance reference, EN 16931 BT-83"),
             ].filter { !$0.isEmpty }
             for line in lines {
                 draw(line, at: CGPoint(x: margin, y: y), font: .monospacedSystemFont(ofSize: 11, weight: .regular), color: Ink.primary)
@@ -240,8 +251,8 @@ final class InvoicePDFRenderer {
     private func drawFooter(_ invoice: Invoice) {
         let isCompliant = invoice.type.isEInvoiceable && InvoiceValidator.isCompliant(invoice)
         let text = isCompliant
-            ? "Generated by Pay Day · EN 16931-valid e-invoice available"
-            : "Generated by Pay Day"
+            ? String(localized: "Generated by Pay Day · EN 16931-valid e-invoice available")
+            : String(localized: "Generated by Pay Day")
         let attr = attributed(text, font: .systemFont(ofSize: 8), color: Ink.tertiary)
         attr.draw(at: CGPoint(x: margin, y: pageSize.height - margin + 8))
     }

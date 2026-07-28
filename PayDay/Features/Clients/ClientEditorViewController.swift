@@ -8,14 +8,14 @@ final class ClientEditorViewController: UIViewController {
     private let onSave: (Party) -> Void
     private let vatService = VATValidationService()
 
-    private let nameField = ClientEditorViewController.field("Legal name")
-    private let emailField = ClientEditorViewController.field("Email", keyboard: .emailAddress)
-    private let line1Field = ClientEditorViewController.field("Street address")
-    private let cityField = ClientEditorViewController.field("City")
-    private let postalField = ClientEditorViewController.field("Postal code")
-    private let countryField = ClientEditorViewController.field("Country code (e.g. DE)")
-    private let vatField = ClientEditorViewController.field("VAT ID (e.g. DE123456789)")
-    private let peppolField = ClientEditorViewController.field("Peppol ID (scheme:id)")
+    private let nameField = ClientEditorViewController.field(String(localized: "Legal name"))
+    private let emailField = ClientEditorViewController.field(String(localized: "Email"), keyboard: .emailAddress)
+    private let line1Field = ClientEditorViewController.field(String(localized: "Street address"))
+    private let cityField = ClientEditorViewController.field(String(localized: "City"))
+    private let postalField = ClientEditorViewController.field(String(localized: "Postal code"))
+    private let countryField = ClientEditorViewController.field(String(localized: "Country code (e.g. DE)", comment: "Placeholder for the ISO 3166 two-letter country code"))
+    private let vatField = ClientEditorViewController.field(String(localized: "VAT ID (e.g. DE123456789)", comment: "Placeholder for the buyer VAT identifier, EN 16931 BT-48"))
+    private let peppolField = ClientEditorViewController.field(String(localized: "Peppol ID (scheme:id)", comment: "Placeholder for the Peppol participant identifier; scheme and id are literal"))
     private let vatStatusLabel = UILabel()
     private let peppolStatusLabel = UILabel()
     private let peppolFixButton = UIButton(type: .system)
@@ -32,7 +32,7 @@ final class ClientEditorViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Client"
+        title = String(localized: "Client")
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = DesignSystem.Color.background
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .save, primaryAction: UIAction { [weak self] _ in self?.commit() })
@@ -108,20 +108,22 @@ final class ClientEditorViewController: UIViewController {
     private func checkVAT() {
         let vatID = vatField.text ?? ""
         guard !vatID.isEmpty else { vatStatusLabel.text = nil; return }
-        vatStatusLabel.text = "Checking VAT…"
+        vatStatusLabel.text = String(localized: "Checking VAT…")
         Task { [weak self] in
             let result = try? await self?.vatService.validate(vatID: vatID)
             await MainActor.run {
                 guard let self else { return }
                 guard let result else { self.vatStatusLabel.text = nil; return }
                 if !result.reachable {
-                    self.vatStatusLabel.text = "Couldn't reach VIES — you can still issue."
+                    self.vatStatusLabel.text = String(localized: "Couldn't reach VIES — you can still issue.", comment: "VIES is the EU VAT Information Exchange System; keep the acronym")
                     self.vatStatusLabel.textColor = DesignSystem.Color.secondary
                 } else if result.valid {
-                    self.vatStatusLabel.text = "✓ Valid VAT number" + (result.name.map { " · \($0)" } ?? "")
+                    self.vatStatusLabel.text = result.name.map {
+                        String(localized: "✓ Valid VAT number · \($0)", comment: "Successful VIES check followed by the registered company name")
+                    } ?? String(localized: "✓ Valid VAT number")
                     self.vatStatusLabel.textColor = DesignSystem.Color.paid
                 } else {
-                    self.vatStatusLabel.text = "✗ Not a valid VAT number"
+                    self.vatStatusLabel.text = String(localized: "✗ Not a valid VAT number")
                     self.vatStatusLabel.textColor = DesignSystem.Color.overdue
                 }
             }
@@ -148,8 +150,8 @@ final class ClientEditorViewController: UIViewController {
             } catch {
                 AppLogger.shared.error("client save failed: \(error)", category: .db)
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
-                let alert = UIAlertController(title: "Couldn't Save", message: error.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                let alert = UIAlertController(title: String(localized: "Couldn't Save"), message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
                 self.present(alert, animated: true)
             }
         }
@@ -177,7 +179,9 @@ final class ClientEditorViewController: UIViewController {
     private func refreshPeppolAdvisory() {
         let raw = (peppolField.text ?? "").trimmed
         if !raw.isEmpty && !raw.contains(":") {
-            setPeppolHint("Use scheme:id — the scheme is a 4-digit code, e.g. 0216:003712345678.", warning: true, suggestion: nil)
+            setPeppolHint(String(localized: "Use scheme:id — the scheme is a 4-digit code, e.g. 0216:003712345678.",
+                                 comment: "Peppol participant id format hint; \"scheme:id\" is literal syntax"),
+                          warning: true, suggestion: nil)
             return
         }
         let id = PeppolID(parsing: raw)
@@ -193,7 +197,7 @@ final class ClientEditorViewController: UIViewController {
         peppolStatusLabel.textColor = warning ? DesignSystem.Color.overdue : DesignSystem.Color.secondary
         peppolSuggestion = suggestion
         peppolFixButton.isHidden = suggestion == nil
-        if let suggestion { peppolFixButton.setTitle("Use \(suggestion.wire)", for: .normal) }
+        if let suggestion { peppolFixButton.setTitle(String(localized: "Use \(suggestion.wire)", comment: "Button offering a corrected Peppol participant id"), for: .normal) }
     }
 
     private func applyPeppolSuggestion() {

@@ -6,25 +6,25 @@ import PayDayKit
 final class BusinessSettingsViewController: UIViewController {
     private var profile = BusinessProfile()
 
-    private let nameField = BusinessSettingsViewController.field("Legal name")
-    private let vatField = BusinessSettingsViewController.field("VAT ID")
-    private let regField = BusinessSettingsViewController.field("Company registration no.")
-    private let line1Field = BusinessSettingsViewController.field("Street address")
-    private let cityField = BusinessSettingsViewController.field("City")
-    private let postalField = BusinessSettingsViewController.field("Postal code")
-    private let countryField = BusinessSettingsViewController.field("Country code")
-    private let ibanField = BusinessSettingsViewController.field("IBAN")
-    private let bicField = BusinessSettingsViewController.field("BIC")
-    private let peppolField = BusinessSettingsViewController.field("Your Peppol ID (scheme:id)")
-    private let vatRateField = BusinessSettingsViewController.field("Default VAT %", keyboard: .decimalPad)
-    private let termsField = BusinessSettingsViewController.field("Default payment terms")
+    private let nameField = BusinessSettingsViewController.field(String(localized: "Legal name"))
+    private let vatField = BusinessSettingsViewController.field(String(localized: "VAT ID", comment: "Seller VAT identifier, EN 16931 BT-31"))
+    private let regField = BusinessSettingsViewController.field(String(localized: "Company registration no.", comment: "Seller legal registration identifier, EN 16931 BT-30"))
+    private let line1Field = BusinessSettingsViewController.field(String(localized: "Street address"))
+    private let cityField = BusinessSettingsViewController.field(String(localized: "City"))
+    private let postalField = BusinessSettingsViewController.field(String(localized: "Postal code"))
+    private let countryField = BusinessSettingsViewController.field(String(localized: "Country code", comment: "ISO 3166 two-letter country code"))
+    private let ibanField = BusinessSettingsViewController.field(String(localized: "IBAN", comment: "International Bank Account Number; keep the acronym"))
+    private let bicField = BusinessSettingsViewController.field(String(localized: "BIC", comment: "Bank Identifier Code (SWIFT); keep the acronym"))
+    private let peppolField = BusinessSettingsViewController.field(String(localized: "Your Peppol ID (scheme:id)", comment: "Placeholder for the seller Peppol participant identifier; \"scheme:id\" is literal syntax"))
+    private let vatRateField = BusinessSettingsViewController.field(String(localized: "Default VAT %"), keyboard: .decimalPad)
+    private let termsField = BusinessSettingsViewController.field(String(localized: "Default payment terms"))
     private let peppolStatusLabel = UILabel()
     private let peppolFixButton = UIButton(type: .system)
     private var peppolSuggestion: PeppolID?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Business"
+        title = String(localized: "Business")
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = DesignSystem.Color.background
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .save, primaryAction: UIAction { [weak self] _ in self?.commit() })
@@ -71,10 +71,10 @@ final class BusinessSettingsViewController: UIViewController {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         let stack = UIStackView(arrangedSubviews: [
-            section("Identity"), nameField, vatField, regField,
-            section("Address"), line1Field, cityField, postalField, countryField,
-            section("Getting paid"), ibanField, bicField, peppolField, peppolStatusLabel, peppolFixButton,
-            section("Defaults"), vatRateField, termsField,
+            section(String(localized: "Identity")), nameField, vatField, regField,
+            section(String(localized: "Address")), line1Field, cityField, postalField, countryField,
+            section(String(localized: "Getting paid")), ibanField, bicField, peppolField, peppolStatusLabel, peppolFixButton,
+            section(String(localized: "Defaults")), vatRateField, termsField,
         ])
         stack.axis = .vertical
         stack.spacing = DesignSystem.Spacing.s
@@ -116,8 +116,8 @@ final class BusinessSettingsViewController: UIViewController {
             } catch {
                 AppLogger.shared.error("business profile save failed: \(error)", category: .db)
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
-                let alert = UIAlertController(title: "Couldn't Save", message: error.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                let alert = UIAlertController(title: String(localized: "Couldn't Save"), message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
                 self.present(alert, animated: true)
             }
         }
@@ -145,7 +145,9 @@ final class BusinessSettingsViewController: UIViewController {
     private func refreshPeppolAdvisory() {
         let raw = (peppolField.text ?? "").trimmed
         if !raw.isEmpty && !raw.contains(":") {
-            setPeppolHint("Use scheme:id — the scheme is a 4-digit code, e.g. 0216:003712345678.", warning: true, suggestion: nil)
+            setPeppolHint(String(localized: "Use scheme:id — the scheme is a 4-digit code, e.g. 0216:003712345678.",
+                                 comment: "Peppol participant id format hint; \"scheme:id\" is literal syntax"),
+                          warning: true, suggestion: nil)
             return
         }
         let id = PeppolID(parsing: raw)
@@ -161,7 +163,7 @@ final class BusinessSettingsViewController: UIViewController {
         peppolStatusLabel.textColor = warning ? DesignSystem.Color.overdue : DesignSystem.Color.secondary
         peppolSuggestion = suggestion
         peppolFixButton.isHidden = suggestion == nil
-        if let suggestion { peppolFixButton.setTitle("Use \(suggestion.wire)", for: .normal) }
+        if let suggestion { peppolFixButton.setTitle(String(localized: "Use \(suggestion.wire)", comment: "Button offering a corrected Peppol participant id"), for: .normal) }
     }
 
     private func applyPeppolSuggestion() {

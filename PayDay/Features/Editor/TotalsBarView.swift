@@ -9,7 +9,7 @@ final class TotalsBarView: UIView {
     private let captionLabel = UILabel()
     private let complianceLabel = UILabel()
     private let complianceIcon = UIImageView()
-    private let saveButton = DesignSystem.primaryButton("Save")
+    private let saveButton = DesignSystem.primaryButton(String(localized: "Save"))
     private var lastCompliant: Bool?
 
     private let glass = UIVisualEffectView.paydayGlass(cornerRadius: 26)
@@ -24,7 +24,7 @@ final class TotalsBarView: UIView {
     required init?(coder: NSCoder) { fatalError() }
 
     private func build() {
-        captionLabel.text = "Total due"
+        captionLabel.text = String(localized: "Total due")
         captionLabel.font = DesignSystem.Typography.scaledSystem(12, .semibold, relativeTo: .caption1)
         captionLabel.textColor = DesignSystem.Color.secondary
         captionLabel.adjustsFontForContentSizeCategory = true
@@ -71,7 +71,7 @@ final class TotalsBarView: UIView {
     func update(totals: ComputedTotals) {
         let money = Format.money(totals.summary.payableAmount)
         totalLabel.text = money
-        totalLabel.accessibilityLabel = "Total due \(money)"
+        totalLabel.accessibilityLabel = String(localized: "Total due \(money)")
     }
 
     func update(issues: [ValidationIssue]) {
@@ -82,8 +82,10 @@ final class TotalsBarView: UIView {
         complianceIcon.image = UIImage(systemName: symbol,
             withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .semibold))
         complianceIcon.tintColor = color
-        complianceLabel.text = compliant ? "EN 16931 ready"
-            : "\(errors.count) compliance issue\(errors.count == 1 ? "" : "s")"
+        complianceLabel.text = compliant
+            ? String(localized: "EN 16931 ready")
+            : String(localized: "\(errors.count) compliance issues",
+                     comment: "Count of EN 16931 validation errors blocking a compliant e-invoice")
         complianceLabel.textColor = color
 
         if lastCompliant != nil && lastCompliant != compliant {

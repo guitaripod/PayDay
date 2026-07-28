@@ -25,9 +25,9 @@ final class AIConsentViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
         isModalInPresentation = true
-        navigationItem.title = "AI Drafting"
+        navigationItem.title = String(localized: "AI Drafting")
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            title: "Close", primaryAction: UIAction { [weak self] _ in self?.finish(false) })
+            title: String(localized: "Close"), primaryAction: UIAction { [weak self] _ in self?.finish(false) })
         buildLayout()
     }
 
@@ -38,32 +38,40 @@ final class AIConsentViewController: UIViewController {
         icon.contentMode = .center
 
         let title = DesignSystem.label(
-            "Draft with AI", font: DesignSystem.Typography.title())
+            String(localized: "Draft with AI"), font: DesignSystem.Typography.title())
         title.textAlignment = .center
 
         let intro = DesignSystem.label(
-            "To turn your words or a photo into line items, Pay Day sends the "
-            + "content you provide to a third-party AI service. You control when "
-            + "this happens — nothing is sent until you tap an AI action.",
+            String(localized: """
+                To turn your words or a photo into line items, Pay Day sends the content you \
+                provide to a third-party AI service. You control when this happens — nothing \
+                is sent until you tap an AI action.
+                """),
             font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary)
 
         let bullets = UIStackView(arrangedSubviews: [
-            bullet("What is sent",
-                   "Only the text you type or the photo you choose, plus the invoice "
-                   + "currency. Your client list and saved invoices are not sent."),
-            bullet("Who it is sent to",
-                   "The request goes over an encrypted connection to Pay Day's backend "
-                   + "(operated by Midgar Oy), which forwards it to OpenAI for processing."),
-            bullet("How it is used",
-                   "The content is used only to generate your draft. It is not stored "
-                   + "by us after the response, not used to train AI models, and never "
-                   + "used for advertising. You review and edit every draft."),
+            bullet(String(localized: "What is sent"),
+                   String(localized: """
+                       Only the text you type or the photo you choose, plus the invoice \
+                       currency. Your client list and saved invoices are not sent.
+                       """)),
+            bullet(String(localized: "Who it is sent to"),
+                   String(localized: """
+                       The request goes over an encrypted connection to Pay Day's backend \
+                       (operated by Midgar Oy), which forwards it to OpenAI for processing.
+                       """)),
+            bullet(String(localized: "How it is used"),
+                   String(localized: """
+                       The content is used only to generate your draft. It is not stored by us \
+                       after the response, not used to train AI models, and never used for \
+                       advertising. You review and edit every draft.
+                       """)),
         ])
         bullets.axis = .vertical
         bullets.spacing = DesignSystem.Spacing.l
 
         let policy = UIButton(type: .system)
-        policy.setTitle("Read the Privacy Policy", for: .normal)
+        policy.setTitle(String(localized: "Read the Privacy Policy"), for: .normal)
         policy.titleLabel?.font = DesignSystem.Typography.body()
         policy.tintColor = DesignSystem.Color.accent
         policy.addAction(UIAction { [weak self] _ in self?.openPrivacyPolicy() }, for: .touchUpInside)
@@ -82,10 +90,10 @@ final class AIConsentViewController: UIViewController {
         scroll.addSubview(content)
         view.addSubview(scroll)
 
-        let agree = DesignSystem.primaryButton("Agree & Continue", symbol: "checkmark")
+        let agree = DesignSystem.primaryButton(String(localized: "Agree & Continue"), symbol: "checkmark")
         agree.addAction(UIAction { [weak self] _ in self?.finish(true) }, for: .touchUpInside)
 
-        let decline = DesignSystem.secondaryButton(showsDecline ? "Not Now" : "Withdraw Consent")
+        let decline = DesignSystem.secondaryButton(showsDecline ? String(localized: "Not Now") : String(localized: "Withdraw Consent"))
         decline.addAction(UIAction { [weak self] _ in self?.finish(false) }, for: .touchUpInside)
 
         let buttons = UIStackView(arrangedSubviews: [agree, decline])

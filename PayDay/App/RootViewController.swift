@@ -16,10 +16,10 @@ final class RootViewController: UITabBarController {
         // its Liquid Glass (a custom appearance background would suppress it).
         tabBar.tintColor = DesignSystem.Color.accent
         viewControllers = [
-            wrap(DashboardViewController(), title: "Home", symbol: "house.fill"),
-            wrap(InvoiceListViewController(kind: .invoice), title: "Invoices", symbol: "doc.text.fill"),
-            wrap(ClientListViewController(), title: "Clients", symbol: "person.2.fill"),
-            wrap(SettingsViewController(), title: "Settings", symbol: "gearshape.fill"),
+            wrap(DashboardViewController(), title: String(localized: "Home"), symbol: "house.fill"),
+            wrap(InvoiceListViewController(kind: .invoice), title: String(localized: "Invoices"), symbol: "doc.text.fill"),
+            wrap(ClientListViewController(), title: String(localized: "Clients"), symbol: "person.2.fill"),
+            wrap(SettingsViewController(), title: String(localized: "Settings"), symbol: "gearshape.fill"),
         ]
     }
 

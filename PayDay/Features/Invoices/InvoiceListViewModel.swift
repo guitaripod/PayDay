@@ -7,7 +7,7 @@ final class InvoiceListViewModel {
     let documentsPublisher = PassthroughSubject<[Invoice], Never>()
     let errorPublisher = PassthroughSubject<String, Never>()
 
-    private static let numberAllocationFailure = "Couldn't allocate a number — try again"
+    private static let numberAllocationFailure = String(localized: "Couldn't allocate a number — try again")
 
     var kind: DocumentType
     private let invoices: InvoiceRepository

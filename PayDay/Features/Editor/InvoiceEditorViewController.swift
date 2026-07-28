@@ -31,10 +31,13 @@ final class InvoiceEditorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
-        title = viewModel.isNew ? "New \(viewModel.invoice.type.displayName)" : viewModel.invoice.number
+        title = viewModel.isNew
+            ? String(localized: "New \(viewModel.invoice.type.displayName)",
+                     comment: "Editor title for a new document, e.g. New Invoice")
+            : viewModel.invoice.number
         navigationItem.largeTitleDisplayMode = .never
         let previewItem = UIBarButtonItem(
-            title: "Preview", primaryAction: UIAction { [weak self] _ in self?.preview() })
+            title: String(localized: "Preview"), primaryAction: UIAction { [weak self] _ in self?.preview() })
         navigationItem.rightBarButtonItems = [previewItem, editButtonItem]
         setupLayout()
         bind()
@@ -93,8 +96,11 @@ final class InvoiceEditorViewController: UIViewController {
         viewModel.save { [weak self] saved in
             guard let self else { return }
             guard let saved else {
-                let alert = UIAlertController(title: "Couldn't save", message: "The invoice couldn't be saved. Please try again.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                let alert = UIAlertController(
+                    title: String(localized: "Couldn't save"),
+                    message: String(localized: "The invoice couldn't be saved. Please try again."),
+                    preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
                 self.present(alert, animated: true)
                 return
             }
@@ -135,19 +141,22 @@ final class InvoiceEditorViewController: UIViewController {
     }
 
     private func presentAIDraftOptions() {
-        let sheet = UIAlertController(title: "Draft line items", message: "Pay Day turns words or a photo into billable lines.", preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: "Describe in words", style: .default) { [weak self] _ in self?.aiFromText() })
-        sheet.addAction(UIAlertAction(title: "Choose a photo or receipt", style: .default) { [weak self] _ in self?.aiFromPhoto() })
-        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        let sheet = UIAlertController(
+            title: String(localized: "Draft line items"),
+            message: String(localized: "Pay Day turns words or a photo into billable lines."),
+            preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: String(localized: "Describe in words"), style: .default) { [weak self] _ in self?.aiFromText() })
+        sheet.addAction(UIAlertAction(title: String(localized: "Choose a photo or receipt"), style: .default) { [weak self] _ in self?.aiFromPhoto() })
+        sheet.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
         sheet.popoverPresentationController?.sourceView = view
         present(sheet, animated: true)
     }
 
     private func aiFromText() {
-        let alert = UIAlertController(title: "Describe the work", message: nil, preferredStyle: .alert)
-        alert.addTextField { $0.placeholder = "8h design at €90, plus €200 hosting" }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Draft", style: .default) { [weak self] _ in
+        let alert = UIAlertController(title: String(localized: "Describe the work"), message: nil, preferredStyle: .alert)
+        alert.addTextField { $0.placeholder = String(localized: "8h design at €90, plus €200 hosting") }
+        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
+        alert.addAction(UIAlertAction(title: String(localized: "Draft"), style: .default) { [weak self] _ in
             guard let text = alert.textFields?.first?.text, !text.isEmpty else { return }
             self?.runDraft { service, currency in try await service.lineItems(fromText: text, currency: currency) }
         })
@@ -170,7 +179,8 @@ final class InvoiceEditorViewController: UIViewController {
             do {
                 let drafts = try await work(InvoiceAIService(), currency)
                 if drafts.isEmpty {
-                    self.presentInfo("Nothing found", "Couldn't extract line items — try describing them instead.")
+                    self.presentInfo(String(localized: "Nothing found"),
+                                     String(localized: "Couldn't extract line items — try describing them instead."))
                 } else {
                     self.viewModel.appendDraftedLines(drafts)
                 }
@@ -180,7 +190,8 @@ final class InvoiceEditorViewController: UIViewController {
                 if AICreditsManager.store.isEmpty {
                     CreditStorePresenter.present(from: self)
                 } else {
-                    self.presentInfo("Couldn't draft", "The AI request failed — check your connection and try again.")
+                    self.presentInfo(String(localized: "Couldn't draft"),
+                                     String(localized: "The AI request failed — check your connection and try again."))
                 }
             }
         }
@@ -188,7 +199,7 @@ final class InvoiceEditorViewController: UIViewController {
 
     private func presentInfo(_ title: String, _ message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
         present(alert, animated: true)
     }
 }
@@ -224,10 +235,10 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch Section(rawValue: section)! {
-        case .details: return "Details"
-        case .client: return "Bill to"
-        case .lines: return "Line items"
-        case .notes: return "Notes & terms"
+        case .details: return String(localized: "Details")
+        case .client: return String(localized: "Bill to", comment: "Invoice section header for the buyer party")
+        case .lines: return String(localized: "Line items")
+        case .notes: return String(localized: "Notes & terms")
         }
     }
 
@@ -250,37 +261,37 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
         switch Section(rawValue: indexPath.section)! {
         case .details:
             switch indexPath.row {
-            case 0: config.text = "Number"; config.secondaryText = invoice.number
-            case 1: config.text = "Issued"; config.secondaryText = Format.date(invoice.issueDate)
-            default: config.text = "Due"; config.secondaryText = Format.date(invoice.dueDate)
+            case 0: config.text = String(localized: "Number"); config.secondaryText = invoice.number
+            case 1: config.text = String(localized: "Issued", comment: "Row label for the invoice issue date"); config.secondaryText = Format.date(invoice.issueDate)
+            default: config.text = String(localized: "Due", comment: "Row label for the payment due date"); config.secondaryText = Format.date(invoice.dueDate)
             }
         case .client:
-            config.text = invoice.buyer.legalName.isEmpty ? "Select a client" : invoice.buyer.displayName
+            config.text = invoice.buyer.legalName.isEmpty ? String(localized: "Select a client") : invoice.buyer.displayName
             if !invoice.buyer.address.singleLine.isEmpty { config.secondaryText = invoice.buyer.address.singleLine }
             cell.accessoryType = .disclosureIndicator
         case .lines:
             let lineCount = invoice.lines.count
             if indexPath.row < lineCount {
                 let line = invoice.lines[indexPath.row]
-                config.text = line.name.isEmpty ? "Untitled" : line.name
+                config.text = line.name.isEmpty ? String(localized: "Untitled") : line.name
                 if let nets = totals?.lineNets, nets.indices.contains(indexPath.row) {
                     config.secondaryText = Format.money(nets[indexPath.row])
                 }
                 cell.accessoryType = .disclosureIndicator
             } else if indexPath.row == lineCount {
-                config.text = "Add line item"
+                config.text = String(localized: "Add line item")
                 config.image = UIImage(systemName: "plus.circle.fill")
                 config.imageProperties.tintColor = DesignSystem.Color.accent
             } else {
-                config.text = "Draft with AI"
+                config.text = String(localized: "Draft with AI")
                 config.image = UIImage(systemName: "sparkles")
                 config.imageProperties.tintColor = DesignSystem.Color.accent
             }
         case .notes:
             if indexPath.row == 0 {
-                config.text = "Payment terms"; config.secondaryText = invoice.paymentTerms.isEmpty ? "None" : invoice.paymentTerms
+                config.text = String(localized: "Payment terms"); config.secondaryText = invoice.paymentTerms.isEmpty ? String(localized: "None") : invoice.paymentTerms
             } else {
-                config.text = "Note"; config.secondaryText = invoice.note.isEmpty ? "None" : invoice.note
+                config.text = String(localized: "Note"); config.secondaryText = invoice.note.isEmpty ? String(localized: "None") : invoice.note
             }
         }
         cell.contentConfiguration = config
@@ -338,7 +349,7 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard isLineRow(indexPath), let line = invoice?.lines[indexPath.row] else { return nil }
-        let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, done in
+        let delete = UIContextualAction(style: .destructive, title: String(localized: "Delete")) { [weak self] _, _, done in
             Haptics.warning(); self?.viewModel.removeLine(id: line.id); done(true)
         }
         return UISwipeActionsConfiguration(actions: [delete])
@@ -348,29 +359,29 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
         guard isLineRow(indexPath), let line = invoice?.lines[indexPath.row] else { return nil }
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
             UIMenu(children: [
-                UIAction(title: "Edit", image: UIImage(systemName: "pencil")) { _ in self?.editLine(line) },
-                UIAction(title: "Duplicate", image: UIImage(systemName: "plus.square.on.square")) { _ in Haptics.tap(); self?.viewModel.duplicateLine(id: line.id) },
-                UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in Haptics.warning(); self?.viewModel.removeLine(id: line.id) },
+                UIAction(title: String(localized: "Edit"), image: UIImage(systemName: "pencil")) { _ in self?.editLine(line) },
+                UIAction(title: String(localized: "Duplicate"), image: UIImage(systemName: "plus.square.on.square")) { _ in Haptics.tap(); self?.viewModel.duplicateLine(id: line.id) },
+                UIAction(title: String(localized: "Delete"), image: UIImage(systemName: "trash"), attributes: .destructive) { _ in Haptics.warning(); self?.viewModel.removeLine(id: line.id) },
             ])
         }
     }
 
     private func editDetail(row: Int) {
         switch row {
-        case 0: promptText(title: "Invoice number", value: invoice?.number ?? "") { [weak self] in self?.viewModel.setNumber($0) }
+        case 0: promptText(title: String(localized: "Invoice number"), value: invoice?.number ?? "") { [weak self] in self?.viewModel.setNumber($0) }
         case 1:
             let window = Self.dateWindow()
-            promptDate(title: "Issue date", value: invoice?.issueDate, minimum: window.lowerBound, maximum: window.upperBound) { [weak self] in self?.viewModel.setIssueDate($0) }
+            promptDate(title: String(localized: "Issue date"), value: invoice?.issueDate, minimum: window.lowerBound, maximum: window.upperBound) { [weak self] in self?.viewModel.setIssueDate($0) }
         default:
-            promptDate(title: "Due date", value: invoice?.dueDate, minimum: invoice?.issueDate, maximum: Self.dateWindow().upperBound) { [weak self] in self?.viewModel.setDueDate($0) }
+            promptDate(title: String(localized: "Due date"), value: invoice?.dueDate, minimum: invoice?.issueDate, maximum: Self.dateWindow().upperBound) { [weak self] in self?.viewModel.setDueDate($0) }
         }
     }
 
     private func editNote(row: Int) {
         if row == 0 {
-            promptMultilineText(title: "Payment terms", value: invoice?.paymentTerms ?? "") { [weak self] in self?.viewModel.setPaymentTerms($0) }
+            promptMultilineText(title: String(localized: "Payment terms"), value: invoice?.paymentTerms ?? "") { [weak self] in self?.viewModel.setPaymentTerms($0) }
         } else {
-            promptMultilineText(title: "Note", value: invoice?.note ?? "") { [weak self] in self?.viewModel.setNote($0) }
+            promptMultilineText(title: String(localized: "Note"), value: invoice?.note ?? "") { [weak self] in self?.viewModel.setNote($0) }
         }
     }
 
@@ -384,8 +395,8 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
     private func promptText(title: String, value: String, onSave: @escaping (String) -> Void) {
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addTextField { $0.text = value }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Save", style: .default) { _ in onSave(alert.textFields?.first?.text ?? "") })
+        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
+        alert.addAction(UIAlertAction(title: String(localized: "Save"), style: .default) { _ in onSave(alert.textFields?.first?.text ?? "") })
         present(alert, animated: true)
     }
 

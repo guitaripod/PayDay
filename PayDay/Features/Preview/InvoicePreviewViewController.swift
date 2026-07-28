@@ -33,7 +33,7 @@ final class InvoicePreviewViewController: UIViewController {
         let shareItem = UIBarButtonItem(
             image: UIImage(systemName: "square.and.arrow.up"),
             primaryAction: UIAction { [weak self] _ in self?.share() })
-        shareItem.accessibilityLabel = "Share"
+        shareItem.accessibilityLabel = String(localized: "Share")
         navigationItem.rightBarButtonItem = shareItem
         buildLayout()
         renderAsync()
@@ -75,7 +75,7 @@ final class InvoicePreviewViewController: UIViewController {
         ])
 
         if invoice.type.isEInvoiceable {
-            let sendButton = DesignSystem.primaryButton("Send via Peppol", symbol: "paperplane.fill")
+            let sendButton = DesignSystem.primaryButton(String(localized: "Send via Peppol"), symbol: "paperplane.fill")
             sendButton.addAction(UIAction { [weak self] _ in self?.sendPeppol() }, for: .touchUpInside)
             sendButton.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(sendButton)
@@ -107,7 +107,7 @@ final class InvoicePreviewViewController: UIViewController {
             if let document = PDFDocument(data: visual) {
                 self.pdfView.document = document
             } else {
-                self.statusLabel.text = "Couldn't render this document. Try again."
+                self.statusLabel.text = String(localized: "Couldn't render this document. Try again.")
                 self.statusLabel.textColor = DesignSystem.Color.overdue
             }
             self.updateStatus()
@@ -132,7 +132,7 @@ final class InvoicePreviewViewController: UIViewController {
 
     private func updateStatus() {
         guard invoice.type.isEInvoiceable else {
-            statusLabel.text = "Estimate — not an e-invoice."
+            statusLabel.text = String(localized: "Estimate — not an e-invoice.")
             statusLabel.textColor = DesignSystem.Color.secondary
             return
         }
@@ -140,17 +140,20 @@ final class InvoicePreviewViewController: UIViewController {
         if issues.isEmpty {
             let embedded = embed?.embedded == true
             if embedded {
-                statusLabel.text = "✓ EN 16931 valid · Factur-X embedded in PDF"
+                statusLabel.text = String(localized: "✓ EN 16931 valid · Factur-X embedded in PDF")
                 statusLabel.textColor = DesignSystem.Color.paid
             } else if isPremium {
-                statusLabel.text = "✓ EN 16931 valid · structured XML attached on export"
+                statusLabel.text = String(localized: "✓ EN 16931 valid · structured XML attached on export")
                 statusLabel.textColor = DesignSystem.Color.paid
             } else {
-                statusLabel.text = "✓ This invoice is EN 16931 valid — unlock Pro to export a Factur-X / Peppol e-invoice."
+                statusLabel.text = String(localized: "✓ This invoice is EN 16931 valid — unlock Pro to export a Factur-X / Peppol e-invoice.")
                 statusLabel.textColor = DesignSystem.Color.sent
             }
         } else {
-            statusLabel.text = "⚠︎ \(issues.count) issue\(issues.count == 1 ? "" : "s") before this is a valid e-invoice:\n• " + issues.prefix(3).map(\.message).joined(separator: "\n• ")
+            let headline = String(
+                localized: "⚠︎ \(issues.count) issues before this is a valid e-invoice:",
+                comment: "Count of EN 16931 validation errors, followed by a bulleted list of them")
+            statusLabel.text = headline + "\n• " + issues.prefix(3).map(\.message).joined(separator: "\n• ")
             statusLabel.textColor = DesignSystem.Color.overdue
         }
     }
@@ -166,7 +169,8 @@ final class InvoicePreviewViewController: UIViewController {
             items.append(xmlURL)
         }
         guard !items.isEmpty else {
-            presentAlert("Couldn't export", "The PDF couldn't be written for sharing. Try again.")
+            presentAlert(String(localized: "Couldn't export"),
+                         String(localized: "The PDF couldn't be written for sharing. Try again."))
             return
         }
         let sheet = UIActivityViewController(activityItems: items, applicationActivities: nil)
@@ -198,7 +202,7 @@ final class InvoicePreviewViewController: UIViewController {
     private func sendPeppol() {
         Task {
             guard await AICreditsManager.store.client.isPremium() else {
-                presentPaywall(reason: "Peppol delivery is a Pay Day Pro feature.")
+                presentPaywall(reason: String(localized: "Peppol delivery is a Pay Day Pro feature."))
                 return
             }
             // Peppol delivery is metered: each send costs credits (charged
@@ -211,16 +215,19 @@ final class InvoicePreviewViewController: UIViewController {
                 return
             }
             guard !invoice.seller.peppolParticipant.isEmpty else {
-                presentAlert("No sender Peppol ID", "Add your Peppol ID in Business Settings before sending over the network.")
+                presentAlert(String(localized: "No sender Peppol ID"),
+                             String(localized: "Add your Peppol ID in Business Settings before sending over the network."))
                 return
             }
             let buyerPeppol = invoice.buyer.peppolParticipant
             guard !buyerPeppol.isEmpty else {
-                presentAlert("No Peppol address", "Add a Peppol ID to this client to send over the network.")
+                presentAlert(String(localized: "No Peppol address"),
+                             String(localized: "Add a Peppol ID to this client to send over the network."))
                 return
             }
             guard InvoiceValidator.isCompliant(invoice), let ubl = try? UBLInvoiceWriter().xml(for: invoice) else {
-                presentAlert("Not valid yet", "Resolve the EN 16931 issues shown above before sending.")
+                presentAlert(String(localized: "Not valid yet"),
+                             String(localized: "Resolve the EN 16931 issues shown above before sending."))
                 return
             }
             let recipient = PeppolRecipient(
@@ -233,35 +240,37 @@ final class InvoicePreviewViewController: UIViewController {
 
     @MainActor
     private func transmit(ubl: String, recipient: PeppolRecipient) async {
-        let hud = UIAlertController(title: "Sending…", message: "\n", preferredStyle: .alert)
+        let hud = UIAlertController(title: String(localized: "Sending…"), message: "\n", preferredStyle: .alert)
         present(hud, animated: true)
         let service = PeppolService()
         do {
             for try await event in service.send(ublXML: ubl, invoiceNumber: invoice.number, recipient: recipient) {
                 switch event {
-                case .validating: hud.message = "Validating…"
-                case .submitting: hud.message = "Submitting to Peppol…"
-                case .accepted: hud.message = "Accepted by the network."
+                case .validating: hud.message = String(localized: "Validating…")
+                case .submitting: hud.message = String(localized: "Submitting to Peppol…")
+                case .accepted: hud.message = String(localized: "Accepted by the network.")
                 case .delivered(let id):
                     Haptics.success()
                     AppLogger.shared.info("delivered \(invoice.number): transmission \(id)", category: .peppol)
                     try? await InvoiceRepository.shared.markSent(id: invoice.id)
                     await AICreditsManager.store.refresh()
                     hud.dismiss(animated: true) {
-                        self.presentAlert("Delivered", "Transmission \(id) accepted by Peppol.") {
+                        self.presentAlert(String(localized: "Delivered"),
+                                          String(localized: "Transmission \(id) accepted by Peppol.",
+                                                 comment: "Peppol transmission identifier returned by the access point")) {
                             ReviewPrompt.recordDelivery(from: self)
                         }
                     }
                     return
                 case .failed(let reason):
                     Haptics.error()
-                    hud.dismiss(animated: true) { self.presentAlert("Send failed", reason) }
+                    hud.dismiss(animated: true) { self.presentAlert(String(localized: "Send failed"), reason) }
                     return
                 }
             }
         } catch {
             Haptics.error()
-            hud.dismiss(animated: true) { self.presentAlert("Send failed", error.localizedDescription) }
+            hud.dismiss(animated: true) { self.presentAlert(String(localized: "Send failed"), error.localizedDescription) }
         }
     }
 
@@ -272,7 +281,7 @@ final class InvoicePreviewViewController: UIViewController {
 
     private func presentAlert(_ title: String, _ message: String, onDismiss: (() -> Void)? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in onDismiss?() })
+        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default) { _ in onDismiss?() })
         present(alert, animated: true)
     }
 
