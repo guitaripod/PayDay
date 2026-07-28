@@ -66,7 +66,7 @@ final class InvoicePDFRenderer {
             draw(invoice.seller.displayName, at: CGPoint(x: margin, y: y),
                  font: .systemFont(ofSize: 20, weight: .bold), color: style.accent)
         }
-        let title = invoice.type.displayName.uppercased()
+        let title = Localized.name(invoice.type).uppercased()
         let titleAttr = attributed(title, font: .systemFont(ofSize: 26, weight: .heavy), color: Ink.primary)
         let titleSize = titleAttr.size()
         titleAttr.draw(at: CGPoint(x: margin + contentWidth - titleSize.width, y: y))
@@ -109,7 +109,7 @@ final class InvoicePDFRenderer {
 
     private func drawMeta(_ invoice: Invoice, top: CGFloat) -> CGFloat {
         let items: [(String, String)] = [
-            (String(localized: "\(invoice.type.displayName) no.", comment: "Invoice PDF meta caption, e.g. Invoice no."), invoice.number),
+            (String(localized: "\(Localized.name(invoice.type)) no.", comment: "Invoice PDF meta caption, e.g. Invoice no."), invoice.number),
             (String(localized: "Issued", comment: "Invoice PDF meta caption for the issue date"), Format.date(invoice.issueDate, locale: style.locale)),
             (String(localized: "Due", comment: "Invoice PDF meta caption for the payment due date"), Format.date(invoice.dueDate, locale: style.locale)),
         ]
@@ -206,7 +206,7 @@ final class InvoicePDFRenderer {
         y += 15
         for b in totals.breakdowns {
             let rate = "\(decimalDisplay(b.ratePercent))%"
-            let label = String(localized: "\(b.category.displayName) \(rate) on \(Format.money(b.taxableBase, locale: style.locale))",
+            let label = String(localized: "\(Localized.name(b.category)) \(rate) on \(Format.money(b.taxableBase, locale: style.locale))",
                                comment: "Invoice PDF VAT breakdown line: category, rate, taxable base amount")
             draw(label, at: CGPoint(x: margin, y: y), font: .systemFont(ofSize: 10), color: Ink.secondary)
             drawRight(Format.money(b.taxAmount, locale: style.locale), rightEdge: margin + 240, y: y,

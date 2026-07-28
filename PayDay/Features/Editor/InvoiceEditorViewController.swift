@@ -32,7 +32,7 @@ final class InvoiceEditorViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
         title = viewModel.isNew
-            ? String(localized: "New \(viewModel.invoice.type.displayName)",
+            ? String(localized: "New \(Localized.name(viewModel.invoice.type))",
                      comment: "Editor title for a new document, e.g. New Invoice")
             : viewModel.invoice.number
         navigationItem.largeTitleDisplayMode = .never

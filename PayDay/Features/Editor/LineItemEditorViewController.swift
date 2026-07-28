@@ -107,7 +107,7 @@ final class LineItemEditorViewController: UIViewController {
         var config = UIButton.Configuration.gray()
         config.baseForegroundColor = DesignSystem.Color.label
         config.title = String(
-            localized: "\(selectedVATCategory.displayName) (\(selectedVATCategory.rawValue))",
+            localized: "\(Localized.name(selectedVATCategory)) (\(selectedVATCategory.rawValue))",
             comment: "VAT category name followed by its EN 16931 code, e.g. Reverse charge (AE)")
         config.image = UIImage(systemName: "chevron.up.chevron.down")
         config.imagePlacement = .trailing
@@ -117,7 +117,7 @@ final class LineItemEditorViewController: UIViewController {
         categoryButton.configuration = config
         categoryButton.contentHorizontalAlignment = .leading
         categoryButton.menu = UIMenu(children: vatCategories.map { cat in
-            UIAction(title: String(localized: "\(cat.displayName) (\(cat.rawValue))",
+            UIAction(title: String(localized: "\(Localized.name(cat)) (\(cat.rawValue))",
                                    comment: "VAT category name followed by its EN 16931 code, e.g. Reverse charge (AE)"),
                      state: cat == selectedVATCategory ? .on : .off) { [weak self] _ in
                 self?.selectedVATCategory = cat

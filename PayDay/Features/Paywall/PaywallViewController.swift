@@ -367,12 +367,7 @@ final class PaywallViewController: UIViewController {
     }
 
     private static func map(_ plan: SubscriptionPlan) -> PlanVM {
-        let term: String
-        switch plan.period {
-        case .annual: term = String(localized: "year", comment: "Billing term shown after a price, e.g. €39.99 / year")
-        case .monthly: term = String(localized: "month", comment: "Billing term shown after a price, e.g. €4.99 / month")
-        case .weekly: term = String(localized: "week", comment: "Billing term shown after a price, e.g. €1.99 / week")
-        }
+        let term = planTerm(plan.period)
         let trial = (plan.trialEligible && (plan.trialDays ?? 0) > 0)
             ? String(localized: "\(plan.trialDays!) days free, then \(plan.localizedPrice)/\(term). Auto-renews. Cancel anytime.")
             : nil
@@ -392,10 +387,23 @@ final class PaywallViewController: UIViewController {
     }
 
     private static let fallbackPlans: [PlanVM] = [
-        PlanVM(id: "com.guitaripod.payday.pro.annual", title: "Billed annually", price: "€39.99", term: "year",
-               badge: "Save 33%", footnote: "7 days free, then €39.99/year. Auto-renews. Cancel anytime.",
-               cta: "Start 7-day free trial"),
-        PlanVM(id: "com.guitaripod.payday.pro.monthly", title: "Billed monthly", price: "€4.99", term: "month",
-               badge: nil, footnote: "Billed €4.99 every month. Auto-renews. Cancel anytime.", cta: "Subscribe"),
+        PlanVM(id: "com.guitaripod.payday.pro.annual", title: planTitle(.annual), price: "€39.99",
+               term: planTerm(.annual), badge: String(localized: "Save 33%"),
+               footnote: String(
+                   localized: "\(7) days free, then \("€39.99")/\(planTerm(.annual)). Auto-renews. Cancel anytime."),
+               cta: String(localized: "Start \(7)-day free trial")),
+        PlanVM(id: "com.guitaripod.payday.pro.monthly", title: planTitle(.monthly), price: "€4.99",
+               term: planTerm(.monthly), badge: nil,
+               footnote: String(
+                   localized: "Billed \("€4.99") every \(planTerm(.monthly)). Auto-renews. Cancel anytime."),
+               cta: String(localized: "Subscribe")),
     ]
+
+    private static func planTerm(_ period: SubscriptionPlan.Period) -> String {
+        switch period {
+        case .annual: return String(localized: "year", comment: "Billing term shown after a price, e.g. €39.99 / year")
+        case .monthly: return String(localized: "month", comment: "Billing term shown after a price, e.g. €4.99 / month")
+        case .weekly: return String(localized: "week", comment: "Billing term shown after a price, e.g. €1.99 / week")
+        }
+    }
 }

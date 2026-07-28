@@ -50,14 +50,14 @@ final class InvoiceRowView: UIControl {
         clientLabel.text = invoice.buyer.displayName
         amountLabel.text = Format.money(payable)
         pill?.removeFromSuperview()
-        let newPill = DesignSystem.statusPill(invoice.status.rawValue, title: invoice.status.displayName)
+        let newPill = DesignSystem.statusPill(invoice.status.rawValue, title: Localized.name(invoice.status))
         rightStack.addArrangedSubview(newPill)
         pill = newPill
         accessibilityLabel = String(
-            localized: "\(invoice.type.displayName) \(invoice.number), \(invoice.buyer.displayName)",
+            localized: "\(Localized.name(invoice.type)) \(invoice.number), \(invoice.buyer.displayName)",
             comment: "VoiceOver label for a document row: document kind, document number, client name")
         accessibilityValue = String(
-            localized: "\(Format.money(payable)), \(invoice.status.displayName)",
+            localized: "\(Format.money(payable)), \(Localized.name(invoice.status))",
             comment: "VoiceOver value for a document row: payable amount, document status")
     }
 
