@@ -75,6 +75,12 @@
             "state" : "translated",
             "value" : "%1$@ %2$@"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@"
+          }
         }
       }
     },
@@ -152,6 +158,12 @@
             "state" : "translated",
             "value" : "%1$@ %2$@，计税基础 %3$@"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@，課稅基礎 %3$@"
+          }
         }
       }
     },
@@ -225,6 +237,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@，%3$@"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ %2$@，%3$@"
@@ -306,6 +324,12 @@
             "state" : "translated",
             "value" : "%1$@（%2$@）"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@（%2$@）"
+          }
         }
       }
     },
@@ -383,6 +407,12 @@
             "state" : "translated",
             "value" : "%1$@ / %2$@"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ / %2$@"
+          }
         }
       }
     },
@@ -453,6 +483,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@编号"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@編號"
           }
         }
       }
@@ -531,6 +567,12 @@
             "state" : "translated",
             "value" : "%1$@，%2$@"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@，%2$@"
+          }
         }
       }
     },
@@ -604,6 +646,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@，每%3$@ %2$@"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@，每%3$@ %2$@"
@@ -823,6 +871,18 @@
               }
             }
           }
+        },
+        "zh-Hant" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld 項合規問題"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1019,6 +1079,18 @@
               }
             }
           }
+        },
+        "zh-Hant" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld 點數"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1094,6 +1166,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$lld 积分（赠送 %2$lld）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld 點數（加贈 %2$lld）"
           }
         }
       }
@@ -1171,6 +1249,12 @@
             "state" : "translated",
             "value" : "免费 %1$lld 天，之后 %2$@/%3$@。自动续订，可随时取消。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免費 %1$lld 天，之後 %2$@/%3$@。自動續訂，可隨時取消。"
+          }
         }
       }
     },
@@ -1240,6 +1324,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "设计 8 小时 90 欧元，另加托管 200 欧元"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設計 8 小時 90 歐元，另加主機代管 200 歐元"
           }
         }
       }
@@ -1311,6 +1401,12 @@
             "state" : "translated",
             "value" : "AI 起草"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI 起草"
+          }
         }
       }
     },
@@ -1377,6 +1473,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI 起草"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "AI 起草"
@@ -1452,6 +1554,12 @@
             "state" : "translated",
             "value" : "金额"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "金額"
+          }
         }
       }
     },
@@ -1521,6 +1629,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "关于"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關於"
           }
         }
       }
@@ -1592,6 +1706,12 @@
             "state" : "translated",
             "value" : "网络已接收。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "網路已接受。"
+          }
         }
       }
     },
@@ -1661,6 +1781,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "账户"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "帳戶"
           }
         }
       }
@@ -1732,6 +1858,12 @@
             "state" : "translated",
             "value" : "为该客户添加 Peppol ID 后即可通过网络发送。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "為這位客戶新增 Peppol ID，即可透過網路傳送。"
+          }
         }
       }
     },
@@ -1801,6 +1933,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加客户"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增客戶"
           }
         }
       }
@@ -1872,6 +2010,12 @@
             "state" : "translated",
             "value" : "添加明细"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增明細"
+          }
         }
       }
     },
@@ -1941,6 +2085,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加你开票的企业。其增值税税号和 Peppol 地址是合规电子发票的基础。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增你開立發票的對象企業。他們的加值稅稅號與 Peppol 位址是合規電子發票的基礎。"
           }
         }
       }
@@ -2012,6 +2162,12 @@
             "state" : "translated",
             "value" : "通过网络发送前，请先在企业设置中填写你的 Peppol ID。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "透過網路傳送前，請先在企業設定中填寫你的 Peppol ID。"
+          }
         }
       }
     },
@@ -2081,6 +2237,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "填写名称、增值税税号和 IBAN"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "填寫名稱、加值稅稅號與 IBAN"
           }
         }
       }
@@ -2152,6 +2314,12 @@
             "state" : "translated",
             "value" : "填写名称、增值税税号和 IBAN，让每张发票都完整。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "填寫名稱、加值稅稅號與 IBAN，讓每張發票都完整。"
+          }
         }
       }
     },
@@ -2218,6 +2386,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "地址"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "地址"
@@ -2292,6 +2466,12 @@
             "state" : "translated",
             "value" : "同意并继续"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同意並繼續"
+          }
         }
       }
     },
@@ -2361,6 +2541,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已允许"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已允許"
           }
         }
       }
@@ -2432,6 +2618,12 @@
             "state" : "translated",
             "value" : "应用"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App"
+          }
         }
       }
     },
@@ -2502,6 +2694,12 @@
             "state" : "translated",
             "value" : "外观"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外觀"
+          }
         }
       }
     },
@@ -2569,6 +2767,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BIC"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "BIC"
@@ -2644,6 +2848,12 @@
             "state" : "translated",
             "value" : "BIC  %@"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BIC  %@"
+          }
         }
       }
     },
@@ -2713,6 +2923,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "免费开出漂亮的发票——需要时还能生成符合欧盟规范的电子发票（Factur-X、Peppol）。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免費開出漂亮的發票——需要時還能產生符合歐盟規範的電子發票（Factur-X、Peppol）。"
           }
         }
       }
@@ -2785,21 +3001,33 @@
             "state" : "translated",
             "value" : "收票方"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買方"
+          }
         }
       }
     },
     "Billed %@ every %@. Auto-renews. Cancel anytime." : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrechnung: %1$@ pro %2$@. Verlängert sich automatisch. Jederzeit kündbar."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Billed %1$@ every %2$@. Auto-renews. Cancel anytime."
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abrechnung: %1$@ pro %2$@. Verlängert sich automatisch. Jederzeit kündbar."
+            "value" : "Se cobra %1$@ cada %2$@. Se renueva automáticamente. Cancela cuando quieras."
           }
         },
         "fi" : {
@@ -2812,12 +3040,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Facturé %1$@ par %2$@. Renouvellement automatique. Annulable à tout moment."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se cobra %1$@ cada %2$@. Se renueva automáticamente. Cancela cuando quieras."
           }
         },
         "it" : {
@@ -2844,10 +3066,10 @@
             "value" : "Je betaalt %1$@ per %2$@. Wordt automatisch verlengd. Altijd opzegbaar."
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "每%2$@收取 %1$@。自动续订，可随时取消。"
+            "value" : "Płatność %1$@ co %2$@. Odnawia się automatycznie. Możesz anulować w każdej chwili."
           }
         },
         "pt-BR" : {
@@ -2856,10 +3078,16 @@
             "value" : "Cobrança de %1$@ por %2$@. Renova automaticamente. Cancele quando quiser."
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Płatność %1$@ co %2$@. Odnawia się automatycznie. Możesz anulować w każdej chwili."
+            "value" : "每%2$@收取 %1$@。自动续订，可随时取消。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每%2$@收取 %1$@。自動續訂，可隨時取消。"
           }
         }
       }
@@ -2931,6 +3159,12 @@
             "state" : "translated",
             "value" : "按年计费"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按年計費"
+          }
         }
       }
     },
@@ -3000,6 +3234,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "按月计费"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按月計費"
           }
         }
       }
@@ -3071,6 +3311,12 @@
             "state" : "translated",
             "value" : "企业"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "企業"
+          }
         }
       }
     },
@@ -3141,6 +3387,12 @@
             "state" : "translated",
             "value" : "企业信息"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "企業資料"
+          }
         }
       }
     },
@@ -3207,6 +3459,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消"
@@ -3282,6 +3540,12 @@
             "state" : "translated",
             "value" : "附加费用"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "附加費用"
+          }
         }
       }
     },
@@ -3351,6 +3615,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在校验增值税税号…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在驗證加值稅稅號…"
           }
         }
       }
@@ -3422,6 +3692,12 @@
             "state" : "translated",
             "value" : "选择照片或收据"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇照片或收據"
+          }
         }
       }
     },
@@ -3492,6 +3768,12 @@
             "state" : "translated",
             "value" : "选择客户"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇客戶"
+          }
         }
       }
     },
@@ -3558,6 +3840,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "城市"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "城市"
@@ -3632,6 +3920,12 @@
             "state" : "translated",
             "value" : "客户"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "客戶"
+          }
         }
       }
     },
@@ -3702,6 +3996,12 @@
             "state" : "translated",
             "value" : "客户"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "客戶"
+          }
         }
       }
     },
@@ -3771,6 +4071,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "关闭"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關閉"
           }
         }
       }
@@ -3843,6 +4149,12 @@
             "state" : "translated",
             "value" : "公司注册号"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "公司登記編號"
+          }
         }
       }
     },
@@ -3912,6 +4224,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "继续"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繼續"
           }
         }
       }
@@ -3983,6 +4301,12 @@
             "state" : "translated",
             "value" : "转为发票"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轉為發票"
+          }
         }
       }
     },
@@ -4052,6 +4376,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "拷贝"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝"
           }
         }
       }
@@ -4123,6 +4453,12 @@
             "state" : "translated",
             "value" : "无法删除"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法刪除"
+          }
         }
       }
     },
@@ -4192,6 +4528,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法存储"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法儲存"
           }
         }
       }
@@ -4263,6 +4605,12 @@
             "state" : "translated",
             "value" : "无法分配编号"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法取得編號"
+          }
         }
       }
     },
@@ -4332,6 +4680,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法分配编号，请重试"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法取得編號，請再試一次"
           }
         }
       }
@@ -4403,6 +4757,12 @@
             "state" : "translated",
             "value" : "无法分配编号，请重试。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法取得編號，請再試一次。"
+          }
         }
       }
     },
@@ -4472,6 +4832,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法删除账户"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法刪除帳戶"
           }
         }
       }
@@ -4543,6 +4909,12 @@
             "state" : "translated",
             "value" : "无法生成草稿"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法產生草稿"
+          }
         }
       }
     },
@@ -4612,6 +4984,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法导出"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法匯出"
           }
         }
       }
@@ -4683,6 +5061,12 @@
             "state" : "translated",
             "value" : "无法提取明细，试试用文字描述。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法擷取明細，改用文字描述看看。"
+          }
         }
       }
     },
@@ -4752,6 +5136,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法加载订阅方案，请检查网络连接。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法載入訂閱方案，請檢查網路連線。"
           }
         }
       }
@@ -4823,6 +5213,12 @@
             "state" : "translated",
             "value" : "无法打开链接"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法打開連結"
+          }
         }
       }
     },
@@ -4892,6 +5288,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法打开链接"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法打開連結"
           }
         }
       }
@@ -4964,6 +5366,12 @@
             "state" : "translated",
             "value" : "无法连接 VIES——仍可正常开票。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法連上 VIES——仍可正常開立發票。"
+          }
         }
       }
     },
@@ -5033,6 +5441,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法连接网络。请检查网络连接后重试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法連上網路。請檢查網路連線後再試一次。"
           }
         }
       }
@@ -5104,6 +5518,12 @@
             "state" : "translated",
             "value" : "无法生成此文档，请重试。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法產生這份文件，請再試一次。"
+          }
         }
       }
     },
@@ -5173,6 +5593,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法存储"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法儲存"
           }
         }
       }
@@ -5245,6 +5671,12 @@
             "state" : "translated",
             "value" : "国家代码"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "國家代碼"
+          }
         }
       }
     },
@@ -5316,6 +5748,12 @@
             "state" : "translated",
             "value" : "国家代码（例如 DE）"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "國家代碼（例如 DE）"
+          }
         }
       }
     },
@@ -5385,6 +5823,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "创建报价单发给客户，客户接受后可一键转为发票。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建立報價單寄給客戶，客戶接受後即可轉為發票。"
           }
         }
       }
@@ -5456,6 +5900,12 @@
             "state" : "translated",
             "value" : "创建报价单"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建立報價單"
+          }
         }
       }
     },
@@ -5525,6 +5975,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "创建发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建立發票"
           }
         }
       }
@@ -5596,6 +6052,12 @@
             "state" : "translated",
             "value" : "创建你的第一张发票。免费、不限数量，并已为欧盟电子发票做好准备。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建立你的第一張發票。免費、不限數量，並已為歐盟電子發票做好準備。"
+          }
         }
       }
     },
@@ -5665,6 +6127,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "积分包"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "點數包"
           }
         }
       }
@@ -5736,6 +6204,12 @@
             "state" : "translated",
             "value" : "积分包目前无法从 App Store 购买。你仍可完整使用本 App，请稍后再试。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目前無法從 App Store 購買點數包。你仍可完整使用本 App，請稍後再試。"
+          }
         }
       }
     },
@@ -5806,6 +6280,12 @@
             "state" : "translated",
             "value" : "积分"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "點數"
+          }
         }
       }
     },
@@ -5875,6 +6355,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "积分用于通过 Peppol 发送的每张发票以及可选的 AI 起草。没有积分也能完整使用本 App。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "點數用於透過 Peppol 傳送的每張發票，以及選用的 AI 起草。沒有點數也能完整使用本 App。"
           }
         }
       }
@@ -5947,6 +6433,12 @@
             "state" : "translated",
             "value" : "项目"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "項目"
+          }
         }
       }
     },
@@ -6013,6 +6505,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "深色"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "深色"
@@ -6087,6 +6585,12 @@
             "state" : "translated",
             "value" : "默认增值税率 %"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預設加值稅率 %"
+          }
         }
       }
     },
@@ -6156,6 +6660,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "默认付款条件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預設付款條件"
           }
         }
       }
@@ -6227,6 +6737,12 @@
             "state" : "translated",
             "value" : "默认值"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預設值"
+          }
         }
       }
     },
@@ -6296,6 +6812,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除"
           }
         }
       }
@@ -6367,6 +6889,12 @@
             "state" : "translated",
             "value" : "删除账户"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除帳戶"
+          }
         }
       }
     },
@@ -6436,6 +6964,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除账户？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除帳戶？"
           }
         }
       }
@@ -6507,6 +7041,12 @@
             "state" : "translated",
             "value" : "删除明细"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除明細"
+          }
         }
       }
     },
@@ -6576,6 +7116,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在删除…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在刪除…"
           }
         }
       }
@@ -6647,6 +7193,12 @@
             "state" : "translated",
             "value" : "已送达"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已送達"
+          }
         }
       }
     },
@@ -6713,6 +7265,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用文字描述"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "用文字描述"
@@ -6787,6 +7345,12 @@
             "state" : "translated",
             "value" : "描述工作内容"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "描述工作內容"
+          }
         }
       }
     },
@@ -6856,6 +7420,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "项目名称"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "項目名稱"
           }
         }
       }
@@ -6927,6 +7497,12 @@
             "state" : "translated",
             "value" : "详情"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "詳細資訊"
+          }
         }
       }
     },
@@ -6997,6 +7573,12 @@
             "state" : "translated",
             "value" : "详情（可选）"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "詳細資訊（選填）"
+          }
         }
       }
     },
@@ -7064,6 +7646,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "折扣"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "折扣"
@@ -7138,6 +7726,12 @@
             "state" : "translated",
             "value" : "文档类型"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件類型"
+          }
         }
       }
     },
@@ -7204,6 +7798,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
@@ -7278,6 +7878,12 @@
             "state" : "translated",
             "value" : "生成"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "產生"
+          }
         }
       }
     },
@@ -7347,6 +7953,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "起草明细"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "起草明細"
           }
         }
       }
@@ -7418,6 +8030,12 @@
             "state" : "translated",
             "value" : "从一张照片或一句话生成明细"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從一張照片或一句話起草明細"
+          }
         }
       }
     },
@@ -7484,6 +8102,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用 AI 起草"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "用 AI 起草"
@@ -7559,6 +8183,12 @@
             "state" : "translated",
             "value" : "到期日"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "到期日"
+          }
         }
       }
     },
@@ -7625,6 +8255,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "到期日"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "到期日"
@@ -7699,6 +8335,12 @@
             "state" : "translated",
             "value" : "复制"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "複製"
+          }
         }
       }
     },
@@ -7769,6 +8411,12 @@
             "state" : "translated",
             "value" : "EN 16931 电子发票"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EN 16931 電子發票"
+          }
         }
       }
     },
@@ -7835,6 +8483,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "符合 EN 16931"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "符合 EN 16931"
@@ -7909,6 +8563,12 @@
             "state" : "translated",
             "value" : "编辑"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編輯"
+          }
         }
       }
     },
@@ -7978,6 +8638,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "电子邮件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "電子郵件"
           }
         }
       }
@@ -8049,6 +8715,12 @@
             "state" : "translated",
             "value" : "报价单——不是电子发票。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "報價單——不是電子發票。"
+          }
         }
       }
     },
@@ -8118,6 +8790,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "报价单"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "報價單"
           }
         }
       }
@@ -8189,6 +8867,12 @@
             "state" : "translated",
             "value" : "可通过税务机关校验的 Factur-X / ZUGFeRD PDF。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可通過稅務機關驗證的 Factur-X / ZUGFeRD PDF。"
+          }
         }
       }
     },
@@ -8258,6 +8942,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "完善你的企业信息"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成企業資料設定"
           }
         }
       }
@@ -8330,6 +9020,12 @@
             "state" : "translated",
             "value" : "开票方"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "賣方"
+          }
         }
       }
     },
@@ -8399,6 +9095,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "由 Pay Day 生成"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由 Pay Day 產生"
           }
         }
       }
@@ -8470,6 +9172,12 @@
             "state" : "translated",
             "value" : "由 Pay Day 生成 · 提供符合 EN 16931 的电子发票"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由 Pay Day 產生 · 提供符合 EN 16931 的電子發票"
+          }
         }
       }
     },
@@ -8539,6 +9247,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "获取积分"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取得點數"
           }
         }
       }
@@ -8610,6 +9324,12 @@
             "state" : "translated",
             "value" : "合规收款，稳稳到账。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "合規開立，順利收款。"
+          }
         }
       }
     },
@@ -8679,6 +9399,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "开始使用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開始使用"
           }
         }
       }
@@ -8750,6 +9476,12 @@
             "state" : "translated",
             "value" : "收款信息"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收款資訊"
+          }
         }
       }
     },
@@ -8820,6 +9552,12 @@
             "state" : "translated",
             "value" : "主页"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "首頁"
+          }
         }
       }
     },
@@ -8886,6 +9624,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如何使用"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "如何使用"
@@ -8961,6 +9705,12 @@
             "state" : "translated",
             "value" : "IBAN"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN"
+          }
         }
       }
     },
@@ -9028,6 +9778,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN  %@"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "IBAN  %@"
@@ -9102,6 +9858,12 @@
             "state" : "translated",
             "value" : "身份信息"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "身分資訊"
+          }
         }
       }
     },
@@ -9171,6 +9933,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "转为发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轉為發票"
           }
         }
       }
@@ -9242,6 +10010,12 @@
             "state" : "translated",
             "value" : "发票默认设置"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "發票預設值"
+          }
         }
       }
     },
@@ -9311,6 +10085,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "发票编号"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "發票編號"
           }
         }
       }
@@ -9382,6 +10162,12 @@
             "state" : "translated",
             "value" : "发票"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "發票"
+          }
         }
       }
     },
@@ -9451,6 +10237,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "开具日期"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開立日期"
           }
         }
       }
@@ -9523,6 +10315,12 @@
             "state" : "translated",
             "value" : "开具日期"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開立日期"
+          }
         }
       }
     },
@@ -9592,6 +10390,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "公司法定名称"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "公司法定名稱"
           }
         }
       }
@@ -9663,6 +10467,12 @@
             "state" : "translated",
             "value" : "浅色"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "淺色"
+          }
         }
       }
     },
@@ -9732,6 +10542,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "明细"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "明細"
           }
         }
       }
@@ -9803,6 +10619,12 @@
             "state" : "translated",
             "value" : "明细"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "明細"
+          }
         }
       }
     },
@@ -9872,6 +10694,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "对每个客户实时进行 VIES 校验。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "為每位客戶即時查驗 VIES。"
           }
         }
       }
@@ -9943,6 +10771,12 @@
             "state" : "translated",
             "value" : "正在加载积分包…"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在載入點數包…"
+          }
         }
       }
     },
@@ -10012,6 +10846,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在加载方案…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在載入訂閱方案…"
           }
         }
       }
@@ -10083,6 +10923,12 @@
             "state" : "translated",
             "value" : "Logo、强调色、自定义模板。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo、強調色、自訂範本。"
+          }
         }
       }
     },
@@ -10152,6 +10998,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "标记已付款"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "標記為已付款"
           }
         }
       }
@@ -10223,6 +11075,12 @@
             "state" : "translated",
             "value" : "标记已发送"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "標記為已傳送"
+          }
         }
       }
     },
@@ -10289,6 +11147,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多 App"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "更多 App"
@@ -10364,6 +11228,12 @@
             "state" : "translated",
             "value" : "新建 %@"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增 %@"
+          }
         }
       }
     },
@@ -10433,6 +11303,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新建报价单"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增報價單"
           }
         }
       }
@@ -10504,6 +11380,12 @@
             "state" : "translated",
             "value" : "新建发票"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增發票"
+          }
         }
       }
     },
@@ -10573,6 +11455,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新建发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增發票"
           }
         }
       }
@@ -10644,6 +11532,12 @@
             "state" : "translated",
             "value" : "没有 Peppol 地址"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有 Peppol 位址"
+          }
         }
       }
     },
@@ -10713,6 +11607,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "没有可恢复的购买项目"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有可回復的購買項目"
           }
         }
       }
@@ -10784,6 +11684,12 @@
             "state" : "translated",
             "value" : "未找到与此 Apple ID 关联的有效 Pay Day Pro 订阅。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "找不到與此 Apple ID 相關聯的有效 Pay Day Pro 訂閱。"
+          }
         }
       }
     },
@@ -10853,6 +11759,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "还没有客户"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還沒有客戶"
           }
         }
       }
@@ -10924,6 +11836,12 @@
             "state" : "translated",
             "value" : "还没有报价单"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還沒有報價單"
+          }
         }
       }
     },
@@ -10993,6 +11911,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "还没有发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還沒有發票"
           }
         }
       }
@@ -11064,6 +11988,12 @@
             "state" : "translated",
             "value" : "未配置邮件 App"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未設定郵件 App"
+          }
         }
       }
     },
@@ -11133,6 +12063,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "没有发送方 Peppol ID"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有傳送方 Peppol ID"
           }
         }
       }
@@ -11204,6 +12140,12 @@
             "state" : "translated",
             "value" : "无"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無"
+          }
         }
       }
     },
@@ -11273,6 +12215,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "以后再说"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "稍後再說"
           }
         }
       }
@@ -11344,6 +12292,12 @@
             "state" : "translated",
             "value" : "尚未通过校验"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚未通過驗證"
+          }
         }
       }
     },
@@ -11413,6 +12367,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "备注"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "備註"
           }
         }
       }
@@ -11484,6 +12444,12 @@
             "state" : "translated",
             "value" : "备注与条款"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "備註與條款"
+          }
         }
       }
     },
@@ -11553,6 +12519,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "没有找到内容"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "找不到內容"
           }
         }
       }
@@ -11624,6 +12596,12 @@
             "state" : "translated",
             "value" : "这里还空着"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這裡還是空的"
+          }
         }
       }
     },
@@ -11694,6 +12672,12 @@
             "state" : "translated",
             "value" : "编号"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編號"
+          }
         }
       }
     },
@@ -11760,6 +12744,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "好"
@@ -11834,6 +12824,12 @@
             "state" : "translated",
             "value" : "关闭"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關閉"
+          }
         }
       }
     },
@@ -11903,6 +12899,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "一键生成可提交税务机关的电子发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一鍵產生可送交稅務機關的電子發票"
           }
         }
       }
@@ -11974,6 +12976,12 @@
             "state" : "translated",
             "value" : "只发送你输入的文字或选择的照片，以及发票币种。你的客户名单和已保存的发票不会被发送。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只會傳送你輸入的文字或選擇的照片，以及發票幣別。你的客戶名單和已儲存的發票不會被傳送。"
+          }
         }
       }
     },
@@ -12044,6 +13052,12 @@
             "state" : "translated",
             "value" : "打开"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開"
+          }
         }
       }
     },
@@ -12110,6 +13124,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "待收款"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "待收款"
@@ -12184,6 +13204,12 @@
             "state" : "translated",
             "value" : "待收款余额"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "待收款餘額"
+          }
         }
       }
     },
@@ -12250,6 +13276,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "逾期"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "逾期"
@@ -12325,6 +13357,12 @@
             "state" : "translated",
             "value" : "付款信息"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "付款資訊"
+          }
         }
       }
     },
@@ -12392,6 +13430,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pay Day"
@@ -12466,6 +13510,12 @@
             "state" : "translated",
             "value" : "Pay Day Pro"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day Pro"
+          }
         }
       }
     },
@@ -12535,6 +13585,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pay Day Pro — 已订阅"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day Pro — 訂閱中"
           }
         }
       }
@@ -12606,6 +13662,12 @@
             "state" : "translated",
             "value" : "Pay Day 会把文字或照片变成可开票的明细。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day 會把文字或照片變成可開立的明細。"
+          }
         }
       }
     },
@@ -12675,6 +13737,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "付款与 IBAN"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "付款與 IBAN"
           }
         }
       }
@@ -12746,6 +13814,12 @@
             "state" : "translated",
             "value" : "付款条件"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "付款條件"
+          }
         }
       }
     },
@@ -12813,6 +13887,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol ID（scheme:id）"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Peppol ID（scheme:id）"
@@ -12887,6 +13967,12 @@
             "state" : "translated",
             "value" : "Peppol 发送"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol 傳送"
+          }
         }
       }
     },
@@ -12956,6 +14042,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Peppol 发送是 Pay Day Pro 的功能。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol 傳送是 Pay Day Pro 的功能。"
           }
         }
       }
@@ -13027,6 +14119,12 @@
             "state" : "translated",
             "value" : "订阅方案仍在加载"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "訂閱方案仍在載入"
+          }
         }
       }
     },
@@ -13096,6 +14194,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请稍后再试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請稍後再試。"
           }
         }
       }
@@ -13167,6 +14271,12 @@
             "state" : "translated",
             "value" : "邮政编码"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "郵遞區號"
+          }
         }
       }
     },
@@ -13236,6 +14346,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "预览"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預覽"
           }
         }
       }
@@ -13307,6 +14423,12 @@
             "state" : "translated",
             "value" : "隐私政策"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隱私權政策"
+          }
         }
       }
     },
@@ -13376,6 +14498,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "购买失败"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "購買失敗"
           }
         }
       }
@@ -13448,6 +14576,12 @@
             "state" : "translated",
             "value" : "数量"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "數量"
+          }
         }
       }
     },
@@ -13519,6 +14653,12 @@
             "state" : "translated",
             "value" : "数量"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "數量"
+          }
         }
       }
     },
@@ -13588,6 +14728,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "数量"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "數量"
           }
         }
       }
@@ -13659,6 +14805,12 @@
             "state" : "translated",
             "value" : "阅读隐私政策"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "閱讀隱私權政策"
+          }
         }
       }
     },
@@ -13725,6 +14877,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "最近"
@@ -13799,6 +14957,12 @@
             "state" : "translated",
             "value" : "周期性发票"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "週期性發票"
+          }
         }
       }
     },
@@ -13870,6 +15034,12 @@
             "state" : "translated",
             "value" : "付款参考号  %@"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "付款參考號  %@"
+          }
         }
       }
     },
@@ -13939,6 +15109,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "发送前请先解决上方列出的 EN 16931 问题。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送前請先解決上方列出的 EN 16931 問題。"
           }
         }
       }
@@ -14010,6 +15186,12 @@
             "state" : "translated",
             "value" : "恢复"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回復"
+          }
         }
       }
     },
@@ -14079,6 +15261,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢复购买项目"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回復購買項目"
           }
         }
       }
@@ -14150,6 +15338,12 @@
             "state" : "translated",
             "value" : "存储"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存"
+          }
         }
       }
     },
@@ -14216,6 +15410,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "省 33%"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "省 33%"
@@ -14290,6 +15490,12 @@
             "state" : "translated",
             "value" : "选择客户"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇客戶"
+          }
         }
       }
     },
@@ -14359,6 +15565,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "发送失败"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送失敗"
           }
         }
       }
@@ -14430,6 +15642,12 @@
             "state" : "translated",
             "value" : "通过 Peppol 网络发送至欧盟各国"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "透過 Peppol 網路傳送至歐盟各國"
+          }
         }
       }
     },
@@ -14499,6 +15717,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "直接发送到客户的财务系统。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直接傳送到客戶的會計系統。"
           }
         }
       }
@@ -14570,6 +15794,12 @@
             "state" : "translated",
             "value" : "通过 Peppol 发送"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "透過 Peppol 傳送"
+          }
         }
       }
     },
@@ -14639,6 +15869,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在发送…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在傳送…"
           }
         }
       }
@@ -14710,6 +15946,12 @@
             "state" : "translated",
             "value" : "设置一次，按月自动开票收款。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定一次，每月準時收款。"
+          }
         }
       }
     },
@@ -14779,6 +16021,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "设置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
           }
         }
       }
@@ -14850,6 +16098,12 @@
             "state" : "translated",
             "value" : "共享"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享"
+          }
         }
       }
     },
@@ -14920,6 +16174,12 @@
             "state" : "translated",
             "value" : "显示逾期发票"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示逾期發票"
+          }
         }
       }
     },
@@ -14989,6 +16249,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "出错了"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "發生錯誤"
           }
         }
       }
@@ -15186,6 +16452,18 @@
               }
             }
           }
+        },
+        "zh-Hant" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "開始 %lld 天免費試用"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -15252,6 +16530,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "街道地址"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "街道地址"
@@ -15326,6 +16610,12 @@
             "state" : "translated",
             "value" : "正在提交至 Peppol…"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在提交至 Peppol…"
+          }
         }
       }
     },
@@ -15396,6 +16686,12 @@
             "state" : "translated",
             "value" : "订阅"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "訂閱"
+          }
         }
       }
     },
@@ -15465,6 +16761,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "订阅将自动续订，除非在当期结束前至少 24 小时取消。可在 Apple ID 设置中管理。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "除非在當期結束前至少 24 小時取消，否則訂閱將自動續訂。可在 Apple ID 設定中管理。"
           }
         }
       }
@@ -15537,6 +16839,12 @@
             "state" : "translated",
             "value" : "小计"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小計"
+          }
         }
       }
     },
@@ -15606,6 +16914,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "支持"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支援"
           }
         }
       }
@@ -15677,6 +16991,12 @@
             "state" : "translated",
             "value" : "跟随系统"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "跟隨系統"
+          }
         }
       }
     },
@@ -15746,6 +17066,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用条款"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用條款"
           }
         }
       }
@@ -15817,6 +17143,12 @@
             "state" : "translated",
             "value" : "AI 请求失败——请检查网络连接后重试。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI 請求失敗——請檢查網路連線後再試一次。"
+          }
         }
       }
     },
@@ -15886,6 +17218,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法生成用于共享的 PDF，请重试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法產生可分享的 PDF，請再試一次。"
           }
         }
       }
@@ -15957,6 +17295,12 @@
             "state" : "translated",
             "value" : "这些内容仅用于生成你的草稿。我们在收到回复后不会保存，不用于训练 AI 模型，也绝不用于广告。每份草稿都由你审阅和修改。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這些內容僅用於產生你的草稿。我們在收到回應後不會留存，不會用於訓練 AI 模型，也絕不會用於廣告。每份草稿都由你審閱與編輯。"
+          }
         }
       }
     },
@@ -16027,6 +17371,12 @@
             "state" : "translated",
             "value" : "无法存储发票，请重试。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法儲存這張發票，請再試一次。"
+          }
         }
       }
     },
@@ -16096,6 +17446,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请求通过加密连接发送到 Pay Day 的后端（由 Midgar Oy 运营），再转发给 OpenAI 处理。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請求會透過加密連線傳送至 Pay Day 的後端（由 Midgar Oy 營運），再轉交 OpenAI 處理。"
           }
         }
       }
@@ -16168,6 +17524,12 @@
             "state" : "translated",
             "value" : "服务器无法删除账户（%lld）。请重试。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "伺服器無法刪除帳戶（%lld）。請再試一次。"
+          }
         }
       }
     },
@@ -16239,6 +17601,12 @@
             "state" : "translated",
             "value" : "服务器返回错误（%lld）。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "伺服器傳回錯誤（%lld）。"
+          }
         }
       }
     },
@@ -16308,6 +17676,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "服务器返回了意外的响应。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "伺服器傳回了非預期的回應。"
           }
         }
       }
@@ -16379,6 +17753,12 @@
             "state" : "translated",
             "value" : "这将永久删除你的账户、积分余额，以及此设备上的所有发票、报价单和客户。此操作无法撤销。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這將永久刪除你的帳戶、點數餘額，以及此裝置上的所有發票、報價單與客戶。此操作無法復原。"
+          }
         }
       }
     },
@@ -16448,6 +17828,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "为了把你的文字或照片变成发票明细，Pay Day 会将你提供的内容发送给第三方 AI 服务。何时发送由你决定——在你点按 AI 操作之前，不会发送任何内容。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "為了把你的文字或照片變成發票明細，Pay Day 會將你提供的內容傳送給第三方 AI 服務。何時傳送由你決定——在你點一下 AI 功能之前，不會傳送任何內容。"
           }
         }
       }
@@ -16520,6 +17906,12 @@
             "state" : "translated",
             "value" : "应付总额"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "應付總額"
+          }
         }
       }
     },
@@ -16589,6 +17981,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "应付总额 %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "應付總額 %@"
           }
         }
       }
@@ -16661,6 +18059,12 @@
             "state" : "translated",
             "value" : "传输 %@ 已被 Peppol 接收。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳輸編號 %@ 已由 Peppol 接受。"
+          }
         }
       }
     },
@@ -16730,6 +18134,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重试"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再試一次"
           }
         }
       }
@@ -16801,6 +18211,12 @@
             "state" : "translated",
             "value" : "请稍后再试。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請稍後再試。"
+          }
         }
       }
     },
@@ -16871,6 +18287,12 @@
             "state" : "translated",
             "value" : "不可用"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法使用"
+          }
         }
       }
     },
@@ -16940,6 +18362,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "单价"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "單價"
           }
         }
       }
@@ -17012,6 +18440,12 @@
             "state" : "translated",
             "value" : "单价（%@）"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "單價（%@）"
+          }
         }
       }
     },
@@ -17081,6 +18515,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "发票与报价单不限量、你的 Logo、任意币种"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "發票與報價單不限數量、你的 Logo、任何幣別"
           }
         }
       }
@@ -17152,6 +18592,12 @@
             "state" : "translated",
             "value" : "解锁合规电子发票与 Peppol 发送。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解鎖合規電子發票與 Peppol 傳送。"
+          }
         }
       }
     },
@@ -17221,6 +18667,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无标题"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未命名"
           }
         }
       }
@@ -17292,6 +18744,12 @@
             "state" : "translated",
             "value" : "升级到 Pro"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "升級為 Pro"
+          }
         }
       }
     },
@@ -17359,6 +18817,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用 %@"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 %@"
@@ -17434,6 +18898,12 @@
             "state" : "translated",
             "value" : "请使用 scheme:id 格式——scheme 是 4 位数字代码，例如 0216:003712345678。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請使用 scheme:id 格式——scheme 是 4 位數字代碼，例如 0216:003712345678。"
+          }
         }
       }
     },
@@ -17504,6 +18974,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "增值税"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加值稅"
           }
         }
       }
@@ -17576,6 +19052,12 @@
             "state" : "translated",
             "value" : "增值税 %"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加值稅 %"
+          }
         }
       }
     },
@@ -17646,6 +19128,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "增值税税号 %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加值稅稅號 %@"
           }
         }
       }
@@ -17718,6 +19206,12 @@
             "state" : "translated",
             "value" : "增值税明细"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加值稅明細"
+          }
         }
       }
     },
@@ -17788,6 +19282,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "增值税税号"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加值稅稅號"
           }
         }
       }
@@ -17860,6 +19360,12 @@
             "state" : "translated",
             "value" : "增值税税号（例如 DE123456789）"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加值稅稅號（例如 DE123456789）"
+          }
         }
       }
     },
@@ -17931,6 +19437,12 @@
             "state" : "translated",
             "value" : "增值税类别"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加值稅類別"
+          }
         }
       }
     },
@@ -18000,6 +19512,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "增值税率 %"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加值稅率 %"
           }
         }
       }
@@ -18071,6 +19589,12 @@
             "state" : "translated",
             "value" : "增值税税号校验"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加值稅稅號驗證"
+          }
         }
       }
     },
@@ -18140,6 +19664,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在校验…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在驗證…"
           }
         }
       }
@@ -18211,6 +19741,12 @@
             "state" : "translated",
             "value" : "按周计费"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按週計費"
+          }
         }
       }
     },
@@ -18280,6 +19816,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "发送哪些内容"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送哪些內容"
           }
         }
       }
@@ -18351,6 +19893,12 @@
             "state" : "translated",
             "value" : "发送给谁"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送給誰"
+          }
         }
       }
     },
@@ -18417,6 +19965,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撤回同意"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "撤回同意"
@@ -18617,6 +20171,18 @@
               }
             }
           }
+        },
+        "zh-Hant" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "還需要 %lld 點數才能傳送這張發票。"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -18687,6 +20253,12 @@
             "state" : "translated",
             "value" : "删除账户需要联网——请在联网后重试。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除帳戶需要網路連線——請在連上網路後再試一次。"
+          }
         }
       }
     },
@@ -18754,6 +20326,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的 Peppol ID（scheme:id）"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "你的 Peppol ID（scheme:id）"
@@ -18828,6 +20406,12 @@
             "state" : "translated",
             "value" : "你的余额"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的餘額"
+          }
         }
       }
     },
@@ -18894,6 +20478,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的品牌"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "你的品牌"
@@ -18968,6 +20558,12 @@
             "state" : "translated",
             "value" : "你的企业"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的企業"
+          }
         }
       }
     },
@@ -19038,22 +20634,34 @@
             "state" : "translated",
             "value" : "最近的发票和报价单会显示在这里。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近的發票和報價單會顯示在這裡。"
+          }
         }
       }
     },
     "documentStatus.accepted" : {
       "comment" : "Estimate status pill: the client accepted the quote",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Angenommen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Accepted"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Angenommen"
+            "value" : "Aceptada"
           }
         },
         "fi" : {
@@ -19066,12 +20674,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Acceptée"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aceptada"
           }
         },
         "it" : {
@@ -19098,10 +20700,10 @@
             "value" : "Geaccepteerd"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已接受"
+            "value" : "Przyjęta"
           }
         },
         "pt-BR" : {
@@ -19110,10 +20712,16 @@
             "value" : "Aceita"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przyjęta"
+            "value" : "已接受"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已接受"
           }
         }
       }
@@ -19121,16 +20729,22 @@
     "documentStatus.declined" : {
       "comment" : "Estimate status pill: the client rejected the quote",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgelehnt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Declined"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abgelehnt"
+            "value" : "Rechazada"
           }
         },
         "fi" : {
@@ -19143,12 +20757,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Refusée"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechazada"
           }
         },
         "it" : {
@@ -19175,10 +20783,10 @@
             "value" : "Afgewezen"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已拒绝"
+            "value" : "Odrzucona"
           }
         },
         "pt-BR" : {
@@ -19187,10 +20795,16 @@
             "value" : "Recusada"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odrzucona"
+            "value" : "已拒绝"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已拒絕"
           }
         }
       }
@@ -19198,16 +20812,22 @@
     "documentStatus.draft" : {
       "comment" : "Document status pill: not issued yet",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entwurf"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Draft"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Entwurf"
+            "value" : "Borrador"
           }
         },
         "fi" : {
@@ -19220,12 +20840,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Brouillon"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Borrador"
           }
         },
         "it" : {
@@ -19252,10 +20866,10 @@
             "value" : "Concept"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "草稿"
+            "value" : "Szkic"
           }
         },
         "pt-BR" : {
@@ -19264,10 +20878,16 @@
             "value" : "Rascunho"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Szkic"
+            "value" : "草稿"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "草稿"
           }
         }
       }
@@ -19275,16 +20895,22 @@
     "documentStatus.overdue" : {
       "comment" : "Document status pill: past the due date",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überfällig"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Overdue"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Überfällig"
+            "value" : "Vencida"
           }
         },
         "fi" : {
@@ -19297,12 +20923,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En retard"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vencida"
           }
         },
         "it" : {
@@ -19329,10 +20949,10 @@
             "value" : "Te laat"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已逾期"
+            "value" : "Po terminie"
           }
         },
         "pt-BR" : {
@@ -19341,10 +20961,16 @@
             "value" : "Vencida"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Po terminie"
+            "value" : "已逾期"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已逾期"
           }
         }
       }
@@ -19352,16 +20978,22 @@
     "documentStatus.paid" : {
       "comment" : "Document status pill: settled in full",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bezahlt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paid"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bezahlt"
+            "value" : "Pagada"
           }
         },
         "fi" : {
@@ -19374,12 +21006,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Payée"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pagada"
           }
         },
         "it" : {
@@ -19406,10 +21032,10 @@
             "value" : "Betaald"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已付款"
+            "value" : "Opłacona"
           }
         },
         "pt-BR" : {
@@ -19418,10 +21044,16 @@
             "value" : "Paga"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Opłacona"
+            "value" : "已付款"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已付款"
           }
         }
       }
@@ -19429,16 +21061,22 @@
     "documentStatus.partiallyPaid" : {
       "comment" : "Document status pill: part of the amount is settled",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilbezahlt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Partially Paid"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Teilbezahlt"
+            "value" : "Pago parcial"
           }
         },
         "fi" : {
@@ -19451,12 +21089,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Payée en partie"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pago parcial"
           }
         },
         "it" : {
@@ -19483,10 +21115,10 @@
             "value" : "Deels betaald"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "部分付款"
+            "value" : "Częściowo opłacona"
           }
         },
         "pt-BR" : {
@@ -19495,10 +21127,16 @@
             "value" : "Paga em parte"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Częściowo opłacona"
+            "value" : "部分付款"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分付款"
           }
         }
       }
@@ -19506,16 +21144,22 @@
     "documentStatus.sent" : {
       "comment" : "Document status pill: delivered to the client",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesendet"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sent"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gesendet"
+            "value" : "Enviada"
           }
         },
         "fi" : {
@@ -19528,12 +21172,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Envoyée"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enviada"
           }
         },
         "it" : {
@@ -19560,10 +21198,10 @@
             "value" : "Verzonden"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已发送"
+            "value" : "Wysłana"
           }
         },
         "pt-BR" : {
@@ -19572,10 +21210,16 @@
             "value" : "Enviada"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wysłana"
+            "value" : "已发送"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已傳送"
           }
         }
       }
@@ -19583,16 +21227,22 @@
     "documentStatus.viewed" : {
       "comment" : "Document status pill: opened by the client",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Angesehen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Viewed"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Angesehen"
+            "value" : "Vista"
           }
         },
         "fi" : {
@@ -19605,12 +21255,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Consultée"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vista"
           }
         },
         "it" : {
@@ -19637,10 +21281,10 @@
             "value" : "Bekeken"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已查看"
+            "value" : "Wyświetlona"
           }
         },
         "pt-BR" : {
@@ -19649,10 +21293,16 @@
             "value" : "Visualizada"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wyświetlona"
+            "value" : "已查看"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已檢視"
           }
         }
       }
@@ -19660,16 +21310,22 @@
     "documentStatus.void" : {
       "comment" : "Document status pill: cancelled, no longer payable",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Storniert"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Void"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Storniert"
+            "value" : "Anulada"
           }
         },
         "fi" : {
@@ -19682,12 +21338,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Annulée"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anulada"
           }
         },
         "it" : {
@@ -19714,10 +21364,10 @@
             "value" : "Geannuleerd"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "作废"
+            "value" : "Anulowana"
           }
         },
         "pt-BR" : {
@@ -19726,10 +21376,16 @@
             "value" : "Cancelada"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Anulowana"
+            "value" : "作废"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作廢"
           }
         }
       }
@@ -19737,16 +21393,22 @@
     "documentType.creditNote" : {
       "comment" : "Document kind: an EN 16931 credit note",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gutschrift"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Credit Note"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gutschrift"
+            "value" : "Factura rectificativa"
           }
         },
         "fi" : {
@@ -19759,12 +21421,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Avoir"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Factura rectificativa"
           }
         },
         "it" : {
@@ -19791,10 +21447,10 @@
             "value" : "Creditfactuur"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "贷记单"
+            "value" : "Faktura korygująca"
           }
         },
         "pt-BR" : {
@@ -19803,10 +21459,16 @@
             "value" : "Nota de crédito"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Faktura korygująca"
+            "value" : "贷记单"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "貸項通知單"
           }
         }
       }
@@ -19814,16 +21476,22 @@
     "documentType.estimate" : {
       "comment" : "Document kind: a quote / estimate",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Angebot"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estimate"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Angebot"
+            "value" : "Presupuesto"
           }
         },
         "fi" : {
@@ -19836,12 +21504,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Devis"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Presupuesto"
           }
         },
         "it" : {
@@ -19868,10 +21530,10 @@
             "value" : "Offerte"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "报价单"
+            "value" : "Oferta"
           }
         },
         "pt-BR" : {
@@ -19880,10 +21542,16 @@
             "value" : "Orçamento"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oferta"
+            "value" : "报价单"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "報價單"
           }
         }
       }
@@ -19891,16 +21559,22 @@
     "documentType.invoice" : {
       "comment" : "Document kind: a sales invoice",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechnung"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invoice"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rechnung"
+            "value" : "Factura"
           }
         },
         "fi" : {
@@ -19913,12 +21587,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Facture"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Factura"
           }
         },
         "it" : {
@@ -19945,10 +21613,10 @@
             "value" : "Factuur"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "发票"
+            "value" : "Faktura"
           }
         },
         "pt-BR" : {
@@ -19957,10 +21625,16 @@
             "value" : "Fatura"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Faktura"
+            "value" : "发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "發票"
           }
         }
       }
@@ -20029,6 +21703,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "月"
@@ -20104,22 +21784,34 @@
             "state" : "translated",
             "value" : "未知"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知"
+          }
         }
       }
     },
     "vatCategory.exempt" : {
       "comment" : "EN 16931 VAT category E: exempt from VAT",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steuerbefreit"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exempt"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Steuerbefreit"
+            "value" : "Exento"
           }
         },
         "fi" : {
@@ -20132,12 +21824,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exonéré"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exento"
           }
         },
         "it" : {
@@ -20164,10 +21850,10 @@
             "value" : "Vrijgesteld"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免税"
+            "value" : "Zwolnione z VAT"
           }
         },
         "pt-BR" : {
@@ -20176,10 +21862,16 @@
             "value" : "Isento"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zwolnione z VAT"
+            "value" : "免税"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免稅"
           }
         }
       }
@@ -20187,16 +21879,22 @@
     "vatCategory.export" : {
       "comment" : "EN 16931 VAT category G: export outside the EU",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausfuhr"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Export"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ausfuhr"
+            "value" : "Exportación"
           }
         },
         "fi" : {
@@ -20209,12 +21907,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exportation"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exportación"
           }
         },
         "it" : {
@@ -20241,10 +21933,10 @@
             "value" : "Uitvoer"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "出口"
+            "value" : "Eksport"
           }
         },
         "pt-BR" : {
@@ -20253,10 +21945,16 @@
             "value" : "Exportação"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eksport"
+            "value" : "出口"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "出口"
           }
         }
       }
@@ -20264,16 +21962,22 @@
     "vatCategory.intraCommunity" : {
       "comment" : "EN 16931 VAT category K: intra-Community supply",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Innergemeinschaftlich"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Intra-Community"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Innergemeinschaftlich"
+            "value" : "Intracomunitario"
           }
         },
         "fi" : {
@@ -20286,12 +21990,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Intracommunautaire"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intracomunitario"
           }
         },
         "it" : {
@@ -20318,10 +22016,10 @@
             "value" : "Intracommunautair"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "欧盟内部供应"
+            "value" : "Wewnątrzwspólnotowa"
           }
         },
         "pt-BR" : {
@@ -20330,10 +22028,16 @@
             "value" : "Intracomunitário"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wewnątrzwspólnotowa"
+            "value" : "欧盟内部供应"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "歐盟境內供應"
           }
         }
       }
@@ -20341,16 +22045,22 @@
     "vatCategory.outsideScope" : {
       "comment" : "EN 16931 VAT category O: outside the scope of VAT",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht steuerbar"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Outside scope"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nicht steuerbar"
+            "value" : "No sujeto"
           }
         },
         "fi" : {
@@ -20363,12 +22073,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hors champ"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No sujeto"
           }
         },
         "it" : {
@@ -20395,10 +22099,10 @@
             "value" : "Niet-belastbaar"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "不属增值税范围"
+            "value" : "Niepodlegające VAT"
           }
         },
         "pt-BR" : {
@@ -20407,10 +22111,16 @@
             "value" : "Fora de incidência"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Niepodlegające VAT"
+            "value" : "不属增值税范围"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不屬加值稅範圍"
           }
         }
       }
@@ -20418,16 +22128,22 @@
     "vatCategory.reverseCharge" : {
       "comment" : "EN 16931 VAT category AE: the buyer accounts for the VAT",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reverse-Charge"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reverse charge"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reverse-Charge"
+            "value" : "Inversión del sujeto pasivo"
           }
         },
         "fi" : {
@@ -20440,12 +22156,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Autoliquidation"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inversión del sujeto pasivo"
           }
         },
         "it" : {
@@ -20472,10 +22182,10 @@
             "value" : "Btw verlegd"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "反向征收"
+            "value" : "Odwrotne obciążenie"
           }
         },
         "pt-BR" : {
@@ -20484,10 +22194,16 @@
             "value" : "Reversão da cobrança"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odwrotne obciążenie"
+            "value" : "反向征收"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "逆向課稅"
           }
         }
       }
@@ -20495,16 +22211,22 @@
     "vatCategory.standard" : {
       "comment" : "EN 16931 VAT category S: the standard national rate",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regelsteuersatz"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standard rate"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Regelsteuersatz"
+            "value" : "Tipo general"
           }
         },
         "fi" : {
@@ -20517,12 +22239,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Taux normal"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tipo general"
           }
         },
         "it" : {
@@ -20549,10 +22265,10 @@
             "value" : "Algemeen tarief"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "标准税率"
+            "value" : "Stawka podstawowa"
           }
         },
         "pt-BR" : {
@@ -20561,10 +22277,16 @@
             "value" : "Alíquota padrão"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stawka podstawowa"
+            "value" : "标准税率"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "標準稅率"
           }
         }
       }
@@ -20572,16 +22294,22 @@
     "vatCategory.zeroRated" : {
       "comment" : "EN 16931 VAT category Z: zero rated goods",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nullsatz"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zero rated"
           }
         },
-        "de" : {
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nullsatz"
+            "value" : "Tipo cero"
           }
         },
         "fi" : {
@@ -20594,12 +22322,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Taux zéro"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tipo cero"
           }
         },
         "it" : {
@@ -20626,10 +22348,10 @@
             "value" : "Nultarief"
           }
         },
-        "zh-Hans" : {
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "零税率"
+            "value" : "Stawka 0%"
           }
         },
         "pt-BR" : {
@@ -20638,10 +22360,16 @@
             "value" : "Alíquota zero"
           }
         },
-        "pl" : {
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stawka 0%"
+            "value" : "零税率"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "零稅率"
           }
         }
       }
@@ -20714,6 +22442,12 @@
             "state" : "translated",
             "value" : "周"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "週"
+          }
         }
       }
     },
@@ -20781,6 +22515,12 @@
           }
         },
         "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "年"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "年"
@@ -21000,6 +22740,18 @@
               }
             }
           }
+        },
+        "zh-Hant" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "⚠︎ 還有 %lld 個問題待解決，才會是有效的電子發票："
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -21069,6 +22821,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "✓ 符合 EN 16931 · 已在 PDF 中嵌入 Factur-X"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 符合 EN 16931 · 已於 PDF 內嵌 Factur-X"
           }
         }
       }
@@ -21140,6 +22898,12 @@
             "state" : "translated",
             "value" : "✓ 符合 EN 16931 · 导出时附带结构化 XML"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 符合 EN 16931 · 匯出時附上結構化 XML"
+          }
         }
       }
     },
@@ -21210,6 +22974,12 @@
             "state" : "translated",
             "value" : "✓ 这张发票符合 EN 16931——升级 Pro 即可导出 Factur-X / Peppol 电子发票。"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 這張發票符合 EN 16931——升級 Pro 即可匯出 Factur-X / Peppol 電子發票。"
+          }
         }
       }
     },
@@ -21279,6 +23049,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "✓ 增值税税号有效"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 加值稅稅號有效"
           }
         }
       }
@@ -21351,6 +23127,12 @@
             "state" : "translated",
             "value" : "✓ 增值税税号有效 · %@"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 加值稅稅號有效 · %@"
+          }
         }
       }
     },
@@ -21420,6 +23202,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "✗ 增值税税号无效"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✗ 加值稅稅號無效"
           }
         }
       }
