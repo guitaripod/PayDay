@@ -5,6 +5,7 @@ import PayDayKit
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var creditsObservers: Set<AnyCancellable> = []
+    private var didReportAdAttribution = false
 
     func scene(
         _ scene: UIScene,
@@ -24,6 +25,21 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         Task { await AICreditsManager.store.bootstrap() }
         AppLogger.shared.info("scene connected", category: .app)
+    }
+
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        reportAdAttributionOnce()
+    }
+
+    /// Fired once the first frame is on screen, never on the launch critical
+    /// path: the reporter returns immediately and works on a background task.
+    private func reportAdAttributionOnce() {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["PAYDAY_DEMO"] != nil { return }
+        #endif
+        guard !didReportAdAttribution else { return }
+        didReportAdAttribution = true
+        AICreditsManager.shared.reportAdAttribution()
     }
 
     private static func makeRoot() -> UIViewController {

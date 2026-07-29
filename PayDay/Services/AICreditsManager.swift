@@ -23,4 +23,14 @@ final class AICreditsManager: Sendable {
             config: config,
             purchaseProvider: RevenueCatPurchaseProvider(apiKey: revenueCatPublicKey))
     }
+
+    /// Reports the Apple Ads install attribution once, in the background, so a
+    /// paid install can later be joined to whether that user subscribed. The
+    /// token is exchanged with Apple server-side, is never logged, and campaign
+    /// identifiers stay on the backend — only the verdict is traced here.
+    func reportAdAttribution() {
+        client.startAdAttributionReporting { result in
+            AppLogger.shared.info("ad attribution \(result.logDescription)", category: .credits)
+        }
+    }
 }
