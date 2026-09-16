@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "iPhone开Peppol发票",
+    "subtitle": "符合EN 16931。内嵌Factur-X。一键发送。"
+  },
+  "editor": {
+    "title": "一分钟开出合规发票",
+    "subtitle": "完整EN 16931增值税引擎，含反向征收。"
+  },
+  "dashboard": {
+    "title": "一眼看清本国截止日期",
+    "subtitle": "比利时、法国、德国：强制要求与起始时间。"
+  },
+  "preview-ic": {
+    "title": "反向征收，精确无误",
+    "subtitle": "对每位客户实时核验VIES增值税号。"
+  },
+  "list": {
+    "title": "免费且不限量",
+    "subtitle": "发票、报价单、客户、你的标志。Pro 加上合规。"
+  }
+}

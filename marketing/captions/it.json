@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Fatture Peppol dal tuo iPhone",
+    "subtitle": "Valida EN 16931. Factur-X incorporato. Inviata con un tocco."
+  },
+  "editor": {
+    "title": "Una fattura conforme in un minuto",
+    "subtitle": "Motore IVA EN 16931 completo, inversione contabile inclusa."
+  },
+  "dashboard": {
+    "title": "La scadenza del tuo Paese, chiara",
+    "subtitle": "Italia, Belgio, Germania: cosa è obbligatorio, e da quando."
+  },
+  "preview-ic": {
+    "title": "Inversione contabile UE, corretta",
+    "subtitle": "Verifica IVA VIES in tempo reale per ogni cliente."
+  },
+  "list": {
+    "title": "Gratis e illimitata",
+    "subtitle": "Fatture, preventivi, clienti, il tuo logo. Pro aggiunge conformità."
+  }
+}

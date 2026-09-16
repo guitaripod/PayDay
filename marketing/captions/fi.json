@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Peppol-verkkolaskut iPhonesta",
+    "subtitle": "EN 16931 -yhteensopiva. Factur-X mukana. Lähtee yhdellä napautuksella."
+  },
+  "editor": {
+    "title": "Yhteensopiva lasku minuutissa",
+    "subtitle": "Täysi EN 16931 -alv-moottori, käännetty verovelvollisuus mukana."
+  },
+  "dashboard": {
+    "title": "Oman maasi määräaika selväksi",
+    "subtitle": "Suomi, Belgia, Saksa: mikä on pakollista, ja mistä lähtien."
+  },
+  "preview-ic": {
+    "title": "Käännetty verovelvollisuus oikein",
+    "subtitle": "Reaaliaikainen VIES-alv-tarkistus joka asiakkaalle."
+  },
+  "list": {
+    "title": "Ilmainen ja rajaton",
+    "subtitle": "Laskut, tarjoukset, asiakkaat, oma logo. Pro tuo vaatimustenmukaisuuden."
+  }
+}

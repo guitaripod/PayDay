@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Peppol-E-Rechnungen vom iPhone",
+    "subtitle": "EN 16931 gültig. Factur-X eingebettet. Ein Tap zum Senden."
+  },
+  "editor": {
+    "title": "Konforme Rechnung in einer Minute",
+    "subtitle": "Volle EN-16931-USt-Logik, inklusive Reverse-Charge."
+  },
+  "dashboard": {
+    "title": "Die Frist Ihres Landes im Blick",
+    "subtitle": "Deutschland, Österreich, Belgien: was Pflicht ist und ab wann."
+  },
+  "preview-ic": {
+    "title": "EU-Reverse-Charge, richtig gemacht",
+    "subtitle": "Live VIES-USt-Prüfung für jeden Kunden."
+  },
+  "list": {
+    "title": "Kostenlos und unbegrenzt",
+    "subtitle": "Rechnungen, Angebote, Kunden, Ihr Logo. Pro bringt Konformität."
+  }
+}

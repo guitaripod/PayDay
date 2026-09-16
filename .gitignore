@@ -22,3 +22,6 @@ workers/node_modules/
 # Logs / build artifacts
 *.log
 build/
+
+# asc cli reports
+.asc/

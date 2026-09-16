@@ -1,2 +1,3 @@
 date,us_ratings,us_avg,downloads_wk,trial_starts_wk,trials_converted_wk,sub_units_wk,credit_units_wk,peppol_sends_wk,proceeds_wk,notes
 2026-06-13,0,0,0,0,0,0,0,0,0,pre-launch baseline; app shell not yet created in ASC (apple_id TODO); bundle com.guitaripod.payday registered (AL4DRY5YYV); icon + 6.9" screenshots done; launch spec in docs/launch-spec.md
+2026-09-16,0,0,3,0,0,0,0,0,0,"Aug: 7 dl / Sep 1-14: 3 dl / €0 proceeds; 1.0.3 live (build 202607272012); ranks BE peppol #28, FR peppol #10, DE peppol #5, FI verkkolasku #1; 1.1.0 prepared: en-GB listing, keyword re-cut, framed screenshots, dashboard mandate card, Rate/Share (docs/aso-2026-09.md)"

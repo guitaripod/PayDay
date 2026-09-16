@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "iPhone에서 Peppol 발송",
+    "subtitle": "EN 16931 적합. Factur-X 내장. 탭 한 번으로 전송."
+  },
+  "editor": {
+    "title": "1분 만에 적격 인보이스",
+    "subtitle": "EN 16931 부가세 엔진 완비, 리버스 차지 포함."
+  },
+  "dashboard": {
+    "title": "국가별 기한 한눈에",
+    "subtitle": "벨기에, 프랑스, 독일: 무엇이 의무이고 언제부터인지."
+  },
+  "preview-ic": {
+    "title": "역내 리버스 차지, 정확하게",
+    "subtitle": "모든 거래처에 실시간 VIES 확인."
+  },
+  "list": {
+    "title": "무료, 그것도 무제한",
+    "subtitle": "인보이스, 견적서, 거래처, 내 로고. Pro는 규정 준수까지."
+  }
+}

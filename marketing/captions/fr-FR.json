@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Factures Peppol depuis l'iPhone",
+    "subtitle": "Conforme EN 16931. Factur-X intégré. Envoyée en un geste."
+  },
+  "editor": {
+    "title": "Une facture conforme en une minute",
+    "subtitle": "Moteur de TVA EN 16931 complet, autoliquidation incluse."
+  },
+  "dashboard": {
+    "title": "L'échéance de votre pays, en clair",
+    "subtitle": "France, Belgique, Luxembourg : ce qui est obligatoire, et depuis quand."
+  },
+  "preview-ic": {
+    "title": "Autoliquidation UE, sans erreur",
+    "subtitle": "Vérification TVA VIES en direct pour chaque client."
+  },
+  "list": {
+    "title": "Gratuite et illimitée",
+    "subtitle": "Factures, devis, clients, votre logo. Pro ajoute la conformité."
+  }
+}

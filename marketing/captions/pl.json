@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Peppol e-faktury z iPhone'a",
+    "subtitle": "Zgodność z EN 16931. Factur-X wbudowany. Wysyłka jednym dotknięciem."
+  },
+  "editor": {
+    "title": "Zgodna faktura w minutę",
+    "subtitle": "Pełny silnik VAT EN 16931, z odwrotnym obciążeniem."
+  },
+  "dashboard": {
+    "title": "Poznaj termin dla Twojego kraju",
+    "subtitle": "Polska, Belgia, Niemcy: co jest obowiązkowe i od kiedy."
+  },
+  "preview-ic": {
+    "title": "Odwrotne obciążenie, poprawnie",
+    "subtitle": "Weryfikacja VAT na żywo w systemie VIES dla każdego klienta."
+  },
+  "list": {
+    "title": "Darmowa i bez limitów",
+    "subtitle": "Faktury, wyceny, klienci, Twoje logo. Pro dodaje zgodność."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Facturas Peppol desde tu iPhone",
+    "subtitle": "Válida EN 16931. Factur-X integrado. Enviada en un toque."
+  },
+  "editor": {
+    "title": "Una factura conforme en un minuto",
+    "subtitle": "Motor de IVA EN 16931 completo, con inversión del sujeto pasivo."
+  },
+  "dashboard": {
+    "title": "La fecha límite de tu país, clara",
+    "subtitle": "España, Bélgica, Francia: qué es obligatorio, y desde cuándo."
+  },
+  "preview-ic": {
+    "title": "Inversión del sujeto pasivo",
+    "subtitle": "Comprobación de IVA VIES en vivo con cada cliente."
+  },
+  "list": {
+    "title": "Gratis e ilimitada",
+    "subtitle": "Facturas, presupuestos, clientes, tu logo. Pro añade cumplimiento."
+  }
+}

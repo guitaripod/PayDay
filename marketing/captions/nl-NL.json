@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Peppol e-facturen vanaf je iPhone",
+    "subtitle": "EN 16931 geldig. Factur-X ingebed. Verstuurd met één tik."
+  },
+  "editor": {
+    "title": "Een conforme factuur in een minuut",
+    "subtitle": "Volledige EN 16931-btw-motor, incl. intracommunautaire verlegging."
+  },
+  "dashboard": {
+    "title": "Ken de deadline van jouw land",
+    "subtitle": "België, Nederland: wat verplicht is, en vanaf wanneer."
+  },
+  "preview-ic": {
+    "title": "Verlegde btw, correct geregeld",
+    "subtitle": "Live VIES-btw-controle bij elke klant."
+  },
+  "list": {
+    "title": "Gratis en onbeperkt",
+    "subtitle": "Facturen, offertes, klanten, je logo. Pro voegt compliance toe."
+  }
+}

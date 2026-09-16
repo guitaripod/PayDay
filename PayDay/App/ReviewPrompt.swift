@@ -11,7 +11,7 @@ import UIKit
 /// document the user actually delivered.
 @MainActor
 enum ReviewPrompt {
-    private static let deliveriesBeforeAsking = 3
+    private static let deliveriesBeforeAsking = 2
 
     /// Call after an invoice reaches its recipient — a completed share sheet or
     /// an accepted Peppol transmission.

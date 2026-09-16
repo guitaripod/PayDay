@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Peppol e-invoices from your iPhone",
+    "subtitle": "EN 16931 valid. Factur-X embedded. Sent in one tap."
+  },
+  "editor": {
+    "title": "A compliant invoice in a minute",
+    "subtitle": "A full EN 16931 VAT engine, reverse charge included."
+  },
+  "dashboard": {
+    "title": "Know your country's deadline",
+    "subtitle": "Belgium, France, Germany: what is mandatory, and when."
+  },
+  "preview-ic": {
+    "title": "Intra-EU reverse charge, done right",
+    "subtitle": "Live VIES VAT checks on every client."
+  },
+  "list": {
+    "title": "Free and unlimited",
+    "subtitle": "Invoices, estimates, clients, your logo. Pro adds compliance."
+  }
+}

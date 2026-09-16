@@ -21,6 +21,20 @@ final class BusinessSettingsViewController: UIViewController {
     private let peppolStatusLabel = UILabel()
     private let peppolFixButton = UIButton(type: .system)
     private var peppolSuggestion: PeppolID?
+    private let focusesPeppol: Bool
+
+    init(focusesPeppol: Bool = false) {
+        self.focusesPeppol = focusesPeppol
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if focusesPeppol { peppolField.becomeFirstResponder() }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

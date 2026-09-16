@@ -80,9 +80,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return n
         }
         switch screen {
-        case "dashboard", "list", "clients":
+        case "dashboard", "list", "clients", "settings":
             let tabs = RootViewController()
-            tabs.selectedIndex = ["dashboard": 0, "list": 1, "clients": 2][screen] ?? 0
+            tabs.selectedIndex = ["dashboard": 0, "list": 1, "clients": 2, "settings": 3][screen] ?? 0
             return tabs
         case "editor":
             return nav(InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(existing: DemoData.sampleInvoice())))

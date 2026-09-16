@@ -24,6 +24,8 @@ final class OnboardingViewController: UIViewController {
             font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary)
         subtitle.textAlignment = .center
 
+        let mandateLine = makeMandateLine()
+
         let features = UIStackView(arrangedSubviews: [
             feature("doc.text.fill", String(localized: "Unlimited invoices & estimates, your logo, any currency")),
             feature("checkmark.seal.fill", String(localized: "One tap to a tax-authority-ready e-invoice")),
@@ -36,10 +38,10 @@ final class OnboardingViewController: UIViewController {
         let cta = DesignSystem.primaryButton(String(localized: "Get started"))
         cta.addAction(UIAction { [weak self] _ in self?.onFinish?() }, for: .touchUpInside)
 
-        let stack = UIStackView(arrangedSubviews: [icon, title, subtitle, features, cta])
+        let stack = UIStackView(arrangedSubviews: [icon, title, subtitle, mandateLine, features, cta].compactMap { $0 })
         stack.axis = .vertical
         stack.spacing = DesignSystem.Spacing.l
-        stack.setCustomSpacing(DesignSystem.Spacing.xl, after: subtitle)
+        stack.setCustomSpacing(DesignSystem.Spacing.xl, after: mandateLine ?? subtitle)
         stack.translatesAutoresizingMaskIntoConstraints = false
 
         let scrollView = UIScrollView()
@@ -64,6 +66,21 @@ final class OnboardingViewController: UIViewController {
             stack.centerYAnchor.constraint(equalTo: content.centerYAnchor),
             fillHeight,
         ])
+    }
+
+    /// The device region's e-invoicing deadline, when there is one worth leading
+    /// with — the first thing a Belgian or French freelancer needs to hear.
+    private func makeMandateLine() -> UIView? {
+        let region = DashboardViewModel.countryCode(for: nil)
+        guard let text = MandateCopy.welcomeLine(countryCode: region) else { return nil }
+        let card = DesignSystem.card()
+        card.backgroundColor = DesignSystem.Color.accentSoft
+        let label = DesignSystem.label(text, font: DesignSystem.Typography.scaledSystem(15, .semibold, relativeTo: .subheadline))
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(label)
+        label.pinEdges(to: card, insets: UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16))
+        return card
     }
 
     private func feature(_ symbol: String, _ text: String) -> UIView {

@@ -416,6 +416,83 @@
         }
       }
     },
+    "%@ has no national B2B e-invoicing mandate yet. EU-wide cross-border e-invoicing becomes mandatory on 1 July 2030." : {
+      "comment" : "Generic EU fallback; the argument is a country name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ hat noch keine nationale B2B-E-Rechnungspflicht. EU-weite grenzüberschreitende E-Rechnungen werden ab 1. Juli 2030 verpflichtend."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ aún no tiene una obligación nacional de facturación electrónica B2B. La facturación electrónica transfronteriza en toda la UE será obligatoria a partir del 1 de julio de 2030."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: ei vielä kansallista yritysten välistä verkkolaskutuspakkoa. EU:n laajuisesta rajat ylittävästä verkkolaskutuksesta tulee pakollista 1.7.2030."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ n'a pas encore d'obligation nationale de facturation électronique B2B. La facturation électronique transfrontalière deviendra obligatoire dans toute l'UE à partir du 1er juillet 2030."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ non ha ancora un obbligo nazionale di fatturazione elettronica B2B. La fatturazione elettronica transfrontaliera diventerà obbligatoria in tutta l'UE dal 1° luglio 2030."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@にはまだ国内のB2B電子インボイス義務はありません。EU域内の越境電子インボイスは2030年7月1日から義務化されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@에는 아직 국내 B2B 전자 인보이스 의무가 없습니다. EU 전역의 국경 간 전자 인보이스는 2030년 7월 1일부터 의무화됩니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ heeft nog geen nationale b2b-e-factureringsverplichting. EU-brede grensoverschrijdende e-facturatie wordt verplicht vanaf 1 juli 2030."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ nie ma jeszcze krajowego obowiązku e-fakturowania B2B. Ogólnounijne transgraniczne e-fakturowanie stanie się obowiązkowe od 1 lipca 2030 r."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ainda não tem uma obrigação nacional de fatura eletrônica B2B. A fatura eletrônica transfronteiriça em toda a UE se tornará obrigatória a partir de 1º de julho de 2030."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@目前还没有全国性的 B2B 电子发票强制规定。欧盟范围内的跨境电子发票将于 2030 年 7 月 1 日起强制实施。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@目前尚無全國性的 B2B 電子發票強制規定。歐盟範圍內的跨境電子發票將於 2030 年 7 月 1 日起強制實施。"
+          }
+        }
+      }
+    },
     "%@ no." : {
       "comment" : "Invoice PDF meta caption, e.g. Invoice no.",
       "localizations" : {
@@ -655,6 +732,237 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@，每%3$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@: e-invoicing is mandatory for every business since %@." : {
+      "comment" : "Welcome screen hook; arguments are a country name and a date",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: E-Rechnungen sind für jedes Unternehmen seit %2$@ Pflicht."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: la facturación electrónica es obligatoria para todas las empresas desde %2$@."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: verkkolaskutus on pakollista kaikille yrityksille %2$@ alkaen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ : facturation électronique obligatoire pour toutes les entreprises depuis %2$@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: fatturazione elettronica obbligatoria per tutte le imprese dal %2$@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@：%2$@より、すべての事業者に電子インボイスが義務化。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$@부터 모든 사업자에게 전자 인보이스 의무화."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: e-facturatie is sinds %2$@ verplicht voor elk bedrijf."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: e-fakturowanie obowiązkowe dla każdej firmy od %2$@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: a fatura eletrônica é obrigatória para todas as empresas desde %2$@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@：自 %2$@ 起，电子发票对所有企业强制要求。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@：自 %2$@ 起，所有企業皆須開立電子發票。"
+          }
+        }
+      }
+    },
+    "%@: e-invoicing is phasing in — next deadline %@." : {
+      "comment" : "Welcome screen hook; arguments are a country name and a date",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: Die E-Rechnungspflicht wird schrittweise eingeführt — nächste Frist %2$@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: la facturación electrónica se implanta de forma progresiva — próximo plazo %2$@."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: verkkolaskutus otetaan käyttöön vaiheittain — seuraava määräaika %2$@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ : facturation électronique progressive — prochaine échéance %2$@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: fatturazione elettronica in introduzione graduale — prossima scadenza %2$@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@：電子インボイスは段階的に導入中 — 次の期限は%2$@。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: 전자 인보이스 단계적 도입 중 — 다음 기한 %2$@."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: e-facturatie wordt gefaseerd ingevoerd — volgende deadline %2$@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: e-fakturowanie wprowadzane etapami — kolejny termin %2$@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: a fatura eletrônica está sendo implementada em fases — próximo prazo %2$@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@：电子发票正分阶段推行 — 下一个截止日期 %2$@。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@：電子發票正分階段推行 — 下一個截止日期 %2$@。"
+          }
+        }
+      }
+    },
+    "%@: mandatory e-invoicing starts %@." : {
+      "comment" : "Welcome screen hook; arguments are a country name and a date",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: Die E-Rechnungspflicht beginnt am %2$@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: la facturación electrónica obligatoria comienza el %2$@."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: pakollinen verkkolaskutus alkaa %2$@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ : la facturation électronique obligatoire commence le %2$@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: la fatturazione elettronica obbligatoria inizia il %2$@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@：義務的な電子インボイスは%2$@に開始。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: 의무적 전자 인보이스 %2$@ 시작."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: verplichte e-facturatie start op %2$@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: obowiązkowe e-fakturowanie zaczyna się %2$@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: a fatura eletrônica obrigatória começa em %2$@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@：强制电子发票将于 %2$@ 起实施。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@：強制電子發票將於 %2$@ 起實施。"
           }
         }
       }
@@ -2095,6 +2403,82 @@
         }
       }
     },
+    "Add your Peppol ID" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol-ID hinzufügen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir tu ID de Peppol"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisää Peppol-tunnuksesi"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter votre identifiant Peppol"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aggiungi il tuo ID Peppol"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol IDを追加"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol ID 추가"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voeg je Peppol-ID toe"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj swój identyfikator Peppol"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicionar seu ID Peppol"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加你的 Peppol ID"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增你的 Peppol ID"
+          }
+        }
+      }
+    },
     "Add your Peppol ID in Business Settings before sending over the network." : {
       "localizations" : {
         "de" : {
@@ -2699,6 +3083,82 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "外觀"
+          }
+        }
+      }
+    },
+    "Austria has no B2B mandate yet, but federal suppliers must send e-invoices and Peppol is the standard. EU-wide cross-border e-invoicing becomes mandatory on 1 July 2030." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Österreich hat noch keine B2B-Pflicht, aber Lieferanten des Bundes müssen E-Rechnungen senden, und Peppol ist der Standard. EU-weite grenzüberschreitende E-Rechnungen werden ab 1. Juli 2030 verpflichtend."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Austria aún no tiene una obligación B2B, pero los proveedores del Estado federal deben enviar facturas electrónicas y Peppol es el estándar. La facturación electrónica transfronteriza en toda la UE será obligatoria a partir del 1 de julio de 2030."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Itävallassa ei vielä ole yritysten välistä pakkoa, mutta valtion hankintojen toimittajien on lähetettävä verkkolaskuja, ja Peppol on käytössä oleva standardi. EU:n laajuisesta rajat ylittävästä verkkolaskutuksesta tulee pakollista 1.7.2030."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'Autriche n'a pas encore d'obligation B2B, mais les fournisseurs de l'État fédéral doivent envoyer des factures électroniques et Peppol est la norme. La facturation électronique transfrontalière deviendra obligatoire dans toute l'UE à partir du 1er juillet 2030."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'Austria non ha ancora un obbligo B2B, ma i fornitori dello Stato federale devono inviare fatture elettroniche e Peppol è lo standard. La fatturazione elettronica transfrontaliera diventerà obbligatoria in tutta l'UE dal 1° luglio 2030."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オーストリアにはまだB2B義務はありませんが、連邦政府の取引先はPeppolを標準として電子インボイスを送付する必要があります。EU域内の越境電子インボイスは2030年7月1日から義務化されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오스트리아는 아직 B2B 의무가 없지만, 연방 정부 공급업체는 Peppol을 표준으로 전자 인보이스를 보내야 합니다. EU 전역의 국경 간 전자 인보이스는 2030년 7월 1일부터 의무화됩니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oostenrijk heeft nog geen B2B-verplichting, maar leveranciers van de federale overheid moeten e-facturen sturen en Peppol is de standaard. EU-brede grensoverschrijdende e-facturatie wordt verplicht vanaf 1 juli 2030."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Austria nie ma jeszcze obowiązku B2B, ale dostawcy administracji federalnej muszą wysyłać e-faktury, a Peppol jest standardem. Ogólnounijne transgraniczne e-fakturowanie stanie się obowiązkowe od 1 lipca 2030 r."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Áustria ainda não tem uma obrigação B2B, mas os fornecedores do governo federal devem enviar faturas eletrônicas, e o Peppol é o padrão. A fatura eletrônica transfronteiriça em toda a UE se tornará obrigatória a partir de 1º de julho de 2030."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "奥地利目前还没有 B2B 强制规定，但联邦政府供应商必须发送电子发票，Peppol 是标准渠道。欧盟范围内的跨境电子发票将于 2030 年 7 月 1 日起强制实施。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "奧地利目前尚無 B2B 強制規定，但聯邦政府供應商必須傳送電子發票，Peppol 為標準管道。歐盟範圍內的跨境電子發票將於 2030 年 7 月 1 日起強制實施。"
           }
         }
       }
@@ -6365,6 +6825,82 @@
         }
       }
     },
+    "Croatia requires VAT-registered businesses to issue and receive e-invoices over Peppol with real-time fiscal reporting since 1 January 2026; sole traders and non-VAT businesses follow on 1 January 2027. Pay Day delivers over Peppol but does not do the fiscal reporting." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kroatien verpflichtet umsatzsteuerpflichtige Unternehmen seit dem 1. Januar 2026, E-Rechnungen über Peppol mit Echtzeit-Steuermeldung auszustellen und zu empfangen; Einzelunternehmer und nicht umsatzsteuerpflichtige Unternehmen folgen am 1. Januar 2027. Pay Day versendet über Peppol, übernimmt aber nicht die Steuermeldung."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Croacia exige a las empresas registradas a efectos de IVA emitir y recibir facturas electrónicas por Peppol con comunicación fiscal en tiempo real desde el 1 de enero de 2026; los autónomos y las empresas no sujetas a IVA se incorporan el 1 de enero de 2027. Pay Day envía por Peppol, pero no realiza la comunicación fiscal."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kroatia edellyttää alv-rekisteröidyiltä yrityksiltä verkkolaskujen laatimista ja vastaanottamista Peppolin kautta reaaliaikaisella verottajaraportoinnilla 1.1.2026 alkaen; yksityiset elinkeinonharjoittajat ja alv:sta vapautetut yritykset seuraavat 1.1.2027. Pay Day lähettää Peppolin kautta, mutta ei tee verottajaraportointia."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Croatie impose aux entreprises assujetties à la TVA d'émettre et de recevoir des factures électroniques via Peppol avec un signalement fiscal en temps réel depuis le 1er janvier 2026 ; les indépendants et les entreprises non assujetties à la TVA suivent le 1er janvier 2027. Pay Day envoie via Peppol, mais n'effectue pas le signalement fiscal."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Croazia impone alle imprese con partita IVA di emettere e ricevere fatture elettroniche tramite Peppol con comunicazione fiscale in tempo reale dal 1° gennaio 2026; i lavoratori autonomi e le imprese senza partita IVA seguiranno dal 1° gennaio 2027. Pay Day invia tramite Peppol, ma non esegue la comunicazione fiscale."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クロアチアは付加価値税登録事業者に対し、2026年1月1日からPeppol経由でリアルタイム税務報告付きの電子インボイスの発行・受信を義務付けています。個人事業主および非課税事業者は2027年1月1日から続きます。Pay DayはPeppol経由で送信しますが、税務報告は行いません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "크로아티아는 부가가치세 등록 사업자에게 2026년 1월 1일부터 Peppol을 통한 실시간 세무 보고가 포함된 전자 인보이스 발행 및 수신을 의무화하고 있습니다. 개인사업자 및 비부가세 사업자는 2027년 1월 1일부터 뒤따릅니다. Pay Day는 Peppol로 전송하지만 세무 보고는 수행하지 않습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kroatië verplicht btw-plichtige bedrijven om sinds 1 januari 2026 e-facturen uit te reiken en te ontvangen via Peppol met realtime fiscale rapportage; zelfstandigen en niet-btw-plichtige bedrijven volgen op 1 januari 2027. Pay Day verstuurt via Peppol, maar verzorgt de fiscale rapportage niet."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chorwacja zobowiązuje firmy zarejestrowane jako podatnicy VAT do wystawiania i odbierania e-faktur przez Peppol wraz z raportowaniem fiskalnym w czasie rzeczywistym od 1 stycznia 2026 r.; jednoosobowe działalności gospodarcze i firmy niebędące podatnikami VAT dołączają 1 stycznia 2027 r. Pay Day wysyła przez Peppol, ale nie wykonuje raportowania fiskalnego."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Croácia exige que empresas registradas para o IVA emitam e recebam faturas eletrônicas pelo Peppol com relato fiscal em tempo real desde 1º de janeiro de 2026; autônomos e empresas não sujeitas ao IVA seguem em 1º de janeiro de 2027. O Pay Day envia pelo Peppol, mas não faz o relato fiscal."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "克罗地亚要求增值税注册企业自 2026 年 1 月 1 日起通过 Peppol 开具和接收电子发票，并进行实时财税申报；个体经营者和非增值税企业自 2027 年 1 月 1 日起跟进。Pay Day 通过 Peppol 发送，但不提供财税申报。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "克羅埃西亞要求加值稅登記企業自 2026 年 1 月 1 日起透過 Peppol 開立與接收電子發票，並進行即時財稅申報；個體戶與非加值稅企業自 2027 年 1 月 1 日起跟進。Pay Day 透過 Peppol 傳送，但不提供財稅申報。"
+          }
+        }
+      }
+    },
     "DESCRIPTION" : {
       "comment" : "Invoice PDF table column header, rendered in capitals",
       "localizations" : {
@@ -8344,6 +8880,83 @@
         }
       }
     },
+    "E-invoicing in %@" : {
+      "comment" : "Dashboard card title; the argument is a country name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-Rechnungen in %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Facturación electrónica en %@"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verkkolaskutus: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Facturation électronique : %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fatturazione elettronica: %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@の電子インボイス"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 전자 인보이스"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-facturatie in %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-fakturowanie: %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fatura eletrônica: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@电子发票现状"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@電子發票現況"
+          }
+        }
+      }
+    },
     "EN 16931 e-invoices" : {
       "localizations" : {
         "de" : {
@@ -8800,6 +9413,234 @@
         }
       }
     },
+    "Every VAT-registered business in Belgium must send and receive structured e-invoices over Peppol since 1 January 2026. A PDF or paper invoice no longer counts, and fines start at €1,500." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jedes umsatzsteuerpflichtige Unternehmen in Belgien muss seit dem 1. Januar 2026 strukturierte E-Rechnungen über Peppol senden und empfangen. Eine PDF- oder Papierrechnung zählt nicht mehr, und die Bußgelder beginnen bei 1.500 €."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toda empresa registrada a efectos de IVA en Bélgica debe enviar y recibir facturas electrónicas estructuradas por Peppol desde el 1 de enero de 2026. Una factura en PDF o en papel ya no es válida, y las multas empiezan en 1.500 €."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jokaisen alv-rekisteröidyn yrityksen Belgiassa on lähetettävä ja vastaanotettava rakenteisia verkkolaskuja Peppolin kautta 1.1.2026 alkaen. PDF- tai paperilasku ei enää kelpaa, ja sakot alkavat 1 500 eurosta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Depuis le 1er janvier 2026, toute entreprise assujettie à la TVA en Belgique doit envoyer et recevoir des factures électroniques structurées via Peppol. Une facture PDF ou papier ne suffit plus, et les amendes démarrent à 1 500 €."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dal 1° gennaio 2026 ogni impresa con partita IVA in Belgio deve inviare e ricevere fatture elettroniche strutturate tramite Peppol. Una fattura PDF o cartacea non è più valida, e le sanzioni partono da 1.500 €."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ベルギーでは付加価値税登録済みのすべての事業者が、2026年1月1日以降、Peppol経由で構造化された電子インボイスを送受信する必要があります。PDFや紙の請求書はもはや認められず、罰金は1,500ユーロから科されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "벨기에에서는 부가가치세 등록 사업자 모두가 2026년 1월 1일부터 Peppol을 통해 구조화된 전자 인보이스를 주고받아야 합니다. PDF나 종이 인보이스는 더 이상 인정되지 않으며, 벌금은 1,500유로부터 시작됩니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elk btw-plichtig bedrijf in België moet sinds 1 januari 2026 gestructureerde e-facturen versturen en ontvangen via Peppol. Een pdf- of papieren factuur telt niet meer, en boetes beginnen bij 1.500 €."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Każda firma zarejestrowana jako podatnik VAT w Belgii musi od 1 stycznia 2026 r. wysyłać i odbierać ustrukturyzowane e-faktury przez Peppol. Faktura w PDF lub na papierze już się nie liczy, a kary zaczynają się od 1500 €."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toda empresa registrada para o IVA na Bélgica deve enviar e receber faturas eletrônicas estruturadas pelo Peppol desde 1º de janeiro de 2026. Uma fatura em PDF ou em papel deixou de valer, e as multas começam em 1.500 €."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自 2026 年 1 月 1 日起，比利时所有增值税注册企业都必须通过 Peppol 发送和接收结构化电子发票。PDF 或纸质发票不再有效，罚款最低 1,500 欧元起。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自 2026 年 1 月 1 日起，比利時所有加值稅登記企業都必須透過 Peppol 傳送與接收結構化電子發票。PDF 或紙本發票不再有效，罰款自 1,500 歐元起跳。"
+          }
+        }
+      }
+    },
+    "Every business in France must be able to receive e-invoices since 1 September 2026. Large and mid-sized companies already issue them; small businesses and micro-entrepreneurs must from 1 September 2027, through an accredited platform (PDP). Factur-X is an accepted format." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jedes Unternehmen in Frankreich muss seit dem 1. September 2026 E-Rechnungen empfangen können. Große und mittlere Unternehmen stellen sie bereits aus; kleine Unternehmen und Kleinstunternehmer müssen ab 1. September 2027 über eine akkreditierte Plattform (PDP) folgen. Factur-X ist ein zulässiges Format."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toda empresa en Francia debe poder recibir facturas electrónicas desde el 1 de septiembre de 2026. Las grandes y medianas empresas ya las emiten; las pequeñas empresas y los microempresarios deben hacerlo desde el 1 de septiembre de 2027, a través de una plataforma acreditada (PDP). Factur-X es un formato aceptado."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jokaisen yrityksen Ranskassa on kyettävä vastaanottamaan verkkolaskuja 1.9.2026 alkaen. Suuret ja keskisuuret yritykset laativat niitä jo; pienyritysten ja mikroyrittäjien on seurattava perässä 1.9.2027 alkaen valtuutetun alustan (PDP) kautta. Factur-X on hyväksytty muoto."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Depuis le 1er septembre 2026, toute entreprise en France doit pouvoir recevoir des factures électroniques. Les grandes et moyennes entreprises les émettent déjà ; les petites entreprises et micro-entrepreneurs devront le faire à partir du 1er septembre 2027, via une plateforme agréée (PDP). Factur-X est un format accepté."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dal 1° settembre 2026 ogni impresa in Francia deve poter ricevere fatture elettroniche. Le grandi e medie imprese le emettono già; le piccole imprese e i micro-imprenditori dovranno farlo dal 1° settembre 2027, tramite una piattaforma accreditata (PDP). Factur-X è un formato accettato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フランスではすべての事業者が2026年9月1日以降、電子インボイスを受信できる必要があります。大企業と中堅企業はすでに発行済みで、小規模事業者とマイクロアントレプレナーは2027年9月1日から認定プラットフォーム（PDP）経由で発行が必要になります。Factur-Xが採用形式です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "프랑스에서는 모든 사업자가 2026년 9월 1일부터 전자 인보이스를 수신할 수 있어야 합니다. 대기업과 중견기업은 이미 발행하고 있으며, 소기업과 마이크로 사업자는 2027년 9월 1일부터 인증 플랫폼(PDP)을 통해 발행해야 합니다. Factur-X가 인정되는 형식입니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elk bedrijf in Frankrijk moet sinds 1 september 2026 e-facturen kunnen ontvangen. Grote en middelgrote bedrijven reiken ze al uit; kleine bedrijven en micro-ondernemers moeten dat vanaf 1 september 2027 doen via een erkend platform (PDP). Factur-X is een geaccepteerd formaat."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Każda firma we Francji musi od 1 września 2026 r. potrafić odbierać e-faktury. Duże i średnie firmy już je wystawiają; małe firmy i mikroprzedsiębiorcy muszą dołączyć od 1 września 2027 r., za pośrednictwem akredytowanej platformy (PDP). Factur-X to akceptowany format."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toda empresa na França deve conseguir receber faturas eletrônicas desde 1º de setembro de 2026. Empresas grandes e médias já as emitem; pequenas empresas e microempreendedores devem fazê-lo a partir de 1º de setembro de 2027, por meio de uma plataforma credenciada (PDP). O Factur-X é um formato aceito."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自 2026 年 9 月 1 日起，法国所有企业都必须能够接收电子发票。大中型企业已经在开具；小型企业和微型创业者须从 2027 年 9 月 1 日起通过认证平台（PDP）开具。Factur-X 为认可格式。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自 2026 年 9 月 1 日起，法國所有企業都必須能夠接收電子發票。大中型企業已在開立；小型企業與微型創業者須自 2027 年 9 月 1 日起透過認證平台（PDP）開立。Factur-X 為認可格式。"
+          }
+        }
+      }
+    },
+    "Every business in Germany must be able to receive e-invoices since 1 January 2025. Companies above €800,000 turnover must issue them from 1 January 2027, everyone else from 1 January 2028. ZUGFeRD / Factur-X and XRechnung are the accepted formats." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jedes Unternehmen in Deutschland muss seit dem 1. Januar 2025 E-Rechnungen empfangen können. Unternehmen mit einem Umsatz über 800.000 € müssen sie ab 1. Januar 2027 ausstellen, alle anderen ab 1. Januar 2028. ZUGFeRD / Factur-X und XRechnung sind die zulässigen Formate."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toda empresa en Alemania debe poder recibir facturas electrónicas desde el 1 de enero de 2025. Las empresas con una facturación superior a 800.000 € deben emitirlas a partir del 1 de enero de 2027, y el resto desde el 1 de enero de 2028. ZUGFeRD / Factur-X y XRechnung son los formatos aceptados."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jokaisen yrityksen Saksassa on kyettävä vastaanottamaan verkkolaskuja 1.1.2025 alkaen. Yli 800 000 euron liikevaihdon yritysten on laadittava niitä 1.1.2027 alkaen, muiden 1.1.2028 alkaen. ZUGFeRD / Factur-X ja XRechnung ovat hyväksytyt muodot."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Depuis le 1er janvier 2025, toute entreprise en Allemagne doit pouvoir recevoir des factures électroniques. Les entreprises dont le chiffre d'affaires dépasse 800 000 € doivent les émettre à partir du 1er janvier 2027, les autres à partir du 1er janvier 2028. ZUGFeRD / Factur-X et XRechnung sont les formats acceptés."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dal 1° gennaio 2025 ogni impresa in Germania deve poter ricevere fatture elettroniche. Le imprese con fatturato superiore a 800.000 € devono emetterle dal 1° gennaio 2027, tutte le altre dal 1° gennaio 2028. ZUGFeRD / Factur-X e XRechnung sono i formati accettati."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ドイツではすべての事業者が2025年1月1日以降、電子インボイスを受信できる必要があります。年商80万ユーロを超える企業は2027年1月1日から、それ以外は2028年1月1日から発行が義務付けられます。ZUGFeRD / Factur-X と XRechnung が採用形式です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "독일에서는 모든 사업자가 2025년 1월 1일부터 전자 인보이스를 수신할 수 있어야 합니다. 매출 80만 유로를 초과하는 기업은 2027년 1월 1일부터, 그 외 기업은 2028년 1월 1일부터 발행해야 합니다. ZUGFeRD / Factur-X와 XRechnung이 인정되는 형식입니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elk bedrijf in Duitsland moet sinds 1 januari 2025 e-facturen kunnen ontvangen. Bedrijven met een omzet boven 800.000 € moeten ze vanaf 1 januari 2027 uitreiken, alle andere vanaf 1 januari 2028. ZUGFeRD / Factur-X en XRechnung zijn de geaccepteerde formaten."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Każda firma w Niemczech musi od 1 stycznia 2025 r. potrafić odbierać e-faktury. Firmy o obrotach powyżej 800 000 € muszą je wystawiać od 1 stycznia 2027 r., pozostałe od 1 stycznia 2028 r. ZUGFeRD / Factur-X oraz XRechnung to akceptowane formaty."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toda empresa na Alemanha deve conseguir receber faturas eletrônicas desde 1º de janeiro de 2025. Empresas com faturamento acima de 800.000 € devem emiti-las a partir de 1º de janeiro de 2027, e as demais a partir de 1º de janeiro de 2028. ZUGFeRD / Factur-X e XRechnung são os formatos aceitos."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自 2025 年 1 月 1 日起，德国所有企业都必须能够接收电子发票。营业额超过 80 万欧元的企业须从 2027 年 1 月 1 日起开具电子发票，其余企业则从 2028 年 1 月 1 日起。ZUGFeRD / Factur-X 与 XRechnung 均为认可格式。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自 2025 年 1 月 1 日起，德國所有企業都必須能夠接收電子發票。營業額超過 80 萬歐元的企業須自 2027 年 1 月 1 日起開立電子發票，其餘企業則自 2028 年 1 月 1 日起。ZUGFeRD / Factur-X 與 XRechnung 均為認可格式。"
+          }
+        }
+      }
+    },
     "Factur-X / ZUGFeRD PDFs that pass tax-authority validation." : {
       "localizations" : {
         "de" : {
@@ -9025,6 +9866,83 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "賣方"
+          }
+        }
+      }
+    },
+    "From %@" : {
+      "comment" : "Status pill; the argument is a date",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ab %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde %@"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alkaen %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dès %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dal %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@から"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@부터"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vanaf %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Od %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A partir de %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@起"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@起"
           }
         }
       }
@@ -9485,6 +10403,82 @@
         }
       }
     },
+    "Greece phases in mandatory B2B e-invoicing through myDATA: businesses above €1 million turnover since 2 March 2026, everyone else from 1 October 2026. Pay Day produces EN 16931 e-invoices but does not submit to myDATA." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Griechenland führt die B2B-E-Rechnungspflicht über myDATA schrittweise ein: Unternehmen mit einem Umsatz über 1 Million € seit 2. März 2026, alle anderen ab 1. Oktober 2026. Pay Day erstellt EN-16931-E-Rechnungen, übermittelt aber nicht an myDATA."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grecia implanta de forma progresiva la facturación electrónica B2B obligatoria a través de myDATA: las empresas con una facturación superior a 1 millón de € desde el 2 de marzo de 2026, y el resto desde el 1 de octubre de 2026. Pay Day genera facturas electrónicas EN 16931, pero no las presenta a myDATA."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kreikka ottaa pakollisen yritysten välisen verkkolaskutuksen käyttöön vaiheittain myDATA-järjestelmän kautta: yli 1 miljoonan euron liikevaihdon yrityksille 2.3.2026 alkaen, kaikille muille 1.10.2026 alkaen. Pay Day tuottaa EN 16931 -verkkolaskuja, mutta ei toimita niitä myDATA:an."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Grèce met en place progressivement la facturation électronique B2B obligatoire via myDATA : les entreprises dont le chiffre d'affaires dépasse 1 million d'€ depuis le 2 mars 2026, toutes les autres à partir du 1er octobre 2026. Pay Day génère des factures électroniques EN 16931, mais ne les transmet pas à myDATA."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Grecia introduce gradualmente la fatturazione elettronica B2B obbligatoria tramite myDATA: le imprese con fatturato superiore a 1 milione di € dal 2 marzo 2026, tutte le altre dal 1° ottobre 2026. Pay Day genera fatture elettroniche EN 16931, ma non le trasmette a myDATA."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ギリシャはmyDATAを通じて義務的B2B電子インボイスを段階的に導入します。年商100万ユーロ超の企業は2026年3月2日から、それ以外は2026年10月1日からです。Pay DayはEN 16931準拠の電子インボイスを作成しますが、myDATAへの提出は行いません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "그리스는 myDATA를 통해 의무적 B2B 전자 인보이스를 단계적으로 도입합니다. 매출 100만 유로 초과 기업은 2026년 3월 2일부터, 그 외 기업은 2026년 10월 1일부터입니다. Pay Day는 EN 16931 전자 인보이스를 생성하지만, myDATA에는 제출하지 않습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Griekenland voert verplichte b2b-e-facturatie gefaseerd in via myDATA: bedrijven met een omzet boven 1 miljoen € sinds 2 maart 2026, alle overige vanaf 1 oktober 2026. Pay Day genereert EN 16931-e-facturen, maar dient ze niet in bij myDATA."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grecja wprowadza obowiązkowe e-fakturowanie B2B etapami za pośrednictwem myDATA: firmy o obrotach powyżej 1 mln € od 2 marca 2026 r., pozostałe od 1 października 2026 r. Pay Day tworzy e-faktury zgodne z EN 16931, ale nie przekazuje ich do myDATA."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Grécia implementa em fases a fatura eletrônica B2B obrigatória pelo myDATA: empresas com faturamento acima de 1 milhão de € desde 2 de março de 2026, e as demais a partir de 1º de outubro de 2026. O Pay Day gera faturas eletrônicas EN 16931, mas não as envia ao myDATA."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希腊通过 myDATA 分阶段推行强制性 B2B 电子发票：营业额超过 100 万欧元的企业自 2026 年 3 月 2 日起，其余企业自 2026 年 10 月 1 日起。Pay Day 生成符合 EN 16931 的电子发票，但不会提交至 myDATA。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "希臘透過 myDATA 分階段推行強制性 B2B 電子發票：營業額超過 100 萬歐元的企業自 2026 年 3 月 2 日起，其餘企業自 2026 年 10 月 1 日起。Pay Day 會產生符合 EN 16931 的電子發票，但不會提交至 myDATA。"
+          }
+        }
+      }
+    },
     "Home" : {
       "localizations" : {
         "de" : {
@@ -9867,6 +10861,158 @@
         }
       }
     },
+    "In Estonia any registered e-invoice receiver can require a structured e-invoice from you since 1 July 2025, and a full B2B mandate is planned for 2027. Peppol is the common channel." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Estland kann jeder registrierte E-Rechnungsempfänger seit dem 1. Juli 2025 eine strukturierte E-Rechnung von Ihnen verlangen, und eine vollständige B2B-Pflicht ist für 2027 geplant. Peppol ist der gängige Übertragungsweg."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Estonia, desde el 1 de julio de 2025 cualquier receptor de facturas electrónicas registrado puede exigirte una factura electrónica estructurada, y se prevé una obligación B2B completa para 2027. Peppol es el canal habitual."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virossa mikä tahansa rekisteröity verkkolaskun vastaanottaja voi vaatia sinulta rakenteisen verkkolaskun 1.7.2025 alkaen, ja täysimittainen yritysten välinen pakko on suunnitteilla vuodelle 2027. Peppol on yleisin kanava."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Estonie, depuis le 1er juillet 2025, tout destinataire de factures électroniques enregistré peut vous demander une facture électronique structurée, et une obligation B2B complète est prévue pour 2027. Peppol est le canal courant."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Estonia, dal 1° luglio 2025 qualsiasi destinatario registrato di fatture elettroniche può richiederti una fattura elettronica strutturata, ed è previsto un obbligo B2B completo per il 2027. Peppol è il canale più diffuso."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エストニアでは2025年7月1日以降、登録済みの電子インボイス受信者であれば誰でもあなたに構造化された電子インボイスを要求でき、2027年には全面的なB2B義務化が予定されています。Peppolが一般的な経路です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "에스토니아에서는 2025년 7월 1일부터 등록된 전자 인보이스 수신자라면 누구나 귀하에게 구조화된 전자 인보이스를 요구할 수 있으며, 2027년에는 전면적인 B2B 의무화가 계획되어 있습니다. Peppol이 일반적인 전송 경로입니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Estland kan sinds 1 juli 2025 elke geregistreerde e-factuurontvanger een gestructureerde e-factuur van je eisen, en een volledige b2b-verplichting is gepland voor 2027. Peppol is het gangbare kanaal."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "W Estonii od 1 lipca 2025 r. każdy zarejestrowany odbiorca e-faktur może zażądać od Ciebie ustrukturyzowanej e-faktury, a pełny obowiązek B2B jest planowany na 2027 r. Peppol jest powszechnym kanałem."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na Estônia, desde 1º de julho de 2025, qualquer destinatário registrado de faturas eletrônicas pode exigir de você uma fatura eletrônica estruturada, e uma obrigação B2B completa está prevista para 2027. O Peppol é o canal mais usado."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在爱沙尼亚，自 2025 年 7 月 1 日起，任何已注册的电子发票接收方都可以要求你提供结构化电子发票，全面的 B2B 强制规定计划于 2027 年实施。Peppol 是通用渠道。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在愛沙尼亞，自 2025 年 7 月 1 日起，任何已登記的電子發票接收方都可以要求你提供結構化電子發票，全面的 B2B 強制規定計劃於 2027 年實施。Peppol 為通用管道。"
+          }
+        }
+      }
+    },
+    "In Finland any business can require a structured e-invoice from you (Act 241/2019), and government suppliers must send them. Peppol with an OVT address is the standard." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Finnland kann jedes Unternehmen von Ihnen eine strukturierte E-Rechnung verlangen (Gesetz 241/2019), und Lieferanten des Staates müssen sie versenden. Peppol mit einer OVT-Adresse ist der Standard."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Finlandia, cualquier empresa puede exigirte una factura electrónica estructurada (Ley 241/2019), y los proveedores del Estado deben enviarlas. Peppol con una dirección OVT es el estándar."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suomessa mikä tahansa yritys voi vaatia sinulta rakenteisen verkkolaskun (laki 241/2019), ja valtion hankintojen toimittajien on lähetettävä niitä. Peppol OVT-tunnuksella on käytössä oleva standardi."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Finlande, toute entreprise peut vous demander une facture électronique structurée (loi 241/2019), et les fournisseurs de l'État doivent les envoyer. Peppol avec une adresse OVT est la norme."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Finlandia qualsiasi impresa può richiederti una fattura elettronica strutturata (legge 241/2019), e i fornitori dello Stato devono inviarle. Peppol con un indirizzo OVT è lo standard."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フィンランドでは、どの事業者もあなたに構造化された電子インボイスを要求できます（法律241/2019）。政府調達の取引先は送付が義務です。OVTアドレスを使ったPeppolが標準です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "핀란드에서는 어떤 사업체든 귀하에게 구조화된 전자 인보이스를 요구할 수 있으며(법률 241/2019), 정부 공급업체는 반드시 전송해야 합니다. OVT 주소를 사용하는 Peppol이 표준입니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Finland kan elk bedrijf een gestructureerde e-factuur van je eisen (wet 241/2019), en leveranciers van de overheid moeten ze versturen. Peppol met een OVT-adres is de standaard."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "W Finlandii każda firma może zażądać od Ciebie ustrukturyzowanej e-faktury (ustawa 241/2019), a dostawcy administracji państwowej muszą je wysyłać. Peppol z adresem OVT jest standardem."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na Finlândia, qualquer empresa pode exigir de você uma fatura eletrônica estruturada (Lei 241/2019), e os fornecedores do governo devem enviá-las. O Peppol com endereço OVT é o padrão."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在芬兰，任何企业都可以要求你提供结构化电子发票（第241/2019号法律），政府供应商必须发送电子发票。使用 OVT 地址的 Peppol 是标准渠道。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在芬蘭，任何企業都可以要求你提供結構化電子發票（第241/2019號法律），政府供應商則必須傳送電子發票。使用 OVT 位址的 Peppol 為標準管道。"
+          }
+        }
+      }
+    },
     "Invoice" : {
       "localizations" : {
         "de" : {
@@ -10171,6 +11317,159 @@
         }
       }
     },
+    "Ireland phases in mandatory B2B e-invoicing over Peppol from 1 November 2028, starting with large companies, and extends it to all other VAT-registered businesses in November 2029." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Irland führt die B2B-E-Rechnungspflicht über Peppol ab 1. November 2028 schrittweise ein, zunächst für Großunternehmen, und weitet sie im November 2029 auf alle übrigen umsatzsteuerpflichtigen Unternehmen aus."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Irlanda implanta de forma progresiva la facturación electrónica B2B obligatoria por Peppol desde el 1 de noviembre de 2028, empezando por las grandes empresas, y la extiende a todas las demás empresas registradas a efectos de IVA en noviembre de 2029."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Irlanti ottaa pakollisen yritysten välisen verkkolaskutuksen käyttöön vaiheittain Peppolin kautta 1.11.2028 alkaen, ensin suuryrityksille, ja laajentaa sen kaikkiin muihin alv-rekisteröityihin yrityksiin marraskuussa 2029."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'Irlande met en place progressivement la facturation électronique B2B obligatoire via Peppol à partir du 1er novembre 2028, en commençant par les grandes entreprises, puis l'étend à toutes les autres entreprises assujetties à la TVA en novembre 2029."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'Irlanda introduce gradualmente la fatturazione elettronica B2B obbligatoria tramite Peppol dal 1° novembre 2028, a partire dalle grandi imprese, ed estende l'obbligo a tutte le altre imprese con partita IVA nel novembre 2029."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アイルランドは2028年11月1日から、Peppol経由の義務的B2B電子インボイスを大企業から段階的に導入し、2029年11月にはその他すべての付加価値税登録事業者にも拡大します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아일랜드는 2028년 11월 1일부터 Peppol을 통한 의무적 B2B 전자 인보이스를 대기업부터 단계적으로 도입하며, 2029년 11월에는 나머지 모든 부가가치세 등록 사업자로 확대합니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ierland voert verplichte b2b-e-facturatie via Peppol gefaseerd in vanaf 1 november 2028, te beginnen bij grote bedrijven, en breidt dit in november 2029 uit naar alle overige btw-plichtige ondernemingen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Irlandia wprowadza obowiązkowe e-fakturowanie B2B przez Peppol etapami od 1 listopada 2028 r., zaczynając od dużych firm, a w listopadzie 2029 r. rozszerza je na wszystkie pozostałe firmy zarejestrowane jako podatnicy VAT."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Irlanda implementa em fases a fatura eletrônica B2B obrigatória pelo Peppol a partir de 1º de novembro de 2028, começando pelas grandes empresas, e a estende a todas as demais empresas registradas para o IVA em novembro de 2029."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "爱尔兰将于 2028 年 11 月 1 日起分阶段推行强制性 B2B 电子发票（通过 Peppol），首先适用于大型企业，并于 2029 年 11 月扩大到所有其他增值税注册企业。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "愛爾蘭將於 2028 年 11 月 1 日起分階段推行強制性 B2B 電子發票（透過 Peppol），首先適用於大型企業，並於 2029 年 11 月擴大至所有其他加值稅登記企業。"
+          }
+        }
+      }
+    },
+    "Issue EN 16931 e-invoices that %@'s mandate accepts." : {
+      "comment" : "Paywall reason; the argument is a country name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellen Sie EN-16931-E-Rechnungen, die die Vorgaben von %@ erfüllen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emite facturas electrónicas EN 16931 que cumplen la normativa de %@."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laadi EN 16931 -verkkolaskuja, jotka täyttävät maan %@ vaatimukset."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Émettez des factures électroniques EN 16931 conformes à la réglementation de %@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emetti fatture elettroniche EN 16931 conformi alla normativa di %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@の義務に対応するEN 16931準拠の電子インボイスを発行。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 의무에 부합하는 EN 16931 전자 인보이스를 발행하세요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reik EN 16931-e-facturen uit die voldoen aan de eisen van %@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wystawiaj e-faktury zgodne z EN 16931, które spełniają wymogi kraju %@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emita faturas eletrônicas EN 16931 que atendem às exigências de %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开具符合 %@ 强制规定的 EN 16931 电子发票。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開立符合 %@ 強制規定的 EN 16931 電子發票。"
+          }
+        }
+      }
+    },
     "Issue date" : {
       "localizations" : {
         "de" : {
@@ -10320,6 +11619,158 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "開立日期"
+          }
+        }
+      }
+    },
+    "Italy's SDI platform has been mandatory for B2B invoices since 2019. Pay Day produces EN 16931 e-invoices and Peppol sends, but does not submit to SDI." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Italiens SDI-Plattform ist seit 2019 für B2B-Rechnungen verpflichtend. Pay Day erstellt EN-16931-E-Rechnungen und versendet über Peppol, übermittelt aber nicht an das SDI."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La plataforma SDI de Italia es obligatoria para las facturas B2B desde 2019. Pay Day genera facturas electrónicas EN 16931 y las envía por Peppol, pero no las presenta al SDI."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Italian SDI-alusta on ollut pakollinen yritysten välisille laskuille vuodesta 2019. Pay Day tuottaa EN 16931 -verkkolaskuja ja lähettää ne Peppolin kautta, mutta ei toimita niitä SDI:hin."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La plateforme SDI de l'Italie est obligatoire pour les factures B2B depuis 2019. Pay Day génère des factures électroniques EN 16931 et les envoie via Peppol, mais ne les transmet pas au SDI."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La piattaforma SDI italiana è obbligatoria per le fatture B2B dal 2019. Pay Day genera fatture elettroniche EN 16931 e le invia tramite Peppol, ma non le trasmette allo SDI."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "イタリアのSDIプラットフォームは2019年からB2B請求書で義務化されています。Pay DayはEN 16931準拠の電子インボイスを作成しPeppol経由で送信しますが、SDIへの提出は行いません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이탈리아의 SDI 플랫폼은 2019년부터 B2B 인보이스에 의무화되었습니다. Pay Day는 EN 16931 전자 인보이스를 생성하여 Peppol로 전송하지만, SDI에는 제출하지 않습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het Italiaanse SDI-platform is sinds 2019 verplicht voor b2b-facturen. Pay Day genereert EN 16931-e-facturen en verstuurt ze via Peppol, maar dient ze niet in bij SDI."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Włoska platforma SDI jest obowiązkowa dla faktur B2B od 2019 r. Pay Day tworzy e-faktury zgodne z EN 16931 i wysyła je przez Peppol, ale nie przekazuje ich do SDI."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A plataforma SDI da Itália é obrigatória para faturas B2B desde 2019. O Pay Day gera faturas eletrônicas EN 16931 e as envia pelo Peppol, mas não as envia ao SDI."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "意大利的 SDI 平台自 2019 年起已强制用于 B2B 发票。Pay Day 生成符合 EN 16931 的电子发票并通过 Peppol 发送，但不会提交至 SDI。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "義大利的 SDI 平台自 2019 年起已強制用於 B2B 發票。Pay Day 會產生符合 EN 16931 的電子發票並透過 Peppol 傳送，但不會提交至 SDI。"
+          }
+        }
+      }
+    },
+    "Latvia requires every business to issue and receive structured e-invoices from 1 January 2028, with invoice data reported to the State Revenue Service. Peppol is a supported channel." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lettland verpflichtet ab 1. Januar 2028 jedes Unternehmen, strukturierte E-Rechnungen auszustellen und zu empfangen, wobei die Rechnungsdaten an die staatliche Steuerbehörde gemeldet werden. Peppol wird als Übertragungsweg unterstützt."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letonia exige a toda empresa emitir y recibir facturas electrónicas estructuradas a partir del 1 de enero de 2028, con los datos de la factura comunicados al Servicio Estatal de Impuestos. Peppol es un canal admitido."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latvia edellyttää 1.1.2028 alkaen jokaiselta yritykseltä rakenteisten verkkolaskujen laatimista ja vastaanottamista, ja laskutiedot raportoidaan valtion verohallinnolle. Peppol on tuettu kanava."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Lettonie impose à toute entreprise d'émettre et de recevoir des factures électroniques structurées à partir du 1er janvier 2028, les données de facturation étant transmises au Service national des impôts. Peppol est un canal pris en charge."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Lettonia impone a ogni impresa di emettere e ricevere fatture elettroniche strutturate dal 1° gennaio 2028, con i dati della fattura comunicati all'Agenzia statale delle entrate. Peppol è un canale supportato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラトビアは2028年1月1日から、すべての事業者に構造化された電子インボイスの発行と受信を義務付け、請求データは国税庁に報告されます。Peppolは対応している経路の一つです。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "라트비아는 2028년 1월 1일부터 모든 사업체에 구조화된 전자 인보이스 발행 및 수신을 의무화하며, 인보이스 데이터는 국세청에 보고됩니다. Peppol은 지원되는 전송 경로 중 하나입니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letland verplicht elk bedrijf om vanaf 1 januari 2028 gestructureerde e-facturen uit te reiken en te ontvangen, waarbij factuurgegevens worden gerapporteerd aan de staatsbelastingdienst. Peppol is een ondersteund kanaal."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Łotwa zobowiązuje każdą firmę do wystawiania i odbierania ustrukturyzowanych e-faktur od 1 stycznia 2028 r., a dane z faktur są raportowane do Państwowej Służby Podatkowej. Peppol jest obsługiwanym kanałem."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Letônia exige que toda empresa emita e receba faturas eletrônicas estruturadas a partir de 1º de janeiro de 2028, com os dados da fatura informados ao Serviço Estatal de Receita. O Peppol é um canal compatível."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拉脱维亚要求所有企业自 2028 年 1 月 1 日起开具和接收结构化电子发票，发票数据须上报国家税务局。Peppol 是受支持的渠道之一。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拉脫維亞要求所有企業自 2028 年 1 月 1 日起開立與接收結構化電子發票，發票資料須申報至國家稅務局。Peppol 為受支援的管道之一。"
           }
         }
       }
@@ -10932,6 +12383,159 @@
         }
       }
     },
+    "Luxembourg requires every supplier to public bodies to send e-invoices over Peppol. A bill before Parliament would phase in B2B e-invoicing over Peppol from 2028 to 2029." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luxemburg verpflichtet jeden Lieferanten öffentlicher Stellen, E-Rechnungen über Peppol zu senden. Ein Gesetzentwurf im Parlament würde die B2B-E-Rechnung über Peppol von 2028 bis 2029 schrittweise einführen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luxemburgo exige a todo proveedor de organismos públicos enviar facturas electrónicas por Peppol. Un proyecto de ley ante el Parlamento implantaría de forma progresiva la facturación electrónica B2B por Peppol entre 2028 y 2029."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luxemburg edellyttää jokaiselta julkisyhteisöjen toimittajalta verkkolaskujen lähettämistä Peppolin kautta. Parlamentin käsittelyssä oleva lakiesitys ottaisi yritysten välisen verkkolaskutuksen käyttöön vaiheittain Peppolin kautta vuosina 2028–2029."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le Luxembourg impose à tout fournisseur d'organismes publics d'envoyer des factures électroniques via Peppol. Un projet de loi devant le Parlement mettrait en place progressivement la facturation électronique B2B via Peppol de 2028 à 2029."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il Lussemburgo impone a ogni fornitore di enti pubblici di inviare fatture elettroniche tramite Peppol. Un disegno di legge al vaglio del Parlamento introdurrebbe gradualmente la fatturazione elettronica B2B tramite Peppol dal 2028 al 2029."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ルクセンブルクは公共機関への納入業者すべてに、Peppol経由での電子インボイス送付を義務付けています。議会で審議中の法案が可決されれば、2028年から2029年にかけてPeppol経由のB2B電子インボイスが段階的に導入される見込みです。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "룩셈부르크는 공공기관에 납품하는 모든 공급업체에 Peppol을 통한 전자 인보이스 전송을 의무화하고 있습니다. 의회에 상정된 법안이 통과되면 2028년부터 2029년까지 Peppol을 통한 B2B 전자 인보이스가 단계적으로 도입될 예정입니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luxemburg verplicht elke leverancier van overheidsinstanties om e-facturen via Peppol te versturen. Een wetsvoorstel dat bij het parlement ligt, zou b2b-e-facturatie via Peppol tussen 2028 en 2029 gefaseerd invoeren."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luksemburg zobowiązuje każdego dostawcę podmiotów publicznych do wysyłania e-faktur przez Peppol. Projekt ustawy w parlamencie zakłada stopniowe wprowadzenie e-fakturowania B2B przez Peppol w latach 2028–2029."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luxemburgo exige que todo fornecedor de órgãos públicos envie faturas eletrônicas pelo Peppol. Um projeto de lei em tramitação no Parlamento implementaria a fatura eletrônica B2B pelo Peppol em fases entre 2028 e 2029."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "卢森堡要求所有向公共机构供货的供应商通过 Peppol 发送电子发票。一项正在议会审议的法案拟于 2028 年至 2029 年间分阶段推行通过 Peppol 的 B2B 电子发票。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盧森堡要求所有向公家機關供貨的供應商透過 Peppol 傳送電子發票。一項正在國會審議的法案擬於 2028 年至 2029 年間分階段推行透過 Peppol 的 B2B 電子發票。"
+          }
+        }
+      }
+    },
+    "Mandatory now" : {
+      "comment" : "Status pill",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt Pflicht"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obligatorio ya"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pakollista nyt"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obligatoire"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obbligatorio ora"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "義務化中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "의무 시행 중"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu verplicht"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Już obowiązkowe"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obrigatório agora"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "现已强制"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現已強制"
+          }
+        }
+      }
+    },
     "Mark Paid" : {
       "localizations" : {
         "de" : {
@@ -11461,6 +13065,160 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新增發票"
+          }
+        }
+      }
+    },
+    "Next: %@ — %@" : {
+      "comment" : "Dashboard card deadline line: a date, then who becomes obliged on it",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächste Frist: %1$@ — %2$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próximo: %1$@ — %2$@"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seuraavaksi: %1$@ — %2$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prochaine échéance : %1$@ — %2$@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prossima scadenza: %1$@ — %2$@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "次: %1$@ — %2$@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음: %1$@ — %2$@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volgende: %1$@ — %2$@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolejny termin: %1$@ — %2$@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próximo: %1$@ — %2$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一步：%1$@ — %2$@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一步：%1$@ — %2$@"
+          }
+        }
+      }
+    },
+    "No B2B mandate yet" : {
+      "comment" : "Status pill",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine B2B-Pflicht"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin obligación B2B aún"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ei vielä B2B-pakkoa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pas d'obligation B2B"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nessun obbligo B2B"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B2B義務まだなし"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B2B 의무 아직 없음"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nog geen B2B-verplichting"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak obowiązku B2B"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem obrigação B2B"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚无 B2B 强制"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚無 B2B 強制"
           }
         }
       }
@@ -12145,6 +13903,82 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "無"
+          }
+        }
+      }
+    },
+    "Norway requires every business to issue e-invoices in the Peppol-based EHF format from 1 January 2027 — a PDF by email will no longer count. Receiving follows on 1 January 2030." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Norwegen verpflichtet ab 1. Januar 2027 jedes Unternehmen, E-Rechnungen im Peppol-basierten EHF-Format auszustellen — ein PDF per E-Mail zählt dann nicht mehr. Der Empfang folgt ab 1. Januar 2030."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noruega exige a toda empresa emitir facturas electrónicas en el formato EHF basado en Peppol a partir del 1 de enero de 2027; un PDF por correo ya no será válido. La recepción será obligatoria desde el 1 de enero de 2030."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Norja edellyttää 1.1.2027 alkaen jokaiselta yritykseltä verkkolaskujen laatimista Peppol-pohjaisessa EHF-muodossa — sähköpostitse lähetetty PDF ei enää kelpaa. Vastaanottovelvollisuus seuraa 1.1.2030."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Norvège impose à toute entreprise d'émettre des factures électroniques au format EHF basé sur Peppol à partir du 1er janvier 2027 — un PDF envoyé par e-mail ne suffira plus. La réception suit à partir du 1er janvier 2030."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Norvegia impone a ogni impresa di emettere fatture elettroniche nel formato EHF basato su Peppol dal 1° gennaio 2027 — un PDF via e-mail non basterà più. La ricezione seguirà dal 1° gennaio 2030."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ノルウェーは2027年1月1日から、すべての事業者にPeppolベースのEHF形式での電子インボイス発行を義務付けます。メール添付のPDFはもはや認められません。受信義務は2030年1月1日から続きます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노르웨이는 2027년 1월 1일부터 모든 사업체에 Peppol 기반 EHF 형식의 전자 인보이스 발행을 의무화합니다 — 이메일로 보내는 PDF는 더 이상 인정되지 않습니다. 수신 의무는 2030년 1월 1일부터 뒤따릅니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noorwegen verplicht elk bedrijf om vanaf 1 januari 2027 e-facturen uit te reiken in het op Peppol gebaseerde EHF-formaat — een pdf per e-mail telt dan niet meer. Ontvangen volgt vanaf 1 januari 2030."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Norwegia zobowiązuje każdą firmę do wystawiania e-faktur w opartym na Peppol formacie EHF od 1 stycznia 2027 r. — PDF wysłany e-mailem przestanie się liczyć. Obowiązek odbierania nastąpi od 1 stycznia 2030 r."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Noruega exige que toda empresa emita faturas eletrônicas no formato EHF baseado em Peppol a partir de 1º de janeiro de 2027 — um PDF por e-mail deixará de valer. O recebimento passa a ser obrigatório em 1º de janeiro de 2030."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "挪威要求所有企业自 2027 年 1 月 1 日起以基于 Peppol 的 EHF 格式开具电子发票——邮件发送的 PDF 将不再有效。接收义务自 2030 年 1 月 1 日起跟进。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "挪威要求所有企業自 2027 年 1 月 1 日起以基於 Peppol 的 EHF 格式開立電子發票——郵件傳送的 PDF 將不再有效。接收義務自 2030 年 1 月 1 日起跟進。"
           }
         }
       }
@@ -13671,6 +15505,83 @@
         }
       }
     },
+    "Pay Day — free invoices and EU-compliant e-invoicing (Peppol, Factur-X) on iPhone." : {
+      "comment" : "Text shared alongside the App Store link",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day — kostenlose Rechnungen und EU-konforme E-Rechnungen (Peppol, Factur-X) auf dem iPhone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day — facturas gratis y facturación electrónica conforme a la UE (Peppol, Factur-X) en iPhone."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day — ilmaiset laskut ja EU-vaatimusten mukainen verkkolaskutus (Peppol, Factur-X) iPhonella."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day — factures gratuites et facturation électronique conforme à l'UE (Peppol, Factur-X) sur iPhone."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day — fatture gratuite e fatturazione elettronica conforme alle norme UE (Peppol, Factur-X) su iPhone."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day — 無料の請求書とEU準拠の電子インボイス（Peppol、Factur-X）をiPhoneで。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day — 무료 인보이스와 EU 규정을 지키는 전자 인보이스(Peppol, Factur-X)를 iPhone에서."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day — gratis facturen en EU-conforme e-facturatie (Peppol, Factur-X) op iPhone."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day — darmowe faktury i zgodne z prawem UE e-fakturowanie (Peppol, Factur-X) na iPhonie."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day — faturas grátis e fatura eletrônica em conformidade com a UE (Peppol, Factur-X) no iPhone."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day——iPhone 上的免费发票与符合欧盟规范的电子发票（Peppol、Factur-X）。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day——iPhone 上的免費發票與符合歐盟規範的電子發票（Peppol、Factur-X）。"
+          }
+        }
+      }
+    },
     "Payment & IBAN" : {
       "localizations" : {
         "de" : {
@@ -14052,6 +15963,83 @@
         }
       }
     },
+    "Phasing in" : {
+      "comment" : "Status pill",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird eingeführt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En implantación"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Käyttöönotossa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En déploiement"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In introduzione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "段階的導入中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "단계적 도입 중"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wordt ingevoerd"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wprowadzane etapami"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em implementação"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分阶段推行中"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分階段推行中"
+          }
+        }
+      }
+    },
     "Plans are still loading" : {
       "localizations" : {
         "de" : {
@@ -14200,6 +16188,158 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "請稍後再試。"
+          }
+        }
+      }
+    },
+    "Poland's KSeF platform is mandatory for B2B invoices since 2026. Pay Day produces EN 16931 e-invoices and Peppol sends, but does not submit to KSeF." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Polens KSeF-Plattform ist seit 2026 für B2B-Rechnungen verpflichtend. Pay Day erstellt EN-16931-E-Rechnungen und versendet über Peppol, übermittelt aber nicht an das KSeF."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La plataforma KSeF de Polonia es obligatoria para las facturas B2B desde 2026. Pay Day genera facturas electrónicas EN 16931 y las envía por Peppol, pero no las presenta al KSeF."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puolan KSeF-alusta on pakollinen yritysten välisille laskuille vuodesta 2026. Pay Day tuottaa EN 16931 -verkkolaskuja ja lähettää ne Peppolin kautta, mutta ei toimita niitä KSeF:hen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La plateforme KSeF de la Pologne est obligatoire pour les factures B2B depuis 2026. Pay Day génère des factures électroniques EN 16931 et les envoie via Peppol, mais ne les transmet pas au KSeF."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La piattaforma KSeF polacca è obbligatoria per le fatture B2B dal 2026. Pay Day genera fatture elettroniche EN 16931 e le invia tramite Peppol, ma non le trasmette al KSeF."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ポーランドのKSeFプラットフォームは2026年からB2B請求書で義務化されています。Pay DayはEN 16931準拠の電子インボイスを作成しPeppol経由で送信しますが、KSeFへの提出は行いません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "폴란드의 KSeF 플랫폼은 2026년부터 B2B 인보이스에 의무화되었습니다. Pay Day는 EN 16931 전자 인보이스를 생성하여 Peppol로 전송하지만, KSeF에는 제출하지 않습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het Poolse KSeF-platform is sinds 2026 verplicht voor b2b-facturen. Pay Day genereert EN 16931-e-facturen en verstuurt ze via Peppol, maar dient ze niet in bij KSeF."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Polska platforma KSeF jest obowiązkowa dla faktur B2B od 2026 r. Pay Day tworzy e-faktury zgodne z EN 16931 i wysyła je przez Peppol, ale nie przekazuje ich do KSeF."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A plataforma KSeF da Polônia é obrigatória para faturas B2B desde 2026. O Pay Day gera faturas eletrônicas EN 16931 e as envia pelo Peppol, mas não as envia ao KSeF."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "波兰的 KSeF 平台自 2026 年起已强制用于 B2B 发票。Pay Day 生成符合 EN 16931 的电子发票并通过 Peppol 发送，但不会提交至 KSeF。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "波蘭的 KSeF 平台自 2026 年起已強制用於 B2B 發票。Pay Day 會產生符合 EN 16931 的電子發票並透過 Peppol 傳送，但不會提交至 KSeF。"
+          }
+        }
+      }
+    },
+    "Portugal has no B2B mandate yet. From 1 January 2027 a PDF invoice needs a qualified electronic signature, while a structured e-invoice does not. EU-wide cross-border e-invoicing becomes mandatory on 1 July 2030." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portugal hat noch keine B2B-Pflicht. Ab 1. Januar 2027 benötigt eine PDF-Rechnung eine qualifizierte elektronische Signatur, eine strukturierte E-Rechnung dagegen nicht. EU-weite grenzüberschreitende E-Rechnungen werden ab 1. Juli 2030 verpflichtend."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portugal aún no tiene una obligación B2B. A partir del 1 de enero de 2027, una factura en PDF necesitará una firma electrónica cualificada, mientras que una factura electrónica estructurada no. La facturación electrónica transfronteriza en toda la UE será obligatoria a partir del 1 de julio de 2030."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portugalissa ei vielä ole yritysten välistä pakkoa. PDF-lasku tarvitsee 1.1.2027 alkaen hyväksytyn sähköisen allekirjoituksen, mutta rakenteinen verkkolasku ei. EU:n laajuisesta rajat ylittävästä verkkolaskutuksesta tulee pakollista 1.7.2030."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le Portugal n'a pas encore d'obligation B2B. À partir du 1er janvier 2027, une facture PDF nécessitera une signature électronique qualifiée, contrairement à une facture électronique structurée. La facturation électronique transfrontalière deviendra obligatoire dans toute l'UE à partir du 1er juillet 2030."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il Portogallo non ha ancora un obbligo B2B. Dal 1° gennaio 2027 una fattura PDF richiederà una firma elettronica qualificata, mentre una fattura elettronica strutturata no. La fatturazione elettronica transfrontaliera diventerà obbligatoria in tutta l'UE dal 1° luglio 2030."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ポルトガルにはまだB2B義務はありません。2027年1月1日から、PDF請求書には適格電子署名が必要になりますが、構造化された電子インボイスには不要です。EU域内の越境電子インボイスは2030年7月1日から義務化されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "포르투갈은 아직 B2B 의무가 없습니다. 2027년 1월 1일부터 PDF 인보이스에는 적격 전자서명이 필요하지만, 구조화된 전자 인보이스에는 필요하지 않습니다. EU 전역의 국경 간 전자 인보이스는 2030년 7월 1일부터 의무화됩니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portugal heeft nog geen B2B-verplichting. Vanaf 1 januari 2027 heeft een pdf-factuur een gekwalificeerde elektronische handtekening nodig, een gestructureerde e-factuur niet. EU-brede grensoverschrijdende e-facturatie wordt verplicht vanaf 1 juli 2030."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portugalia nie ma jeszcze obowiązku B2B. Od 1 stycznia 2027 r. faktura PDF będzie wymagać kwalifikowanego podpisu elektronicznego, a ustrukturyzowana e-faktura nie. Ogólnounijne transgraniczne e-fakturowanie stanie się obowiązkowe od 1 lipca 2030 r."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portugal ainda não tem uma obrigação B2B. A partir de 1º de janeiro de 2027, uma fatura em PDF vai precisar de assinatura eletrônica qualificada, o que não se aplica a uma fatura eletrônica estruturada. A fatura eletrônica transfronteiriça em toda a UE se tornará obrigatória a partir de 1º de julho de 2030."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "葡萄牙目前还没有 B2B 强制规定。自 2027 年 1 月 1 日起，PDF 发票需要合格电子签名，而结构化电子发票则不需要。欧盟范围内的跨境电子发票将于 2030 年 7 月 1 日起强制实施。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "葡萄牙目前尚無 B2B 強制規定。自 2027 年 1 月 1 日起，PDF 發票需要合格電子簽章，結構化電子發票則不需要。歐盟範圍內的跨境電子發票將於 2030 年 7 月 1 日起強制實施。"
           }
         }
       }
@@ -14738,6 +16878,82 @@
         }
       }
     },
+    "Rate Pay Day" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day bewerten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valorar Pay Day"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arvostele Pay Day"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noter Pay Day"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valuta Pay Day"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Dayを評価"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day 평가"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beoordeel Pay Day"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oceń Pay Day"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avaliar o Pay Day"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "评价 Pay Day"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "評價 Pay Day"
+          }
+        }
+      }
+    },
     "Read the Privacy Policy" : {
       "localizations" : {
         "de" : {
@@ -15271,6 +17487,82 @@
         }
       }
     },
+    "Romania requires every business to send B2B invoices through RO e-Factura since July 2024. Pay Day produces EN 16931 e-invoices but does not submit to RO e-Factura." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rumänien verpflichtet seit Juli 2024 jedes Unternehmen, B2B-Rechnungen über RO e-Factura zu versenden. Pay Day erstellt EN-16931-E-Rechnungen, übermittelt aber nicht an RO e-Factura."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rumanía exige a toda empresa enviar facturas B2B a través de RO e-Factura desde julio de 2024. Pay Day genera facturas electrónicas EN 16931, pero no las presenta a RO e-Factura."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Romania edellyttää heinäkuusta 2024 alkaen jokaiselta yritykseltä yritysten välisten laskujen lähettämistä RO e-Factura -järjestelmän kautta. Pay Day tuottaa EN 16931 -verkkolaskuja, mutta ei toimita niitä RO e-Facturaan."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Roumanie impose à toute entreprise d'envoyer ses factures B2B via RO e-Factura depuis juillet 2024. Pay Day génère des factures électroniques EN 16931, mais ne les transmet pas à RO e-Factura."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Romania impone a ogni impresa di inviare le fatture B2B tramite RO e-Factura dal luglio 2024. Pay Day genera fatture elettroniche EN 16931, ma non le trasmette a RO e-Factura."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ルーマニアは2024年7月から、すべての事業者にRO e-Factura経由でのB2B請求書送付を義務付けています。Pay DayはEN 16931準拠の電子インボイスを作成しますが、RO e-Facturaへの提出は行いません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "루마니아는 2024년 7월부터 모든 사업체에 RO e-Factura를 통한 B2B 인보이스 전송을 의무화하고 있습니다. Pay Day는 EN 16931 전자 인보이스를 생성하지만, RO e-Factura에는 제출하지 않습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roemenië verplicht elk bedrijf om sinds juli 2024 b2b-facturen te versturen via RO e-Factura. Pay Day genereert EN 16931-e-facturen, maar dient ze niet in bij RO e-Factura."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rumunia zobowiązuje każdą firmę do wysyłania faktur B2B przez RO e-Factura od lipca 2024 r. Pay Day tworzy e-faktury zgodne z EN 16931, ale nie przekazuje ich do RO e-Factura."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Romênia exige que toda empresa envie faturas B2B pelo RO e-Factura desde julho de 2024. O Pay Day gera faturas eletrônicas EN 16931, mas não as envia ao RO e-Factura."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "罗马尼亚要求所有企业自 2024 年 7 月起通过 RO e-Factura 发送 B2B 发票。Pay Day 生成符合 EN 16931 的电子发票，但不会提交至 RO e-Factura。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "羅馬尼亞要求所有企業自 2024 年 7 月起透過 RO e-Factura 傳送 B2B 發票。Pay Day 會產生符合 EN 16931 的電子發票，但不會提交至 RO e-Factura。"
+          }
+        }
+      }
+    },
     "Save" : {
       "localizations" : {
         "de" : {
@@ -15495,6 +17787,83 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "選擇客戶"
+          }
+        }
+      }
+    },
+    "Send compliant e-invoices over Peppol from %@." : {
+      "comment" : "Paywall reason; the argument is a country name",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senden Sie konforme E-Rechnungen über Peppol aus %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envía facturas electrónicas conformes por Peppol desde %@."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lähetä vaatimustenmukaisia verkkolaskuja Peppolin kautta maasta %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez des factures électroniques conformes via Peppol depuis %@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invia fatture elettroniche conformi tramite Peppol da %@."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@からPeppol経由で準拠した電子インボイスを送信。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@에서 Peppol을 통해 규정에 맞는 전자 인보이스를 전송하세요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verstuur conforme e-facturen via Peppol vanuit %@."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wysyłaj zgodne e-faktury przez Peppol z kraju %@."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envie faturas eletrônicas em conformidade pelo Peppol a partir de %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从 %@ 通过 Peppol 发送合规电子发票。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從 %@ 透過 Peppol 傳送合規電子發票。"
           }
         }
       }
@@ -16107,6 +18476,82 @@
         }
       }
     },
+    "Share Pay Day" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day teilen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir Pay Day"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jaa Pay Day"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partager Pay Day"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Condividi Pay Day"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Dayを共有"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day 공유"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deel Pay Day"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Udostępnij Pay Day"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartilhar Pay Day"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享 Pay Day"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享 Pay Day"
+          }
+        }
+      }
+    },
     "Shows overdue invoices" : {
       "localizations" : {
         "de" : {
@@ -16183,6 +18628,158 @@
         }
       }
     },
+    "Slovakia requires every VAT-registered business to issue, receive and report structured e-invoices from 1 January 2027, over a Peppol-based network with central reporting (IS EFA)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Slowakei verpflichtet ab 1. Januar 2027 jedes umsatzsteuerpflichtige Unternehmen, strukturierte E-Rechnungen über ein Peppol-basiertes Netzwerk mit zentraler Meldung (IS EFA) auszustellen, zu empfangen und zu melden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eslovaquia exige a toda empresa registrada a efectos de IVA emitir, recibir y declarar facturas electrónicas estructuradas a partir del 1 de enero de 2027, a través de una red basada en Peppol con notificación centralizada (IS EFA)."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slovakia edellyttää 1.1.2027 alkaen jokaiselta alv-rekisteröidyltä yritykseltä rakenteisten verkkolaskujen laatimista, vastaanottamista ja raportointia Peppol-pohjaisen verkon kautta keskitetyllä raportoinnilla (IS EFA)."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Slovaquie impose à toute entreprise assujettie à la TVA d'émettre, de recevoir et de déclarer des factures électroniques structurées à partir du 1er janvier 2027, via un réseau basé sur Peppol avec signalement centralisé (IS EFA)."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Slovacchia impone a ogni impresa con partita IVA di emettere, ricevere e comunicare fatture elettroniche strutturate dal 1° gennaio 2027, tramite una rete basata su Peppol con rendicontazione centralizzata (IS EFA)."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スロバキアは2027年1月1日から、付加価値税登録事業者すべてに対し、中央報告制度（IS EFA）を備えたPeppolベースのネットワーク経由で構造化された電子インボイスの発行・受信・報告を義務付けます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "슬로바키아는 2027년 1월 1일부터 모든 부가가치세 등록 사업자에게 중앙 보고 체계(IS EFA)를 갖춘 Peppol 기반 네트워크를 통한 구조화된 전자 인보이스의 발행, 수신 및 보고를 의무화합니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slowakije verplicht elk btw-plichtig bedrijf om vanaf 1 januari 2027 gestructureerde e-facturen uit te reiken, te ontvangen en te rapporteren via een op Peppol gebaseerd netwerk met centrale rapportage (IS EFA)."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Słowacja zobowiązuje każdą firmę zarejestrowaną jako podatnik VAT do wystawiania, odbierania i raportowania ustrukturyzowanych e-faktur od 1 stycznia 2027 r., za pośrednictwem sieci opartej na Peppol z centralnym raportowaniem (IS EFA)."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Eslováquia exige que toda empresa registrada para o IVA emita, receba e informe faturas eletrônicas estruturadas a partir de 1º de janeiro de 2027, por uma rede baseada em Peppol com relato centralizado (IS EFA)."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "斯洛伐克要求所有增值税注册企业自 2027 年 1 月 1 日起，通过带有中央申报机制（IS EFA）的 Peppol 网络开具、接收并申报结构化电子发票。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "斯洛伐克要求所有加值稅登記企業自 2027 年 1 月 1 日起，透過具備中央申報機制（IS EFA）的 Peppol 網路開立、接收並申報結構化電子發票。"
+          }
+        }
+      }
+    },
+    "Slovenia requires every business to exchange structured e-invoices from 1 January 2028, over Peppol or an accredited provider." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slowenien verpflichtet ab 1. Januar 2028 jedes Unternehmen zum Austausch strukturierter E-Rechnungen über Peppol oder einen akkreditierten Anbieter."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eslovenia exige a toda empresa intercambiar facturas electrónicas estructuradas a partir del 1 de enero de 2028, a través de Peppol o de un proveedor acreditado."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slovenia edellyttää 1.1.2028 alkaen jokaiselta yritykseltä rakenteisten verkkolaskujen vaihtamista Peppolin tai valtuutetun palveluntarjoajan kautta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Slovénie impose à toute entreprise d'échanger des factures électroniques structurées à partir du 1er janvier 2028, via Peppol ou un prestataire agréé."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Slovenia impone a ogni impresa lo scambio di fatture elettroniche strutturate dal 1° gennaio 2028, tramite Peppol o un fornitore accreditato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スロベニアは2028年1月1日から、すべての事業者に対しPeppolまたは認定プロバイダ経由での構造化された電子インボイスの交換を義務付けます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "슬로베니아는 2028년 1월 1일부터 모든 사업체에 Peppol 또는 공인 제공업체를 통한 구조화된 전자 인보이스 교환을 의무화합니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slovenië verplicht elk bedrijf om vanaf 1 januari 2028 gestructureerde e-facturen uit te wisselen via Peppol of een erkende aanbieder."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Słowenia zobowiązuje każdą firmę do wymiany ustrukturyzowanych e-faktur od 1 stycznia 2028 r., za pośrednictwem Peppol lub akredytowanego dostawcy."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Eslovênia exige que toda empresa troque faturas eletrônicas estruturadas a partir de 1º de janeiro de 2028, pelo Peppol ou por um provedor credenciado."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "斯洛文尼亚要求所有企业自 2028 年 1 月 1 日起通过 Peppol 或认证服务商交换结构化电子发票。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "斯洛維尼亞要求所有企業自 2028 年 1 月 1 日起透過 Peppol 或認證服務商交換結構化電子發票。"
+          }
+        }
+      }
+    },
     "Something Went Wrong" : {
       "localizations" : {
         "de" : {
@@ -16255,6 +18852,82 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "發生錯誤"
+          }
+        }
+      }
+    },
+    "Spain phases in mandatory B2B e-invoicing from 1 October 2027 (turnover above €8 million) and 1 October 2028 (everyone else), through the public solution or a private platform. Pay Day produces EN 16931 e-invoices but does not yet connect to the Spanish platform." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spanien führt die B2B-E-Rechnungspflicht schrittweise ein: ab 1. Oktober 2027 für Unternehmen mit einem Umsatz über 8 Millionen €, ab 1. Oktober 2028 für alle anderen, über die öffentliche Lösung oder eine private Plattform. Pay Day erstellt EN-16931-E-Rechnungen, ist aber noch nicht an die spanische Plattform angebunden."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "España implanta de forma progresiva la facturación electrónica B2B obligatoria: desde el 1 de octubre de 2027 (facturación superior a 8 millones de €) y desde el 1 de octubre de 2028 (el resto), a través de la solución pública o de una plataforma privada. Pay Day genera facturas electrónicas EN 16931, pero todavía no se conecta con la plataforma española."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espanja ottaa pakollisen yritysten välisen verkkolaskutuksen käyttöön vaiheittain: 1.10.2027 alkaen yli 8 miljoonan euron liikevaihdon yrityksille ja 1.10.2028 alkaen kaikille muille, julkisen ratkaisun tai yksityisen alustan kautta. Pay Day tuottaa EN 16931 -verkkolaskuja, mutta ei vielä ole yhteydessä espanjalaiseen alustaan."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'Espagne met en place progressivement la facturation électronique B2B obligatoire : à partir du 1er octobre 2027 (chiffre d'affaires supérieur à 8 millions d'€) et du 1er octobre 2028 (toutes les autres), via la solution publique ou une plateforme privée. Pay Day génère des factures électroniques EN 16931, mais ne se connecte pas encore à la plateforme espagnole."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Spagna introduce gradualmente la fatturazione elettronica B2B obbligatoria: dal 1° ottobre 2027 (fatturato superiore a 8 milioni di €) e dal 1° ottobre 2028 (tutte le altre), tramite la soluzione pubblica o una piattaforma privata. Pay Day genera fatture elettroniche EN 16931, ma non si collega ancora alla piattaforma spagnola."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スペインは義務的B2B電子インボイスを段階的に導入します。2027年10月1日から（年商800万ユーロ超の企業）、2028年10月1日から（それ以外）、公共ソリューションまたは民間プラットフォーム経由となります。Pay DayはEN 16931準拠の電子インボイスを作成しますが、スペインのプラットフォームへの接続はまだ対応していません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스페인은 의무적 B2B 전자 인보이스를 단계적으로 도입합니다. 2027년 10월 1일부터(매출 800만 유로 초과 기업), 2028년 10월 1일부터(그 외 모든 기업), 공공 솔루션 또는 민간 플랫폼을 통해 시행됩니다. Pay Day는 EN 16931 전자 인보이스를 생성하지만, 아직 스페인 플랫폼에는 연결되지 않습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spanje voert verplichte b2b-e-facturatie gefaseerd in: vanaf 1 oktober 2027 (omzet boven 8 miljoen €) en vanaf 1 oktober 2028 (alle overige), via de publieke oplossing of een particulier platform. Pay Day genereert EN 16931-e-facturen, maar maakt nog geen verbinding met het Spaanse platform."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiszpania wprowadza obowiązkowe e-fakturowanie B2B etapami: od 1 października 2027 r. (obroty powyżej 8 mln €) i od 1 października 2028 r. (pozostali), za pośrednictwem rozwiązania publicznego lub platformy prywatnej. Pay Day tworzy e-faktury zgodne z EN 16931, ale nie łączy się jeszcze z hiszpańską platformą."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Espanha implementa em fases a fatura eletrônica B2B obrigatória: a partir de 1º de outubro de 2027 (faturamento acima de 8 milhões de €) e de 1º de outubro de 2028 (as demais empresas), pela solução pública ou por uma plataforma privada. O Pay Day gera faturas eletrônicas EN 16931, mas ainda não se conecta à plataforma espanhola."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "西班牙将分阶段推行强制性 B2B 电子发票：自 2027 年 10 月 1 日起（营业额超过 800 万欧元的企业），自 2028 年 10 月 1 日起（其余企业），通过公共方案或私营平台实施。Pay Day 生成符合 EN 16931 的电子发票，但尚未接入西班牙平台。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "西班牙將分階段推行強制性 B2B 電子發票：自 2027 年 10 月 1 日起（營業額超過 800 萬歐元的企業），自 2028 年 10 月 1 日起（其餘企業），透過公共方案或私營平台實施。Pay Day 會產生符合 EN 16931 的電子發票，但尚未串接西班牙平台。"
           }
         }
       }
@@ -16924,6 +19597,82 @@
         }
       }
     },
+    "Sweden has no B2B mandate yet, but Peppol is the national standard and mandatory for government suppliers. EU-wide cross-border e-invoicing becomes mandatory on 1 July 2030." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schweden hat noch keine B2B-Pflicht, aber Peppol ist der nationale Standard und für Lieferanten des Staates verpflichtend. EU-weite grenzüberschreitende E-Rechnungen werden ab 1. Juli 2030 verpflichtend."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suecia aún no tiene una obligación B2B, pero Peppol es el estándar nacional y es obligatorio para los proveedores del Estado. La facturación electrónica transfronteriza en toda la UE será obligatoria a partir del 1 de julio de 2030."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruotsissa ei vielä ole yritysten välistä pakkoa, mutta Peppol on kansallinen standardi ja pakollinen valtion hankintojen toimittajille. EU:n laajuisesta rajat ylittävästä verkkolaskutuksesta tulee pakollista 1.7.2030."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Suède n'a pas encore d'obligation B2B, mais Peppol est la norme nationale et est obligatoire pour les fournisseurs de l'État. La facturation électronique transfrontalière deviendra obligatoire dans toute l'UE à partir du 1er juillet 2030."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La Svezia non ha ancora un obbligo B2B, ma Peppol è lo standard nazionale ed è obbligatorio per i fornitori statali. La fatturazione elettronica transfrontaliera diventerà obbligatoria in tutta l'UE dal 1° luglio 2030."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スウェーデンにはまだB2B義務はありませんが、Peppolは国内標準であり、政府調達の取引先には義務付けられています。EU域内の越境電子インボイスは2030年7月1日から義務化されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스웨덴은 아직 B2B 의무가 없지만, Peppol이 국가 표준이며 정부 공급업체에는 의무 사항입니다. EU 전역의 국경 간 전자 인보이스는 2030년 7월 1일부터 의무화됩니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zweden heeft nog geen B2B-verplichting, maar Peppol is de nationale standaard en verplicht voor leveranciers van de overheid. EU-brede grensoverschrijdende e-facturatie wordt verplicht vanaf 1 juli 2030."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szwecja nie ma jeszcze obowiązku B2B, ale Peppol jest standardem krajowym i jest obowiązkowy dla dostawców administracji państwowej. Ogólnounijne transgraniczne e-fakturowanie stanie się obowiązkowe od 1 lipca 2030 r."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Suécia ainda não tem uma obrigação B2B, mas o Peppol é o padrão nacional e é obrigatório para fornecedores do governo. A fatura eletrônica transfronteiriça em toda a UE se tornará obrigatória a partir de 1º de julho de 2030."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "瑞典目前还没有 B2B 强制规定，但 Peppol 是国家标准，并且政府供应商必须使用。欧盟范围内的跨境电子发票将于 2030 年 7 月 1 日起强制实施。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "瑞典目前尚無 B2B 強制規定，但 Peppol 是國家標準，且政府供應商必須採用。歐盟範圍內的跨境電子發票將於 2030 年 7 月 1 日起強制實施。"
+          }
+        }
+      }
+    },
     "System" : {
       "localizations" : {
         "de" : {
@@ -17148,6 +19897,82 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "AI 請求失敗——請檢查網路連線後再試一次。"
+          }
+        }
+      }
+    },
+    "The Netherlands has no B2B mandate yet, but Peppol is the national standard and mandatory for government suppliers. EU-wide cross-border e-invoicing becomes mandatory on 1 July 2030." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Niederlande haben noch keine B2B-Pflicht, aber Peppol ist der nationale Standard und für Lieferanten des Staates verpflichtend. EU-weite grenzüberschreitende E-Rechnungen werden ab 1. Juli 2030 verpflichtend."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los Países Bajos aún no tienen una obligación B2B, pero Peppol es el estándar nacional y es obligatorio para los proveedores del Estado. La facturación electrónica transfronteriza en toda la UE será obligatoria a partir del 1 de julio de 2030."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alankomaissa ei vielä ole yritysten välistä pakkoa, mutta Peppol on kansallinen standardi ja pakollinen valtion hankintojen toimittajille. EU:n laajuisesta rajat ylittävästä verkkolaskutuksesta tulee pakollista 1.7.2030."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les Pays-Bas n'ont pas encore d'obligation B2B, mais Peppol est la norme nationale et est obligatoire pour les fournisseurs de l'État. La facturation électronique transfrontalière deviendra obligatoire dans toute l'UE à partir du 1er juillet 2030."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I Paesi Bassi non hanno ancora un obbligo B2B, ma Peppol è lo standard nazionale ed è obbligatorio per i fornitori statali. La fatturazione elettronica transfrontaliera diventerà obbligatoria in tutta l'UE dal 1° luglio 2030."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オランダにはまだB2B義務はありませんが、Peppolは国内標準であり、政府調達の取引先には義務付けられています。EU域内の越境電子インボイスは2030年7月1日から義務化されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "네덜란드는 아직 B2B 의무가 없지만, Peppol이 국가 표준이며 정부 공급업체에는 의무 사항입니다. EU 전역의 국경 간 전자 인보이스는 2030년 7월 1일부터 의무화됩니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nederland heeft nog geen B2B-verplichting, maar Peppol is de nationale standaard en verplicht voor leveranciers van de overheid. EU-brede grensoverschrijdende e-facturatie wordt verplicht vanaf 1 juli 2030."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niderlandy nie mają jeszcze obowiązku B2B, ale Peppol jest standardem krajowym i jest obowiązkowy dla dostawców administracji państwowej. Ogólnounijne transgraniczne e-fakturowanie stanie się obowiązkowe od 1 lipca 2030 r."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Os Países Baixos ainda não têm uma obrigação B2B, mas o Peppol é o padrão nacional e é obrigatório para fornecedores do governo. A fatura eletrônica transfronteiriça em toda a UE se tornará obrigatória a partir de 1º de julho de 2030."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "荷兰目前还没有 B2B 强制规定，但 Peppol 是国家标准，并且政府供应商必须使用。欧盟范围内的跨境电子发票将于 2030 年 7 月 1 日起强制实施。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "荷蘭目前尚無 B2B 強制規定，但 Peppol 是國家標準，且政府供應商必須採用。歐盟範圍內的跨境電子發票將於 2030 年 7 月 1 日起強制實施。"
           }
         }
       }
@@ -18296,6 +21121,82 @@
         }
       }
     },
+    "Under Denmark's Bookkeeping Act, digital bookkeeping systems send e-invoices via NemHandel / Peppol by default since July 2026, and government suppliers must use them. EU-wide cross-border e-invoicing becomes mandatory on 1 July 2030." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach dem dänischen Buchführungsgesetz versenden digitale Buchhaltungssysteme seit Juli 2026 standardmäßig E-Rechnungen über NemHandel / Peppol, und Lieferanten des Staates müssen sie nutzen. EU-weite grenzüberschreitende E-Rechnungen werden ab 1. Juli 2030 verpflichtend."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Según la Ley de Contabilidad de Dinamarca, los sistemas de contabilidad digital envían facturas electrónicas por NemHandel / Peppol de forma predeterminada desde julio de 2026, y los proveedores del Estado deben usarlos. La facturación electrónica transfronteriza en toda la UE será obligatoria a partir del 1 de julio de 2030."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanskan kirjanpitolain mukaan digitaaliset kirjanpitojärjestelmät lähettävät verkkolaskuja NemHandelin / Peppolin kautta oletuksena heinäkuusta 2026 alkaen, ja valtion hankintojen toimittajien on käytettävä niitä. EU:n laajuisesta rajat ylittävästä verkkolaskutuksesta tulee pakollista 1.7.2030."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En vertu de la loi danoise sur la comptabilité, les logiciels de comptabilité numériques envoient par défaut des factures électroniques via NemHandel / Peppol depuis juillet 2026, et les fournisseurs de l'État doivent les utiliser. La facturation électronique transfrontalière deviendra obligatoire dans toute l'UE à partir du 1er juillet 2030."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In base alla legge danese sulla contabilità, dal luglio 2026 i sistemi di contabilità digitale inviano per impostazione predefinita fatture elettroniche tramite NemHandel / Peppol, e i fornitori statali devono usarli. La fatturazione elettronica transfrontaliera diventerà obbligatoria in tutta l'UE dal 1° luglio 2030."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デンマークの記帳法により、デジタル記帳システムは2026年7月以降、標準でNemHandel / Peppol経由の電子インボイスを送信し、政府調達の取引先はこれを利用する必要があります。EU域内の越境電子インボイスは2030年7月1日から義務化されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "덴마크의 기장법(Bookkeeping Act)에 따라 디지털 기장 시스템은 2026년 7월부터 기본적으로 NemHandel / Peppol을 통해 전자 인보이스를 전송하며, 정부 공급업체는 이를 사용해야 합니다. EU 전역의 국경 간 전자 인보이스는 2030년 7월 1일부터 의무화됩니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volgens de Deense Boekhoudwet versturen digitale boekhoudsystemen sinds juli 2026 standaard e-facturen via NemHandel / Peppol, en leveranciers van de overheid moeten ze gebruiken. EU-brede grensoverschrijdende e-facturatie wordt verplicht vanaf 1 juli 2030."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zgodnie z duńską ustawą o rachunkowości cyfrowe systemy księgowe domyślnie wysyłają e-faktury przez NemHandel / Peppol od lipca 2026 r., a dostawcy administracji państwowej muszą z nich korzystać. Ogólnounijne transgraniczne e-fakturowanie stanie się obowiązkowe od 1 lipca 2030 r."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segundo a Lei de Escrituração da Dinamarca, os sistemas digitais de contabilidade enviam faturas eletrônicas pelo NemHandel / Peppol por padrão desde julho de 2026, e os fornecedores do governo devem usá-los. A fatura eletrônica transfronteiriça em toda a UE se tornará obrigatória a partir de 1º de julho de 2030."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "根据丹麦《簿记法》，数字记账系统自 2026 年 7 月起默认通过 NemHandel / Peppol 发送电子发票，政府供应商必须使用该渠道。欧盟范围内的跨境电子发票将于 2030 年 7 月 1 日起强制实施。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "根據丹麥《簿記法》，數位記帳系統自 2026 年 7 月起預設透過 NemHandel / Peppol 傳送電子發票，政府供應商必須使用此管道。歐盟範圍內的跨境電子發票將於 2030 年 7 月 1 日起強制實施。"
+          }
+        }
+      }
+    },
     "Unit price" : {
       "localizations" : {
         "de" : {
@@ -18521,6 +21422,158 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "發票與報價單不限數量、你的 Logo、任何幣別"
+          }
+        }
+      }
+    },
+    "Unlock Factur-X e-invoices" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Factur-X-E-Rechnungen freischalten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquear las facturas Factur-X"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avaa Factur-X-verkkolaskut"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débloquer les factures Factur-X"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sblocca le fatture Factur-X"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Factur-Xをアンロック"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Factur-X 잠금 해제"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ontgrendel Factur-X-e-facturen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odblokuj e-faktury Factur-X"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquear faturas Factur-X"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解锁 Factur-X 电子发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解鎖 Factur-X 電子發票"
+          }
+        }
+      }
+    },
+    "Unlock Peppol delivery" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol-Versand freischalten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquear el envío por Peppol"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avaa Peppol-lähetys"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débloquer l'envoi Peppol"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sblocca l'invio Peppol"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol送信をアンロック"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol 전송 잠금 해제"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ontgrendel Peppol-verzending"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odblokuj wysyłkę Peppol"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desbloquear envio Peppol"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解锁 Peppol 发送"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解鎖 Peppol 傳送"
           }
         }
       }
@@ -20262,6 +23315,158 @@
         }
       }
     },
+    "You're Peppol-ready" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol-bereit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo para Peppol"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol-valmis"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt pour Peppol"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronto per Peppol"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol対応済"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol 준비 완료"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klaar voor Peppol"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gotowość do Peppol"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronto para o Peppol"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol 已就绪"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peppol 已備妥"
+          }
+        }
+      }
+    },
+    "You're e-invoice-ready" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-Rechnungs-bereit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo para la e-factura"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verkkolaskuvalmis"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt pour la facture électronique"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronto per la fattura elettronica"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "電子インボイス対応済"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전자 인보이스 준비 완료"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klaar voor e-facturatie"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gotowość do e-faktur"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronto para a fatura eletrônica"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "电子发票已就绪"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "電子發票已備妥"
+          }
+        }
+      }
+    },
     "Your Peppol ID (scheme:id)" : {
       "comment" : "Placeholder for the seller Peppol participant identifier; \"scheme:id\" is literal syntax",
       "localizations" : {
@@ -21639,6 +24844,237 @@
         }
       }
     },
+    "every business must accept e-invoices" : {
+      "comment" : "Deadline scope phrase",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jedes Unternehmen muss E-Rechnungen empfangen können"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "toda empresa debe poder recibir facturas electrónicas"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jokaisen yrityksen on kyettävä vastaanottamaan verkkolaskuja"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "toute entreprise doit pouvoir recevoir des factures électroniques"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ogni impresa deve poter ricevere fatture elettroniche"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべての事業者が電子インボイスを受信可能である必要"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 사업자가 전자 인보이스를 수신할 수 있어야 함"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "elk bedrijf moet e-facturen kunnen ontvangen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "każda firma musi umieć odbierać e-faktury"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "toda empresa deve conseguir receber faturas eletrônicas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有企业须能够接收电子发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有企業須能夠接收電子發票"
+          }
+        }
+      }
+    },
+    "every business must issue e-invoices" : {
+      "comment" : "Deadline scope phrase",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jedes Unternehmen muss E-Rechnungen ausstellen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "toda empresa debe emitir facturas electrónicas"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jokaisen yrityksen on laadittava verkkolaskuja"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "toute entreprise doit émettre des factures électroniques"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ogni impresa deve emettere fatture elettroniche"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべての事業者が電子インボイスを発行"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 사업자가 전자 인보이스를 발행"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "elk bedrijf moet e-facturen uitreiken"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "każda firma musi wystawiać e-faktury"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "toda empresa deve emitir faturas eletrônicas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有企业须开具电子发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有企業須開立電子發票"
+          }
+        }
+      }
+    },
+    "large companies must issue e-invoices" : {
+      "comment" : "Deadline scope phrase",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "große Unternehmen müssen E-Rechnungen ausstellen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "las grandes empresas deben emitir facturas electrónicas"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "suurten yritysten on laadittava verkkolaskuja"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "les grandes entreprises doivent émettre des factures électroniques"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "le grandi imprese devono emettere fatture elettroniche"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大企業が電子インボイスを発行"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대기업이 전자 인보이스를 발행"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "grote bedrijven moeten e-facturen uitreiken"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "duże firmy muszą wystawiać e-faktury"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "grandes empresas devem emitir faturas eletrônicas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大型企业须开具电子发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大型企業須開立電子發票"
+          }
+        }
+      }
+    },
     "month" : {
       "comment" : "Billing term shown after a price, e.g. €4.99 / month",
       "localizations" : {
@@ -21712,6 +25148,83 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "月"
+          }
+        }
+      }
+    },
+    "small businesses must issue e-invoices" : {
+      "comment" : "Deadline scope phrase",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kleine Unternehmen müssen E-Rechnungen ausstellen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "las pequeñas empresas deben emitir facturas electrónicas"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pienyritysten on laadittava verkkolaskuja"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "les petites entreprises doivent émettre des factures électroniques"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "le piccole imprese devono emettere fatture elettroniche"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小規模事業者が電子インボイスを発行"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "소기업이 전자 인보이스를 발행"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kleine bedrijven moeten e-facturen uitreiken"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "małe firmy muszą wystawiać e-faktury"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pequenas empresas devem emitir faturas eletrônicas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小型企业须开具电子发票"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小型企業須開立電子發票"
           }
         }
       }

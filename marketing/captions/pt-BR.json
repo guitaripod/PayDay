@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Faturas Peppol direto do iPhone",
+    "subtitle": "Válida pela EN 16931. Factur-X embutido. Enviada em um toque."
+  },
+  "editor": {
+    "title": "Fatura conforme em um minuto",
+    "subtitle": "Motor de IVA EN 16931 completo, com autoliquidação incluída."
+  },
+  "dashboard": {
+    "title": "O prazo do seu país, sem mistério",
+    "subtitle": "Bélgica, França, Alemanha: o que é obrigatório, e desde quando."
+  },
+  "preview-ic": {
+    "title": "Autoliquidação da UE, correta",
+    "subtitle": "Verificação de IVA VIES em tempo real, cliente a cliente."
+  },
+  "list": {
+    "title": "Grátis e ilimitado",
+    "subtitle": "Faturas, orçamentos, clientes, seu logo. O Pro soma conformidade."
+  }
+}

@@ -29,6 +29,24 @@ download→trial ~7% · trial→paid ≥35% · ~82% buy the defaulted (annual) p
 - Watch: Peppol-send allowance burn (annual 60/yr, monthly 5/mo, server-granted) — if heavy-sender COGS
   exceeds retained revenue, cut 60→40 via the mako promo grant (no metadata change).
 
+## Store metadata is canonical in `metadata/` (asc)
+
+`metadata/app-info/<locale>.json` + `metadata/version/<version>/<locale>.json` are the source of
+truth for every listing field, pulled and pushed with `asc metadata pull/push` (app-info id for the
+pending version: `asc apps info list`). Edit the files, `asc metadata validate --subscription-app`,
+dry-run, push. `docs/asc-metadata.json` and the copy blocks in `docs/launch-spec.md` are historical.
+Always keep an **en-GB** localization: Apple indexes English (U.K.) in every EU storefront, so it is a
+second keyword set for BE/FR/DE/NL/FI (see `docs/aso-2026-09.md`).
+
+## Screenshots
+
+`scripts/ios-build.sh` (Debug, simulator) → `scripts/capture-screenshots.sh` (raw 1320×2868 per
+locale via the `PAYDAY_DEMO` routes, `PAYDAY_DEMO_COUNTRY` pins the dashboard card) →
+`swift scripts/frame-screenshots.swift --raw marketing/appstore/raw --captions marketing/captions
+--out marketing/appstore/framed` → `asc screenshots upload --app 6779927672 --version <v> --path
+marketing/appstore/framed --device-type IPHONE_67 --replace --confirm`. Captions live in
+`marketing/captions/<locale>.json`; en-GB reuses the en-US set.
+
 ## ASO (lead with the wedge, not "invoice maker")
 
 - Title/subtitle keywords: **e-invoice, Factur-X, ZUGFeRD, Peppol, EN 16931, EU VAT, e-lasku,
@@ -57,7 +75,14 @@ download→trial ~7% · trial→paid ≥35% · ~82% buy the defaulted (annual) p
   explicitly sends (a VAT id to validate, a UBL to transmit). Privacy page:
   `https://mako.midgarcorp.cc/privacy/payday`. **China availability OFF.**
 
-## Release CI
+## Release (beta-macOS host → buildvm)
+
+`buildvm build --dir ~/Dev/ios/PayDay --scheme PayDay --profile ~/.config/midgar/signing/PayDay_AppStore_2026.mobileprovision --env PAYDAY_BUNDLE_ID=com.guitaripod.payday --env PAYDAY_TEAM_ID=<team> --deploy-key ~/.config/midgar/signing/aicredits_deploy_key --archive-flags "-skipPackagePluginValidation -skipMacroValidation -scmProvider system" --build <YYYYMMDDHHMM> --marketing <version>`
+then `asc review submit --app 6779927672 --version <version> --build-id <id> --confirm`.
+`PayDay/Secrets.swift` (gitignored) rides along in the rsync; `--marketing` drives
+`CFBundleShortVersionString` because project.yml binds it to `MARKETING_VERSION`.
+
+## Release CI (fallback)
 
 - `.github/workflows/release.yml` — `macos-26` runner, beta-host guard (ITMS-90111), manual signing
   (p12 + provisioning profile "PayDay App Store 2026"), Secrets.swift materialized inline, IPA zipped

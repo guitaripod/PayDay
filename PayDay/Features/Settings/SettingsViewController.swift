@@ -6,12 +6,14 @@ import PayDayKit
 /// Settings: business profile, defaults, appearance, Pro status, credit balance,
 /// and the legal/support links App Review expects.
 final class SettingsViewController: UIViewController {
-    private enum Row { case business, payment, defaults, appearance, aiDrafting, pro, credits, privacy, terms, support, moreApps, deleteAccount }
+    private enum Row { case business, payment, defaults, appearance, aiDrafting, pro, credits, rate, share, privacy, terms, support, moreApps, deleteAccount }
+    private static let appStoreURL = URL(string: "https://apps.apple.com/app/id6779927672")!
+    private static let writeReviewURL = URL(string: "https://apps.apple.com/app/id6779927672?action=write-review")!
     private let sections: [(String, [Row])] = [
         (String(localized: "Your business"), [.business, .payment, .defaults]),
         (String(localized: "Pay Day Pro"), [.pro, .credits]),
         (String(localized: "App"), [.appearance, .aiDrafting]),
-        (String(localized: "About"), [.privacy, .terms, .support, .moreApps]),
+        (String(localized: "About"), [.rate, .share, .privacy, .terms, .support, .moreApps]),
         (String(localized: "Account"), [.deleteAccount]),
     ]
 
@@ -77,6 +79,8 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             config.text = String(localized: "Credits"); config.secondaryText = "\(balance)"
             config.image = UIImage(systemName: "bolt.fill")
             cell.accessoryType = .disclosureIndicator
+        case .rate: config.text = String(localized: "Rate Pay Day"); config.image = UIImage(systemName: "star")
+        case .share: config.text = String(localized: "Share Pay Day"); config.image = UIImage(systemName: "square.and.arrow.up")
         case .privacy: config.text = String(localized: "Privacy Policy"); config.image = UIImage(systemName: "hand.raised")
         case .terms: config.text = String(localized: "Terms of Use"); config.image = UIImage(systemName: "doc.text")
         case .support: config.text = String(localized: "Support"); config.image = UIImage(systemName: "envelope")
@@ -103,12 +107,22 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             if !isPremium { present(UINavigationController(rootViewController: PaywallViewController()), animated: true) }
         case .credits:
             CreditStorePresenter.present(from: self)
+        case .rate: UIApplication.shared.open(Self.writeReviewURL)
+        case .share: shareApp(from: tableView.cellForRow(at: indexPath))
         case .privacy: open("https://mako.midgarcorp.cc/privacy/payday")
         case .terms: open("https://mako.midgarcorp.cc/terms/payday")
         case .support: open("mailto:support@midgarcorp.cc")
         case .moreApps: Midgar.present(from: self)
         case .deleteAccount: confirmDeleteAccount()
         }
+    }
+
+    private func shareApp(from sourceView: UIView?) {
+        let pitch = String(localized: "Pay Day — free invoices and EU-compliant e-invoicing (Peppol, Factur-X) on iPhone.",
+                           comment: "Text shared alongside the App Store link")
+        let sheet = UIActivityViewController(activityItems: [pitch, Self.appStoreURL], applicationActivities: nil)
+        sheet.popoverPresentationController?.sourceView = sourceView ?? view
+        present(sheet, animated: true)
     }
 
     private func confirmDeleteAccount() {

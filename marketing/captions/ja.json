@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "iPhoneでPeppol発行",
+    "subtitle": "EN 16931準拠。Factur-X内蔵。タップで送信。"
+  },
+  "editor": {
+    "title": "1分で適格請求書",
+    "subtitle": "EN 16931 VAT計算を完全対応、リバースチャージも。"
+  },
+  "dashboard": {
+    "title": "自国の期限がひと目で",
+    "subtitle": "ベルギー、フランス、ドイツ：義務化の内容と時期。"
+  },
+  "preview-ic": {
+    "title": "リバースチャージも正確に",
+    "subtitle": "VIESでVAT番号をリアルタイム確認。"
+  },
+  "list": {
+    "title": "無料、それも無制限",
+    "subtitle": "請求書、見積書、取引先、ロゴ。Proで法令対応も。"
+  }
+}

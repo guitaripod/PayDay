@@ -15,6 +15,9 @@ final class DashboardViewController: UIViewController {
     private let statsRow = UIStackView()
     private let recentStack = UIStackView()
     private lazy var setupBanner = makeSetupBanner()
+    private let mandateCard = MandateCardView()
+    private var lastSnapshot: DashboardViewModel.Snapshot?
+    private var isPremium = false
 
     init(viewModel: DashboardViewModel = DashboardViewModel()) {
         self.viewModel = viewModel
@@ -46,6 +49,15 @@ final class DashboardViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.apply($0) }
             .store(in: &cancellables)
+        AICreditsManager.store.$isPremium
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let self else { return }
+                self.isPremium = $0
+                if let snapshot = self.lastSnapshot { self.applyMandate(snapshot) }
+            }
+            .store(in: &cancellables)
+        mandateCard.onAction = { [weak self] in self?.perform($0) }
     }
 
     private func buildLayout() {
@@ -73,6 +85,8 @@ final class DashboardViewController: UIViewController {
         statsRow.distribution = .fillEqually
         statsRow.spacing = DesignSystem.Spacing.m
         stack.addArrangedSubview(statsRow)
+        mandateCard.isHidden = true
+        stack.addArrangedSubview(mandateCard)
 
         let cta = DesignSystem.primaryButton(String(localized: "New Invoice"), symbol: "plus")
         cta.addAction(UIAction { [weak self] _ in self?.newInvoice() }, for: .touchUpInside)
@@ -147,7 +161,9 @@ final class DashboardViewController: UIViewController {
     }
 
     private func apply(_ snapshot: DashboardViewModel.Snapshot) {
+        lastSnapshot = snapshot
         setupBanner.isHidden = snapshot.sellerConfigured
+        applyMandate(snapshot)
         outstandingLabel.text = Format.money(snapshot.outstanding)
         outstandingLabel.accessibilityLabel = String(localized: "Outstanding balance")
         outstandingLabel.accessibilityValue = Format.money(snapshot.outstanding)
@@ -173,6 +189,29 @@ final class DashboardViewController: UIViewController {
                                          onTap: { [weak self] in self?.open(invoice) })
                 recentStack.addArrangedSubview(row)
             }
+        }
+    }
+
+    private func applyMandate(_ snapshot: DashboardViewModel.Snapshot) {
+        guard let model = MandateCopy.card(countryCode: snapshot.sellerCountryCode, isPro: isPremium,
+                                           peppolConfigured: snapshot.sellerPeppolConfigured) else {
+            mandateCard.isHidden = true
+            return
+        }
+        mandateCard.apply(model)
+        mandateCard.isHidden = false
+    }
+
+    private func perform(_ action: MandateCardModel.Action) {
+        switch action {
+        case .unlockPro(let reason):
+            present(UINavigationController(rootViewController: PaywallViewController(reason: reason)), animated: true)
+        case .openPeppolSettings:
+            navigationController?.pushViewController(BusinessSettingsViewController(focusesPeppol: true), animated: true)
+        case .openBusinessSettings:
+            navigationController?.pushViewController(BusinessSettingsViewController(), animated: true)
+        case .informationOnly:
+            break
         }
     }
 
