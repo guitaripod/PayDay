@@ -10914,7 +10914,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "W Estonii od 1 lipca 2025 r. każdy zarejestrowany odbiorca e-faktur może zażądać od Ciebie ustrukturyzowanej e-faktury, a pełny obowiązek B2B jest planowany na 2027 r. Peppol jest powszechnym kanałem."
+            "value" : "W Estonii od 1 lipca 2025 r. każdy zarejestrowany odbiorca e-faktur może zażądać od ciebie ustrukturyzowanej e-faktury, a pełny obowiązek B2B jest planowany na 2027 r. Peppol jest powszechnym kanałem."
           }
         },
         "pt-BR" : {
@@ -10990,7 +10990,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "W Finlandii każda firma może zażądać od Ciebie ustrukturyzowanej e-faktury (ustawa 241/2019), a dostawcy administracji państwowej muszą je wysyłać. Peppol z adresem OVT jest standardem."
+            "value" : "W Finlandii każda firma może zażądać od ciebie ustrukturyzowanej e-faktury (ustawa 241/2019), a dostawcy administracji państwowej muszą je wysyłać. Peppol z adresem OVT jest standardem."
           }
         },
         "pt-BR" : {
@@ -20564,7 +20564,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "To trwale usunie Twoje konto, saldo kredytów oraz wszystkie faktury, oferty i kontrahentów na tym urządzeniu. Tej operacji nie można cofnąć."
+            "value" : "To trwale usunie twoje konto, saldo kredytów oraz wszystkie faktury, oferty i kontrahentów na tym urządzeniu. Tej operacji nie można cofnąć."
           }
         },
         "pt-BR" : {
@@ -20640,7 +20640,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aby zamienić Twoje słowa lub zdjęcie w pozycje faktury, Pay Day wysyła podane treści do zewnętrznej usługi AI. To Ty decydujesz, kiedy się to dzieje — nic nie zostaje wysłane, dopóki nie dotkniesz akcji AI."
+            "value" : "Aby zamienić twoje słowa lub zdjęcie w pozycje faktury, Pay Day wysyła podane treści do zewnętrznej usługi AI. To Ty decydujesz, kiedy się to dzieje — nic nie zostaje wysłane, dopóki nie dotkniesz akcji AI."
           }
         },
         "pt-BR" : {
@@ -21403,7 +21403,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bez limitu faktur i ofert, Twoje logo, dowolna waluta"
+            "value" : "Bez limitu faktur i ofert, twoje logo, dowolna waluta"
           }
         },
         "pt-BR" : {
@@ -23171,25 +23171,25 @@
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Brakuje Ci %lld kredytów, aby wysłać tę fakturę."
+                  "value" : "Brakuje ci %lld kredytów, aby wysłać tę fakturę."
                 }
               },
               "many" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Brakuje Ci %lld kredytów, aby wysłać tę fakturę."
+                  "value" : "Brakuje ci %lld kredytów, aby wysłać tę fakturę."
                 }
               },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Brakuje Ci %lld kredytu, aby wysłać tę fakturę."
+                  "value" : "Brakuje ci %lld kredytu, aby wysłać tę fakturę."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Brakuje Ci %lld kredytu, aby wysłać tę fakturę."
+                  "value" : "Brakuje ci %lld kredytu, aby wysłać tę fakturę."
                 }
               }
             }
@@ -23825,7 +23825,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tutaj pojawią się Twoje ostatnie faktury i oferty."
+            "value" : "Tutaj pojawią się twoje ostatnie faktury i oferty."
           }
         },
         "pt-BR" : {
