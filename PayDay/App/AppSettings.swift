@@ -19,9 +19,13 @@ enum AppSettings {
         static let defaultVATRate = "payday.defaultVATRate"
         static let defaultPaymentTermDays = "payday.defaultPaymentTermDays"
         static let defaultEInvoiceProfile = "payday.defaultEInvoiceProfile"
-        static let ratingPromptShownVersion = "payday.ratingPromptShownVersion"
-        static let deliveredDocumentCount = "payday.deliveredDocumentCount"
         static let aiConsentGranted = "payday.aiConsentGranted"
+        static let reviewSuccessCount = "payday.reviewSuccessCount"
+        static let reviewAskDates = "payday.reviewAskDates"
+        static let reviewSuccessCountAtLastAsk = "payday.reviewSuccessCountAtLastAsk"
+        static let reviewStateMigrated = "payday.reviewStateMigrated"
+        static let legacyRatingPromptShownVersion = "payday.ratingPromptShownVersion"
+        static let legacyDeliveredDocumentCount = "payday.deliveredDocumentCount"
     }
 
     static var appearance: AppearanceMode {
@@ -60,16 +64,48 @@ enum AppSettings {
         set { defaults.set(newValue, forKey: Key.defaultEInvoiceProfile) }
     }
 
-    static var ratingPromptShownVersion: String? {
-        get { defaults.string(forKey: Key.ratingPromptShownVersion) }
-        set { defaults.set(newValue, forKey: Key.ratingPromptShownVersion) }
+    /// Invoices the user has actually delivered — shared or transmitted over
+    /// Peppol. Feeds `ReviewEligibility` as `successCount`.
+    static var reviewSuccessCount: Int {
+        get { defaults.integer(forKey: Key.reviewSuccessCount) }
+        set { defaults.set(newValue, forKey: Key.reviewSuccessCount) }
     }
 
-    /// Invoices the user has actually delivered — shared or transmitted over
-    /// Peppol. Gates the rating prompt.
-    static var deliveredDocumentCount: Int {
-        get { defaults.integer(forKey: Key.deliveredDocumentCount) }
-        set { defaults.set(newValue, forKey: Key.deliveredDocumentCount) }
+    /// Every past rating-prompt trigger, oldest first. Feeds `ReviewEligibility`
+    /// as `askDates`; entries older than its rolling window are meaningless but
+    /// harmless, since the window check re-derives from `now` on every call.
+    static var reviewAskDates: [Date] {
+        get { (defaults.array(forKey: Key.reviewAskDates) as? [Date]) ?? [] }
+        set { defaults.set(newValue, forKey: Key.reviewAskDates) }
+    }
+
+    /// `reviewSuccessCount` at the moment of the most recent ask. Feeds
+    /// `ReviewEligibility` as `successCountAtLastAsk`.
+    static var reviewSuccessCountAtLastAsk: Int {
+        get { defaults.integer(forKey: Key.reviewSuccessCountAtLastAsk) }
+        set { defaults.set(newValue, forKey: Key.reviewSuccessCountAtLastAsk) }
+    }
+
+    /// One-time migration from the version-gated prompt this replaced. The
+    /// delivery counter carries over unchanged; a prior "already shown this
+    /// version" flag becomes one ask dated to the migration itself — the exact
+    /// original date is unknown, so it's treated as having just happened
+    /// (the conservative reading, since that delays the next ask rather than
+    /// permitting one early) — so it still counts toward the rolling-year cap.
+    /// The legacy keys are never read again after this runs.
+    static func migrateLegacyReviewStateIfNeeded() {
+        guard !defaults.bool(forKey: Key.reviewStateMigrated) else { return }
+        defaults.set(true, forKey: Key.reviewStateMigrated)
+        let legacyCount = defaults.integer(forKey: Key.legacyDeliveredDocumentCount)
+        if legacyCount > 0 {
+            reviewSuccessCount = legacyCount
+        }
+        if defaults.string(forKey: Key.legacyRatingPromptShownVersion) != nil {
+            reviewAskDates = [Date()]
+            reviewSuccessCountAtLastAsk = legacyCount
+        }
+        defaults.removeObject(forKey: Key.legacyRatingPromptShownVersion)
+        defaults.removeObject(forKey: Key.legacyDeliveredDocumentCount)
     }
 
     /// Whether the user has explicitly consented to Pay Day sending AI-drafting
