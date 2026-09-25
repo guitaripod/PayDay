@@ -1459,9 +1459,33 @@
           }
         },
         "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld kredytów (+%2$lld w bonusie)"
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld kredyty (+%2$lld w bonusie)"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld kredytów (+%2$lld w bonusie)"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld kredyt (+%2$lld w bonusie)"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld kredytu (+%2$lld w bonusie)"
+                }
+              }
+            }
           }
         },
         "pt-BR" : {
@@ -1541,9 +1565,33 @@
           }
         },
         "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld dni za darmo, potem %2$@/%3$@. Odnawia się automatycznie. Możesz anulować w każdej chwili."
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld dni za darmo, potem %2$@/%3$@. Odnawia się automatycznie. Możesz anulować w każdej chwili."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld dni za darmo, potem %2$@/%3$@. Odnawia się automatycznie. Możesz anulować w każdej chwili."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld dzień za darmo, potem %2$@/%3$@. Odnawia się automatycznie. Możesz anulować w każdej chwili."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld dnia za darmo, potem %2$@/%3$@. Odnawia się automatycznie. Możesz anulować w każdej chwili."
+                }
+              }
+            }
           }
         },
         "pt-BR" : {
@@ -22780,7 +22828,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Płatność tygodniowa"
+            "value" : "Tygodniowo"
           }
         },
         "pt-BR" : {
