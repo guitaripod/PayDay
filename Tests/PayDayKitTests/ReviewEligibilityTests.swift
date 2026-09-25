@@ -69,4 +69,38 @@ struct ReviewEligibilityTests {
         ]
         #expect(ReviewEligibility.shouldAsk(successCount: 100, askDates: askDates, successCountAtLastAsk: 1, now: now) == true)
     }
+
+    @Test("13 days since the last ask is not yet eligible")
+    func thirteenDaysIsNotEnough() {
+        let askDates = [now.addingTimeInterval(-days(13))]
+        #expect(ReviewEligibility.shouldAsk(successCount: 4, askDates: askDates, successCountAtLastAsk: 1, now: now) == false)
+    }
+
+    @Test("Exactly 14 days since the last ask is eligible, with enough new successes")
+    func fourteenDaysIsEnough() {
+        let askDates = [now.addingTimeInterval(-days(14))]
+        #expect(ReviewEligibility.shouldAsk(successCount: 4, askDates: askDates, successCountAtLastAsk: 1, now: now) == true)
+    }
+
+    @Test("2 new successes since the last ask is not yet enough, even long after 14 days")
+    func twoNewSuccessesIsNotEnough() {
+        let askDates = [now.addingTimeInterval(-days(30))]
+        #expect(ReviewEligibility.shouldAsk(successCount: 3, askDates: askDates, successCountAtLastAsk: 1, now: now) == false)
+    }
+
+    @Test("Exactly 3 new successes since the last ask is enough, once 14 days have passed")
+    func threeNewSuccessesIsEnough() {
+        let askDates = [now.addingTimeInterval(-days(30))]
+        #expect(ReviewEligibility.shouldAsk(successCount: 4, askDates: askDates, successCountAtLastAsk: 1, now: now) == true)
+    }
+
+    @Test("An ask exactly 365 days old has just aged out of the rolling window")
+    func askAgesOutAtExactlyOneYear() {
+        let askDates = [
+            now.addingTimeInterval(-days(365)),
+            now.addingTimeInterval(-days(200)),
+            now.addingTimeInterval(-days(100)),
+        ]
+        #expect(ReviewEligibility.shouldAsk(successCount: 100, askDates: askDates, successCountAtLastAsk: 1, now: now) == true)
+    }
 }
