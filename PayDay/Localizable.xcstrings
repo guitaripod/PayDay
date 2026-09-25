@@ -2380,7 +2380,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dodaj firmy, którym wystawiasz faktury. Ich NIP i adres Peppol umożliwiają zgodne e-faktury."
+            "value" : "Dodaj firmy, którym wystawiasz faktury. Ich numer VAT i adres Peppol umożliwiają zgodne e-faktury."
           }
         },
         "pt-BR" : {
@@ -2608,7 +2608,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uzupełnij nazwę, NIP i IBAN"
+            "value" : "Uzupełnij nazwę, numer VAT i IBAN"
           }
         },
         "pt-BR" : {
@@ -2684,7 +2684,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uzupełnij nazwę, NIP i IBAN, aby każda faktura była kompletna."
+            "value" : "Uzupełnij nazwę, numer VAT i IBAN, aby każda faktura była kompletna."
           }
         },
         "pt-BR" : {
@@ -20640,7 +20640,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aby zamienić twoje słowa lub zdjęcie w pozycje faktury, Pay Day wysyła podane treści do zewnętrznej usługi AI. To Ty decydujesz, kiedy się to dzieje — nic nie zostaje wysłane, dopóki nie dotkniesz akcji AI."
+            "value" : "Aby zamienić twoje słowa lub zdjęcie w pozycje faktury, Pay Day wysyła podane treści do zewnętrznej usługi AI. To ty decydujesz, kiedy się to dzieje — nic nie zostaje wysłane, dopóki nie dotkniesz akcji AI."
           }
         },
         "pt-BR" : {
@@ -22168,7 +22168,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NIP %@"
+            "value" : "Numer VAT %@"
           }
         },
         "pt-BR" : {
@@ -22322,7 +22322,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NIP"
+            "value" : "Numer VAT"
           }
         },
         "pt-BR" : {
@@ -22399,7 +22399,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NIP (np. DE123456789)"
+            "value" : "Numer VAT (np. DE123456789)"
           }
         },
         "pt-BR" : {

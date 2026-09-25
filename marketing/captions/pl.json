@@ -15,7 +15,7 @@
     "subtitle": "Pełny silnik VAT EN 16931, z odwrotnym obciążeniem."
   },
   "dashboard": {
-    "title": "Poznaj termin dla Twojego kraju",
+    "title": "Poznaj termin dla twojego kraju",
     "subtitle": "Polska, Belgia, Niemcy: co jest obowiązkowe i od kiedy."
   },
   "preview-ic": {
@@ -24,6 +24,6 @@
   },
   "list": {
     "title": "Darmowa i bez limitów",
-    "subtitle": "Faktury, wyceny, klienci, Twoje logo. Pro dodaje zgodność."
+    "subtitle": "Faktury, wyceny, klienci, twoje logo. Pro dodaje zgodność."
   }
 }
