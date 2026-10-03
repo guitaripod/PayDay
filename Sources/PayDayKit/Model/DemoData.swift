@@ -23,6 +23,30 @@ public enum DemoData {
             peppolSchemeID: "0216")
     }
 
+    /// The fictional seller's bank details, as seeded into the first-run profile.
+    public static func sampleSellerPaymentMeans() -> PaymentMeans {
+        PaymentMeans(
+            method: .creditTransfer, iban: "FI21 1234 5600 0007 85", bic: "OKOYFIHH",
+            accountName: "Aurora Studio Oy")
+    }
+
+    /// Whether `party` still carries the fictional seller's identity — every
+    /// field that names or addresses the business, compared in wire form so
+    /// re-saving it untouched does not pass it off as the user's own. Changing
+    /// any one of them makes it the user's business.
+    public static func isSampleSeller(_ party: Party) -> Bool {
+        identity(of: party) == identity(of: sampleSeller())
+    }
+
+    private static func identity(of party: Party) -> [String] {
+        [
+            party.legalName.trimmed, party.vatID.normalizedVATID, party.legalRegistrationID.trimmed,
+            party.address.line1.trimmed, party.address.city.trimmed, party.address.postalCode.trimmed,
+            party.address.countryCode.trimmed.uppercased(),
+            party.peppolSchemeID.trimmed, party.peppolEndpointID.trimmed,
+        ]
+    }
+
     public static func sampleBuyer() -> Party {
         Party(
             id: "buyer-demo",

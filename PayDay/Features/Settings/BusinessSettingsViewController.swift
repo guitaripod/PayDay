@@ -3,8 +3,18 @@ import PayDayKit
 
 /// Edits the seller business profile and invoice defaults. Saved values pre-fill
 /// every new document, so this is the one form that pays off on every invoice.
+///
+/// `.essentials` is the same form cut to what a first invoice needs — legal
+/// name, country, IBAN — for onboarding and for the setup a new invoice routes
+/// to while the seller is still the example business.
 final class BusinessSettingsViewController: UIViewController {
+    enum Mode { case settings, essentials }
+
+    /// Called in `.essentials` once the user saves (`true`) or defers (`false`).
+    var onFinish: ((_ saved: Bool) -> Void)?
+
     private var profile = BusinessProfile()
+    private let mode: Mode
 
     private let nameField = BusinessSettingsViewController.field(String(localized: "Legal name"))
     private let vatField = BusinessSettingsViewController.field(String(localized: "VAT ID", comment: "Seller VAT identifier, EN 16931 BT-31"))
@@ -13,7 +23,13 @@ final class BusinessSettingsViewController: UIViewController {
     private let cityField = BusinessSettingsViewController.field(String(localized: "City"))
     private let postalField = BusinessSettingsViewController.field(String(localized: "Postal code"))
     private let countryField = BusinessSettingsViewController.field(String(localized: "Country code", comment: "ISO 3166 two-letter country code"))
-    private let ibanField = BusinessSettingsViewController.field(String(localized: "IBAN", comment: "International Bank Account Number; keep the acronym"))
+    private lazy var ibanField = BusinessSettingsViewController.field(mode == .essentials
+        ? String(localized: "IBAN (optional)", comment: "Placeholder for the seller's bank account during setup; keep the acronym")
+        : String(localized: "IBAN", comment: "International Bank Account Number; keep the acronym"))
+    private let countryButton = UIButton(type: .system)
+    private let regionalDefaultsLabel = UILabel()
+    private lazy var continueButton = DesignSystem.primaryButton(String(localized: "Continue"))
+    private var selectedCountryCode = ""
     private let bicField = BusinessSettingsViewController.field(String(localized: "BIC", comment: "Bank Identifier Code (SWIFT); keep the acronym"))
     private let peppolField = BusinessSettingsViewController.field(String(localized: "Your Peppol ID (scheme:id)", comment: "Placeholder for the seller Peppol participant identifier; \"scheme:id\" is literal syntax"))
     private let vatRateField = BusinessSettingsViewController.field(String(localized: "Default VAT %"), keyboard: .decimalPad)
@@ -23,7 +39,8 @@ final class BusinessSettingsViewController: UIViewController {
     private var peppolSuggestion: PeppolID?
     private let focusesPeppol: Bool
 
-    init(focusesPeppol: Bool = false) {
+    init(mode: Mode = .settings, focusesPeppol: Bool = false) {
+        self.mode = mode
         self.focusesPeppol = focusesPeppol
         super.init(nibName: nil, bundle: nil)
     }
@@ -38,19 +55,33 @@ final class BusinessSettingsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = String(localized: "Business")
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = DesignSystem.Color.background
-        navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .save, primaryAction: UIAction { [weak self] _ in self?.commit() })
-        build()
+        switch mode {
+        case .settings:
+            title = String(localized: "Business")
+            navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .save, primaryAction: UIAction { [weak self] _ in self?.commit() })
+            build()
+        case .essentials:
+            buildEssentials()
+        }
         load()
     }
 
     private func load() {
         Task {
             let loaded = (try? await BusinessRepository.shared.load()) ?? BusinessProfile()
-            await MainActor.run { self.profile = loaded; self.populate() }
+            await MainActor.run { self.profile = Self.editable(loaded); self.populate() }
         }
+    }
+
+    /// The example business is never edited in place: the form starts blank, on
+    /// the device region's defaults, so saving can't leave any of its details
+    /// (VAT ID, IBAN, contact) on the user's invoices.
+    private static func editable(_ loaded: BusinessProfile) -> BusinessProfile {
+        guard loaded.isDemo else { return loaded }
+        let region = DashboardViewModel.countryCode(for: nil)
+        return RegionalDefaults.forCountry(region) == nil ? BusinessProfile() : .starting(in: region)
     }
 
     private func populate() {
@@ -67,6 +98,7 @@ final class BusinessSettingsViewController: UIViewController {
         vatRateField.text = DecimalInput.text(Decimal(profile.defaultVATRatePercent))
         termsField.text = profile.defaultPaymentTerms
         refreshPeppolAdvisory()
+        if mode == .essentials { selectCountry(profile.seller.address.countryCode) }
     }
 
     private func build() {
@@ -106,6 +138,7 @@ final class BusinessSettingsViewController: UIViewController {
     }
 
     private func commit() {
+        guard mode == .settings else { return commitEssentials() }
         profile.seller.legalName = nameField.text ?? ""
         profile.seller.vatID = (vatField.text ?? "").normalizedVATID
         profile.seller.legalRegistrationID = regField.text ?? ""
@@ -120,21 +153,53 @@ final class BusinessSettingsViewController: UIViewController {
         profile.defaultVATRatePercent = DecimalInput.parse(vatRateField.text).map { NSDecimalNumber(decimal: $0).doubleValue } ?? profile.defaultVATRatePercent
         profile.defaultPaymentTerms = termsField.text ?? ""
         AppSettings.defaultVATRatePercent = profile.defaultVATRatePercent
-        let saved = profile
-        navigationItem.rightBarButtonItem?.isEnabled = false
+        persist(profile) { [weak self] in self?.navigationController?.popViewController(animated: true) }
+    }
+
+    /// Saves the essentials over whatever was there — for the example business,
+    /// the blank regional profile `editable` started from — so nothing of the
+    /// example survives into the user's invoices.
+    private func commitEssentials() {
+        let name = (nameField.text ?? "").trimmed
+        guard !name.isEmpty, !selectedCountryCode.isEmpty else { return }
+        profile.seller.legalName = name
+        profile.applyRegionalDefaults(for: selectedCountryCode)
+        let iban = PaymentMeans(iban: ibanField.text ?? "").normalizedIBAN
+        profile.paymentMeans = PaymentMeans(method: .creditTransfer, iban: iban,
+                                            bic: iban.isEmpty ? "" : profile.paymentMeans.bic, accountName: name)
+        AppSettings.defaultVATRatePercent = profile.defaultVATRatePercent
+        AppSettings.defaultCurrencyCode = profile.defaultCurrencyCode
+        AppSettings.defaultEInvoiceProfile = profile.defaultEInvoiceProfile.rawValue
+        persist(profile) { [weak self] in
+            AppLogger.shared.info("business essentials saved (\(self?.selectedCountryCode ?? ""))", category: .ui)
+            self?.onFinish?(true)
+        }
+    }
+
+    private func persist(_ saved: BusinessProfile, then done: @escaping @MainActor () -> Void) {
+        setSaving(true)
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
                 try await BusinessRepository.shared.save(saved)
-                self.navigationController?.popViewController(animated: true)
+                done()
             } catch {
                 AppLogger.shared.error("business profile save failed: \(error)", category: .db)
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                self.setSaving(false)
                 let alert = UIAlertController(title: String(localized: "Couldn't Save"), message: error.localizedDescription, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
                 self.present(alert, animated: true)
             }
         }
+    }
+
+    private func setSaving(_ saving: Bool) {
+        navigationItem.rightBarButtonItem?.isEnabled = !saving
+        continueButton.isEnabled = !saving && canContinue
+    }
+
+    private var canContinue: Bool {
+        !(nameField.text ?? "").trimmed.isEmpty && !selectedCountryCode.isEmpty
     }
 
     /// Always rewrites the seller's Peppol address from the field, so clearing it
@@ -198,5 +263,124 @@ final class BusinessSettingsViewController: UIViewController {
         field.keyboardType = keyboard
         field.font = DesignSystem.Typography.body()
         return field
+    }
+
+    private func buildEssentials() {
+        let heading = DesignSystem.label(String(localized: "Your business"), font: DesignSystem.Typography.largeTitle())
+        let intro = DesignSystem.label(
+            String(localized: "Your name and bank account go on every invoice you send. Add your VAT ID, address and Peppol ID any time in Settings.",
+                   comment: "Business setup intro during onboarding"),
+            font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary)
+
+        nameField.textContentType = .organizationName
+        nameField.returnKeyType = .next
+        nameField.addAction(UIAction { [weak self] _ in self?.refreshContinue() }, for: .editingChanged)
+        nameField.addAction(UIAction { [weak self] _ in self?.ibanField.becomeFirstResponder() }, for: .editingDidEndOnExit)
+        ibanField.autocapitalizationType = .allCharacters
+        ibanField.autocorrectionType = .no
+        ibanField.returnKeyType = .done
+        ibanField.addAction(UIAction { [weak self] _ in self?.commit() }, for: .editingDidEndOnExit)
+
+        configureCountryButton()
+        regionalDefaultsLabel.font = DesignSystem.Typography.caption()
+        regionalDefaultsLabel.adjustsFontForContentSizeCategory = true
+        regionalDefaultsLabel.textColor = DesignSystem.Color.secondary
+        regionalDefaultsLabel.numberOfLines = 0
+
+        continueButton.addAction(UIAction { [weak self] _ in self?.commit() }, for: .touchUpInside)
+        let later = UIButton(type: .system)
+        later.setTitle(String(localized: "Set up later", comment: "Skips business setup; the dashboard keeps reminding"), for: .normal)
+        later.titleLabel?.font = DesignSystem.Typography.scaledSystem(16, .medium, relativeTo: .callout)
+        later.titleLabel?.adjustsFontForContentSizeCategory = true
+        later.addAction(UIAction { [weak self] _ in
+            AppLogger.shared.info("business setup deferred", category: .ui)
+            self?.view.endEditing(true)
+            self?.onFinish?(false)
+        }, for: .touchUpInside)
+
+        let fields = UIStackView(arrangedSubviews: [nameField, countryButton, regionalDefaultsLabel, ibanField])
+        fields.axis = .vertical
+        fields.spacing = DesignSystem.Spacing.s
+        fields.setCustomSpacing(DesignSystem.Spacing.m, after: regionalDefaultsLabel)
+
+        let stack = UIStackView(arrangedSubviews: [heading, intro, fields, continueButton, later])
+        stack.axis = .vertical
+        stack.spacing = DesignSystem.Spacing.l
+        stack.setCustomSpacing(DesignSystem.Spacing.s, after: heading)
+        stack.setCustomSpacing(DesignSystem.Spacing.s, after: continueButton)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+
+        let scroll = UIScrollView()
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.keyboardDismissMode = .interactive
+        view.addSubview(scroll)
+        scroll.addSubview(stack)
+        scroll.pinEdges(toSafeAreaOf: view)
+        NSLayoutConstraint.activate([
+            stack.topAnchor.constraint(equalTo: scroll.topAnchor, constant: DesignSystem.Spacing.m),
+            stack.leadingAnchor.constraint(equalTo: scroll.leadingAnchor, constant: DesignSystem.Spacing.l),
+            stack.trailingAnchor.constraint(equalTo: scroll.trailingAnchor, constant: -DesignSystem.Spacing.l),
+            stack.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: -DesignSystem.Spacing.l),
+            stack.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -DesignSystem.Spacing.l * 2),
+        ])
+        refreshContinue()
+    }
+
+    /// A menu of every country Pay Day has invoicing defaults for, by localized
+    /// name; picking one re-derives the currency and VAT line beneath it.
+    private func configureCountryButton() {
+        var config = UIButton.Configuration.plain()
+        config.background.backgroundColor = .systemBackground
+        config.background.cornerRadius = 6
+        config.background.strokeColor = .systemGray4
+        config.background.strokeWidth = 1 / max(traitCollection.displayScale, 1)
+        config.image = UIImage(systemName: "chevron.up.chevron.down")
+        config.imagePlacement = .trailing
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)
+        config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 7, bottom: 7, trailing: 10)
+        config.titleAlignment = .leading
+        countryButton.configuration = config
+        countryButton.contentHorizontalAlignment = .fill
+        countryButton.showsMenuAsPrimaryAction = true
+        countryButton.changesSelectionAsPrimaryAction = false
+        selectCountry("")
+    }
+
+    private func countryMenu() -> UIMenu {
+        let names = RegionalDefaults.supportedCountryCodes
+            .map { (code: $0, name: MandateCopy.countryName($0, locale: .current)) }
+            .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        return UIMenu(children: names.map { entry in
+            UIAction(title: entry.name, state: entry.code == selectedCountryCode ? .on : .off) { [weak self] _ in
+                self?.selectCountry(entry.code)
+            }
+        })
+    }
+
+    private func selectCountry(_ code: String) {
+        let upper = code.trimmed.uppercased()
+        selectedCountryCode = RegionalDefaults.forCountry(upper) == nil ? "" : upper
+        let title = selectedCountryCode.isEmpty
+            ? String(localized: "Choose your country", comment: "Country picker placeholder in business setup")
+            : MandateCopy.countryName(selectedCountryCode, locale: .current)
+        countryButton.configuration?.attributedTitle = AttributedString(
+            title, attributes: AttributeContainer([.font: DesignSystem.Typography.body()]))
+        countryButton.configuration?.baseForegroundColor = selectedCountryCode.isEmpty ? DesignSystem.Color.tertiary : DesignSystem.Color.label
+        countryButton.menu = countryMenu()
+        countryButton.accessibilityLabel = String(localized: "Country")
+        countryButton.accessibilityValue = selectedCountryCode.isEmpty ? nil : title
+        regionalDefaultsLabel.text = RegionalDefaults.forCountry(selectedCountryCode).map(Self.regionalDefaultsLine)
+        regionalDefaultsLabel.isHidden = regionalDefaultsLabel.text == nil
+        refreshContinue()
+    }
+
+    private static func regionalDefaultsLine(_ defaults: RegionalDefaults) -> String {
+        let rate = (defaults.standardVATRatePercent / 100).formatted(.percent.precision(.fractionLength(0...1)))
+        return String(localized: "Invoices in \(defaults.currencyCode) with \(rate) standard VAT. You can change both in Settings.",
+                      comment: "Business setup: the defaults derived from the chosen country; a currency code and a percentage")
+    }
+
+    private func refreshContinue() {
+        continueButton.isEnabled = canContinue
     }
 }

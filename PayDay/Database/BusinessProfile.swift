@@ -37,7 +37,46 @@ struct BusinessProfile: Codable, Sendable, Equatable {
     }
 
     var currency: Currency { Currency(defaultCurrencyCode) }
-    var isConfigured: Bool { !seller.legalName.trimmed.isEmpty }
+    var isConfigured: Bool { !seller.legalName.trimmed.isEmpty && !isDemo }
+
+    /// Still the fictional first-run business: its identity and bank account are
+    /// exactly as seeded. Any edit to either makes the profile the user's own.
+    var isDemo: Bool {
+        DemoData.isSampleSeller(seller)
+            && paymentMeans.normalizedIBAN == DemoData.sampleSellerPaymentMeans().normalizedIBAN
+    }
+
+    /// The worked-example business seeded on first launch so the sample
+    /// documents render; `isDemo` is true for it until the user replaces it.
+    static func demo() -> BusinessProfile {
+        BusinessProfile(
+            seller: DemoData.sampleSeller(),
+            defaultCurrencyCode: "EUR",
+            defaultVATRatePercent: 25.5,
+            defaultPaymentTermDays: 14,
+            defaultEInvoiceProfile: .en16931,
+            paymentMeans: DemoData.sampleSellerPaymentMeans(),
+            defaultPaymentTerms: "Net 14 days.")
+    }
+
+    /// A blank profile carrying a country's invoicing defaults, so a seller
+    /// starting out in `countryCode` bills in the right currency and VAT rate.
+    static func starting(in countryCode: String) -> BusinessProfile {
+        var profile = BusinessProfile()
+        profile.applyRegionalDefaults(for: countryCode)
+        return profile
+    }
+
+    /// Sets the seller's country and, where Pay Day knows them, the country's
+    /// currency, standard VAT rate and e-invoice profile.
+    mutating func applyRegionalDefaults(for countryCode: String) {
+        let code = countryCode.trimmed.uppercased()
+        seller.address.countryCode = code
+        guard let defaults = RegionalDefaults.forCountry(code) else { return }
+        defaultCurrencyCode = defaults.currencyCode
+        defaultVATRatePercent = NSDecimalNumber(decimal: defaults.standardVATRatePercent).doubleValue
+        defaultEInvoiceProfile = defaults.eInvoiceProfile
+    }
 
     /// Tolerant decoder: a future field addition must never make an existing
     /// stored profile undecodable (which would silently wipe the seller's

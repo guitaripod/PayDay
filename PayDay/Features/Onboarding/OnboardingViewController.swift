@@ -1,14 +1,49 @@
 import UIKit
 
-/// First-run welcome. Sells the wedge in one screen, then drops the user into a
-/// pre-seeded app (demo invoice + clients), so there is no empty cold start.
+/// First-run welcome. Sells the wedge in one screen, asks for the few business
+/// details a first invoice needs (or lets the user defer them), then drops the
+/// user into a pre-seeded app (demo invoice + clients), so there is no empty
+/// cold start.
 final class OnboardingViewController: UIViewController {
     var onFinish: (() -> Void)?
+
+    /// The whole first-run flow — welcome, then business essentials — calling
+    /// `onFinish` once the user saves or defers their business.
+    static func makeFlow(onFinish: @escaping (_ window: UIWindow?) -> Void) -> UIViewController {
+        let welcome = OnboardingViewController()
+        welcome.onFinish = { [weak welcome] in onFinish(welcome?.navigationController?.view.window) }
+        let nav = UINavigationController(rootViewController: welcome)
+        nav.navigationBar.prefersLargeTitles = false
+        return nav
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = DesignSystem.Color.background
+        navigationItem.backButtonDisplayMode = .minimal
         build()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+
+    private func showBusinessSetup() {
+        guard let navigationController else { return finish(savedBusiness: false) }
+        let setup = BusinessSettingsViewController(mode: .essentials)
+        setup.onFinish = { [weak self] saved in self?.finish(savedBusiness: saved) }
+        navigationController.pushViewController(setup, animated: true)
+    }
+
+    private func finish(savedBusiness: Bool) {
+        AppLogger.shared.info("onboarding finished, business \(savedBusiness ? "saved" : "deferred")", category: .ui)
+        onFinish?()
     }
 
     private func build() {
@@ -36,7 +71,7 @@ final class OnboardingViewController: UIViewController {
         features.spacing = DesignSystem.Spacing.m
 
         let cta = DesignSystem.primaryButton(String(localized: "Get started"))
-        cta.addAction(UIAction { [weak self] _ in self?.onFinish?() }, for: .touchUpInside)
+        cta.addAction(UIAction { [weak self] _ in self?.showBusinessSetup() }, for: .touchUpInside)
 
         let stack = UIStackView(arrangedSubviews: [icon, title, subtitle, mandateLine, features, cta].compactMap { $0 })
         stack.axis = .vertical

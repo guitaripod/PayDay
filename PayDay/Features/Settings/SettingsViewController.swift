@@ -173,10 +173,9 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         AppSettings.hasOnboarded = false
         Task { await AICreditsManager.store.bootstrap() }
         guard let window = view.window else { return }
-        let onboarding = OnboardingViewController()
-        onboarding.onFinish = { [weak onboarding] in
+        let onboarding = OnboardingViewController.makeFlow { finishedWindow in
             AppSettings.hasOnboarded = true
-            onboarding?.view.window?.rootViewController = RootViewController()
+            finishedWindow?.rootViewController = RootViewController()
         }
         UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve) {
             window.rootViewController = onboarding

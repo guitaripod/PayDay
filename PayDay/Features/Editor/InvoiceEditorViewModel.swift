@@ -58,7 +58,7 @@ final class InvoiceEditorViewModel {
         Task {
             if isNew {
                 let profile = try? await business.load()
-                if let profile {
+                if let profile, !profile.isDemo {
                     invoice.seller = profile.seller
                     invoice.currency = profile.currency
                     invoice.paymentMeans = profile.paymentMeans

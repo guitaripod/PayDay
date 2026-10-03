@@ -37,7 +37,8 @@ final class DashboardViewModel {
                 let currency = Currency(currencyCode)
                 let outstanding = Money(minorUnits: try await invoices.outstandingMinorUnits(currencyCode: currencyCode), currency: currency)
                 let profile = try? await business.load()
-                let sellerConfigured = profile?.isConfigured ?? true
+                let sellerConfigured = Self.showsDemoAsOwn || (profile?.isConfigured ?? true)
+                let ownSeller = profile?.isDemo == true && !Self.showsDemoAsOwn ? nil : profile?.seller
                 let snapshot = Snapshot(
                     outstanding: outstanding,
                     invoiceCount: all.filter { $0.type == .invoice }.count,
@@ -45,13 +46,23 @@ final class DashboardViewModel {
                     overdueCount: all.filter { $0.status == .overdue }.count,
                     recent: Array(all.prefix(5)),
                     sellerConfigured: sellerConfigured,
-                    sellerCountryCode: Self.countryCode(for: profile?.seller),
-                    sellerPeppolConfigured: !(profile?.seller.peppolParticipant.isEmpty ?? true))
+                    sellerCountryCode: Self.countryCode(for: ownSeller),
+                    sellerPeppolConfigured: !(ownSeller?.peppolParticipant.isEmpty ?? true))
                 snapshotPublisher.send(snapshot)
             } catch {
                 AppLogger.shared.error("dashboard load failed: \(error)", category: .db)
             }
         }
+    }
+
+    /// App Store captures (`PAYDAY_DEMO`) present the worked example as the
+    /// user's own, set-up business, as the panels always have.
+    private static var showsDemoAsOwn: Bool {
+        #if DEBUG
+        return ProcessInfo.processInfo.environment["PAYDAY_DEMO"] != nil
+        #else
+        return false
+        #endif
     }
 
     /// The country whose e-invoicing rules apply to the seller: the business

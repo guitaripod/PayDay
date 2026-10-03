@@ -2603,6 +2603,82 @@
         }
       }
     },
+    "Add your business first" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuerst Ihr Unternehmen hinzufügen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primero añade tu empresa"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisää ensin yrityksesi"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez d'abord votre entreprise"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prima aggiungi la tua azienda"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "先に事業者情報を追加してください"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "먼저 사업자 정보를 추가하세요"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voeg eerst je bedrijf toe"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Najpierw dodaj swoją firmę"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primeiro adicione sua empresa"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请先添加你的企业"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請先新增你的企業"
+          }
+        }
+      }
+    },
     "Add your name, VAT ID, and IBAN" : {
       "localizations" : {
         "de" : {
@@ -4281,6 +4357,83 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "選擇客戶"
+          }
+        }
+      }
+    },
+    "Choose your country" : {
+      "comment" : "Country picker placeholder in business setup",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Land auswählen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige tu país"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valitse maa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez votre pays"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scegli il tuo paese"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "国を選択"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "국가 선택"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kies je land"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz kraj"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolha seu país"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择国家/地区"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇國家/地區"
           }
         }
       }
@@ -6107,6 +6260,82 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "無法儲存"
+          }
+        }
+      }
+    },
+    "Country" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Land"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "País"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pays"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paese"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "国"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "국가"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Land"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kraj"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "País"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "国家/地区"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "國家/地區"
           }
         }
       }
@@ -10833,6 +11062,83 @@
         }
       }
     },
+    "IBAN (optional)" : {
+      "comment" : "Placeholder for the seller's bank account during setup; keep the acronym",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN (optional)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN (opcional)"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN (valinnainen)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN (facultatif)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN (facoltativo)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN（任意）"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN(선택)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN (optioneel)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN (opcjonalnie)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN (opcional)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN（可选）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IBAN（選填）"
+          }
+        }
+      }
+    },
     "Identity" : {
       "localizations" : {
         "de" : {
@@ -11361,6 +11667,83 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "發票"
+          }
+        }
+      }
+    },
+    "Invoices in %@ with %@ standard VAT. You can change both in Settings." : {
+      "comment" : "Business setup: the defaults derived from the chosen country; a currency code and a percentage",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechnungen in %1$@ mit %2$@ USt. (Regelsatz). Beides können Sie in den Einstellungen ändern."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Facturas en %1$@ con un IVA general del %2$@. Puedes cambiar ambos en Ajustes."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laskut valuutassa %1$@, yleinen ALV %2$@. Voit muuttaa molempia Asetuksissa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Factures en %1$@ avec une TVA standard de %2$@. Vous pouvez modifier les deux dans Réglages."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fatture in %1$@ con IVA ordinaria al %2$@. Puoi modificare entrambe in Impostazioni."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請求通貨は %1$@、標準 VAT 税率は %2$@ です。どちらも「設定」で変更できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ 통화, 표준 VAT %2$@로 청구합니다. 둘 다 설정에서 변경할 수 있습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Facturen in %1$@ met %2$@ standaard-btw. Je kunt beide wijzigen in Instellingen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faktury w %1$@ z podstawową stawką VAT %2$@. Obie wartości zmienisz w Ustawieniach."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faturas em %1$@ com IVA padrão de %2$@. Você pode alterar ambos em Ajustes."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以 %1$@ 开票，标准增值税率 %2$@。两者都可在“设置”中更改。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以 %1$@ 開立發票，標準加值稅率 %2$@。兩者皆可在「設定」中變更。"
           }
         }
       }
@@ -18296,6 +18679,82 @@
         }
       }
     },
+    "Set Up Business" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unternehmen einrichten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurar empresa"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Määritä yritys"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurer l'entreprise"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configura azienda"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "事業者情報を設定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사업자 정보 설정"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedrijf instellen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skonfiguruj firmę"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurar empresa"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置企业信息"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定企業資訊"
+          }
+        }
+      }
+    },
     "Set it once, get paid every month." : {
       "localizations" : {
         "de" : {
@@ -18368,6 +18827,83 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "設定一次，每月準時收款。"
+          }
+        }
+      }
+    },
+    "Set up later" : {
+      "comment" : "Skips business setup; the dashboard keeps reminding",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Später einrichten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurar más tarde"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Määritä myöhemmin"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurer plus tard"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configura più tardi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "あとで設定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "나중에 설정"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later instellen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skonfiguruj później"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurar depois"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "稍后设置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "稍後設定"
           }
         }
       }
@@ -20559,6 +21095,83 @@
         }
       }
     },
+    "This document doesn't carry your business details yet. Add them so it goes out under your own name and bank account." : {
+      "comment" : "Shown when sharing or sending a document whose seller is the example business or empty",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Dokument enthält noch nicht die Daten Ihres Unternehmens. Ergänzen Sie sie, damit es unter Ihrem Namen und mit Ihrer Bankverbindung versendet wird."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este documento aún no tiene los datos de tu empresa. Añádelos para que salga con tu nombre y tu cuenta bancaria."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tässä asiakirjassa ei ole vielä yrityksesi tietoja. Lisää ne, niin se lähtee omalla nimelläsi ja pankkitililläsi."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce document ne porte pas encore les coordonnées de votre entreprise. Ajoutez-les pour qu'il parte sous votre nom et avec votre compte bancaire."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo documento non contiene ancora i dati della tua azienda. Aggiungili perché parta con il tuo nome e il tuo conto bancario."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この書類にはまだ事業者情報が入っていません。追加すると、あなたの名称と銀行口座で送信されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 문서에는 아직 사업자 정보가 없습니다. 정보를 추가하면 내 이름과 은행 계좌로 발송됩니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dit document bevat nog niet de gegevens van je bedrijf. Voeg ze toe zodat het onder je eigen naam en bankrekening verstuurd wordt."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten dokument nie zawiera jeszcze danych twojej firmy. Dodaj je, aby wyszedł pod twoją nazwą i z twoim rachunkiem bankowym."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este documento ainda não tem os dados da sua empresa. Adicione-os para que ele saia com seu nome e sua conta bancária."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此单据尚未包含你的企业信息。添加后，它将以你自己的名称和银行账户发出。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此單據尚未包含你的企業資訊。新增後，它將以你自己的名稱與銀行帳戶寄出。"
+          }
+        }
+      }
+    },
     "This permanently deletes your account, credit balance, and every invoice, estimate, and client on this device. This cannot be undone." : {
       "localizations" : {
         "de" : {
@@ -21927,6 +22540,83 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 %@"
+          }
+        }
+      }
+    },
+    "Use My Business" : {
+      "comment" : "Replaces the example seller on this document with the user's saved business",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mein Unternehmen verwenden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar mi empresa"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Käytä omaa yritystä"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utiliser mon entreprise"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usa la mia azienda"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自分の事業者情報を使用"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내 사업자 정보 사용"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mijn bedrijf gebruiken"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Użyj mojej firmy"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar minha empresa"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用我的企业信息"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用我的企業資訊"
           }
         }
       }
@@ -23816,6 +24506,83 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你的企業"
+          }
+        }
+      }
+    },
+    "Your name and bank account go on every invoice you send. Add your VAT ID, address and Peppol ID any time in Settings." : {
+      "comment" : "Business setup intro during onboarding",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ihr Name und Ihre Bankverbindung stehen auf jeder Rechnung, die Sie senden. USt-IdNr., Adresse und Peppol-ID können Sie jederzeit in den Einstellungen ergänzen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu nombre y tu cuenta bancaria aparecen en cada factura que envías. Añade tu n.º de IVA, tu dirección y tu ID de Peppol cuando quieras en Ajustes."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nimesi ja pankkitilisi näkyvät jokaisessa lähettämässäsi laskussa. ALV-tunnuksen, osoitteen ja Peppol-tunnuksen voit lisätä milloin tahansa Asetuksissa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre nom et votre compte bancaire figurent sur chaque facture que vous envoyez. Ajoutez votre n° de TVA, votre adresse et votre identifiant Peppol à tout moment dans Réglages."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il tuo nome e il tuo conto bancario compaiono su ogni fattura che invii. Aggiungi partita IVA, indirizzo e ID Peppol quando vuoi in Impostazioni."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称と銀行口座は、送信するすべての請求書に記載されます。VAT 番号・住所・Peppol ID は「設定」でいつでも追加できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이름과 은행 계좌는 보내는 모든 인보이스에 표시됩니다. VAT 번호, 주소, Peppol ID는 설정에서 언제든 추가할 수 있습니다."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je naam en bankrekening staan op elke factuur die je verstuurt. Je btw-nummer, adres en Peppol-ID voeg je op elk moment toe in Instellingen."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twoja nazwa i rachunek bankowy trafiają na każdą wysyłaną fakturę. Numer VAT, adres i identyfikator Peppol dodasz w każdej chwili w Ustawieniach."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seu nome e sua conta bancária aparecem em toda fatura que você envia. Adicione seu nº de IVA, endereço e ID Peppol quando quiser em Ajustes."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的名称和银行账户会显示在你发送的每张发票上。增值税税号、地址和 Peppol ID 可随时在“设置”中添加。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的名稱和銀行帳戶會顯示在你傳送的每張發票上。加值稅稅號、地址和 Peppol ID 可隨時在「設定」中新增。"
           }
         }
       }
@@ -26468,78 +27235,79 @@
         }
       }
     },
-    "✓ This invoice is EN 16931 valid — unlock Pro to export a Factur-X / Peppol e-invoice." : {
+    "✓ EN 16931 valid. Pro makes it a Factur-X e-invoice and sends it over Peppol straight into your client's accounting." : {
+      "comment" : "Preview status for a free user: the invoice is valid, and what Pro adds",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ Diese Rechnung ist EN 16931-konform – mit Pro exportieren Sie sie als Factur-X-/Peppol-E-Rechnung."
+            "value" : "✓ EN 16931-konform. Pro macht daraus eine Factur-X-E-Rechnung und sendet sie per Peppol direkt in die Buchhaltung Ihres Kunden."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ Esta factura es válida según EN 16931: activa Pro para exportarla como factura electrónica Factur-X / Peppol."
+            "value" : "✓ Válida según EN 16931. Pro la convierte en factura electrónica Factur-X y la envía por Peppol directamente a la contabilidad de tu cliente."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ Tämä lasku on EN 16931 -kelpoinen – avaa Pro, niin voit viedä sen Factur-X- tai Peppol-verkkolaskuna."
+            "value" : "✓ EN 16931 -kelpoinen. Pro tekee siitä Factur-X-verkkolaskun ja lähettää sen Peppolissa suoraan asiakkaasi taloushallintoon."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ Cette facture est conforme EN 16931 — passez à Pro pour l'exporter en facture électronique Factur-X / Peppol."
+            "value" : "✓ Conforme EN 16931. Pro en fait une facture électronique Factur-X et l'envoie via Peppol directement dans la comptabilité de votre client."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ Questa fattura è valida EN 16931 — passa a Pro per esportarla come fattura elettronica Factur-X / Peppol."
+            "value" : "✓ Valida EN 16931. Pro la trasforma in una fattura elettronica Factur-X e la invia tramite Peppol direttamente nella contabilità del cliente."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ この請求書は EN 16931 に準拠しています。Pro にすると Factur-X / Peppol の電子インボイスとして書き出せます。"
+            "value" : "✓ EN 16931 準拠。Pro なら Factur-X 電子インボイスにして、Peppol で取引先の会計システムへ直接送信できます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ 이 인보이스는 EN 16931을 충족합니다. Pro로 업그레이드하면 Factur-X / Peppol 전자 인보이스로 내보낼 수 있습니다."
+            "value" : "✓ EN 16931 충족. Pro는 Factur-X 전자 인보이스로 만들어 Peppol로 거래처 회계 시스템에 바로 보냅니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ Deze factuur is EN 16931-conform — met Pro exporteer je hem als Factur-X- of Peppol-e-factuur."
+            "value" : "✓ EN 16931-conform. Pro maakt er een Factur-X-e-factuur van en verstuurt die via Peppol rechtstreeks naar de boekhouding van je klant."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ Ta faktura jest zgodna z EN 16931 — włącz Pro, aby wyeksportować e-fakturę Factur-X / Peppol."
+            "value" : "✓ Zgodna z EN 16931. Pro zamieni ją w e-fakturę Factur-X i wyśle przez Peppol prosto do systemu księgowego kontrahenta."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ Esta fatura é válida em EN 16931 — assine o Pro para exportá-la como fatura eletrônica Factur-X / Peppol."
+            "value" : "✓ Válida em EN 16931. O Pro a transforma em fatura eletrônica Factur-X e a envia pela Peppol direto para a contabilidade do seu cliente."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ 这张发票符合 EN 16931——升级 Pro 即可导出 Factur-X / Peppol 电子发票。"
+            "value" : "✓ 符合 EN 16931。Pro 可将其生成 Factur-X 电子发票，并通过 Peppol 直接发送到客户的财务系统。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "✓ 這張發票符合 EN 16931——升級 Pro 即可匯出 Factur-X / Peppol 電子發票。"
+            "value" : "✓ 符合 EN 16931。Pro 可將其製成 Factur-X 電子發票，並透過 Peppol 直接傳送到客戶的會計系統。"
           }
         }
       }

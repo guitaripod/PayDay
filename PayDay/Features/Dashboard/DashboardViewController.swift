@@ -310,8 +310,10 @@ final class DashboardViewController: UIViewController {
     }
 
     private func newInvoice() {
-        let editor = InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(kind: .invoice))
-        navigationController?.pushViewController(editor, animated: true)
+        BusinessSetupGate.beforeNewDocument(from: self) { [weak self] in
+            let editor = InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(kind: .invoice))
+            self?.navigationController?.pushViewController(editor, animated: true)
+        }
     }
 
     private func open(_ invoice: Invoice) {

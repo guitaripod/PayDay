@@ -2,8 +2,10 @@ import Foundation
 import GRDB
 import PayDayKit
 
-/// Seeds a configured business, two clients, and two worked-example documents on
+/// Seeds an example business, two clients, and two worked-example documents on
 /// first launch — so a new user (and App Review) immediately sees real output.
+/// The example business stays recognisable (`BusinessProfile.isDemo`), so it
+/// never pre-fills a real invoice and is replaced by the user's own on setup.
 ///
 /// Runs **synchronously in a single transaction before any UI is built**: the
 /// dashboard/list load on `viewDidLoad`/`viewWillAppear`, so an async seed would
@@ -13,16 +15,7 @@ enum DemoSeeder {
         guard !AppSettings.didSeedDemo else { return }
         do {
             try dbQueue.write { db in
-                let business = BusinessProfile(
-                    seller: DemoData.sampleSeller(),
-                    defaultCurrencyCode: "EUR",
-                    defaultVATRatePercent: 25.5,
-                    defaultPaymentTermDays: 14,
-                    defaultEInvoiceProfile: .en16931,
-                    paymentMeans: PaymentMeans(
-                        method: .creditTransfer, iban: "FI21 1234 5600 0007 85", bic: "OKOYFIHH",
-                        accountName: "Aurora Studio Oy"),
-                    defaultPaymentTerms: "Net 14 days.")
+                let business = BusinessProfile.demo()
                 try BusinessRecord(business).insert(db)
 
                 let invoice = DemoData.sampleInvoice()

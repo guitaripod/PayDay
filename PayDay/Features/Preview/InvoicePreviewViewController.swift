@@ -7,7 +7,7 @@ import PayDayKit
 /// share the compliant Factur-X hybrid + sidecar XML (Pro), and transmit over
 /// Peppol (Pro + credits). Compliance status is shown honestly up front.
 final class InvoicePreviewViewController: UIViewController {
-    private let invoice: Invoice
+    private var invoice: Invoice
     private let pdfView = PDFView()
     private let statusBar = UIView()
     private let statusLabel = UILabel()
@@ -146,7 +146,8 @@ final class InvoicePreviewViewController: UIViewController {
                 statusLabel.text = String(localized: "✓ EN 16931 valid · structured XML attached on export")
                 statusLabel.textColor = DesignSystem.Color.paid
             } else {
-                statusLabel.text = String(localized: "✓ This invoice is EN 16931 valid — unlock Pro to export a Factur-X / Peppol e-invoice.")
+                statusLabel.text = String(localized: "✓ EN 16931 valid. Pro makes it a Factur-X e-invoice and sends it over Peppol straight into your client's accounting.",
+                                          comment: "Preview status for a free user: the invoice is valid, and what Pro adds")
                 statusLabel.textColor = DesignSystem.Color.sent
             }
         } else {
@@ -159,7 +160,7 @@ final class InvoicePreviewViewController: UIViewController {
     }
 
     private func share() {
-        guard let pdf = renderedPDF else { return }
+        guard ensureOwnSeller(), let pdf = renderedPDF else { return }
         var items: [Any] = []
         if let pdfURL = writeTemp(pdf, name: "\(exportFilename()).pdf") {
             items.append(pdfURL)
@@ -200,6 +201,7 @@ final class InvoicePreviewViewController: UIViewController {
     }
 
     private func sendPeppol() {
+        guard ensureOwnSeller() else { return }
         Task {
             guard await AICreditsManager.store.client.isPremium() else {
                 presentPaywall(reason: String(localized: "Peppol delivery is a Pay Day Pro feature."))
@@ -271,6 +273,63 @@ final class InvoicePreviewViewController: UIViewController {
         } catch {
             Haptics.error()
             hud.dismiss(animated: true) { self.presentAlert(String(localized: "Send failed"), error.localizedDescription) }
+        }
+    }
+
+    /// True when the document goes out under the user's own business. Otherwise
+    /// explains why it is held back and offers to put the user's business on it.
+    private func ensureOwnSeller() -> Bool {
+        guard !BusinessSetupGate.canDeliver(invoice) else { return true }
+        AppLogger.shared.info("delivery held: \(invoice.id) has no own seller", category: .invoice)
+        Haptics.warning()
+        Task { @MainActor [weak self] in
+            let profile = try? await BusinessRepository.shared.load()
+            guard let self else { return }
+            let configured = profile?.isConfigured == true
+            let alert = UIAlertController(
+                title: String(localized: "Add your business first"),
+                message: String(localized: "This document doesn't carry your business details yet. Add them so it goes out under your own name and bank account.",
+                                comment: "Shown when sharing or sending a document whose seller is the example business or empty"),
+                preferredStyle: .alert)
+            let actionTitle = configured
+                ? String(localized: "Use My Business", comment: "Replaces the example seller on this document with the user's saved business")
+                : String(localized: "Set Up Business")
+            alert.addAction(UIAlertAction(title: actionTitle, style: .default) { [weak self] _ in
+                guard let self else { return }
+                if let profile, configured {
+                    self.reissue(as: profile)
+                } else {
+                    BusinessSetupGate.presentSetup(from: self) { [weak self] saved in
+                        guard saved else { return }
+                        Task { @MainActor in
+                            if let profile = try? await BusinessRepository.shared.load() { self?.reissue(as: profile) }
+                        }
+                    }
+                }
+            })
+            alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
+            present(alert, animated: true)
+        }
+        return false
+    }
+
+    /// Puts the user's business on this document, saves it, and re-renders so
+    /// they see their own name on the PDF before sharing.
+    private func reissue(as profile: BusinessProfile) {
+        let updated = BusinessSetupGate.reissue(invoice, as: profile)
+        Task { @MainActor in
+            do {
+                invoice = try await InvoiceRepository.shared.save(updated)
+                AppLogger.shared.info("reissued \(invoice.id) under the user's business", category: .invoice)
+                Haptics.success()
+                renderedPDF = nil
+                embed = nil
+                spinner.startAnimating()
+                renderAsync()
+            } catch {
+                AppLogger.shared.error("reissue save failed: \(error)", category: .db)
+                presentAlert(String(localized: "Couldn't Save"), error.localizedDescription)
+            }
         }
     }
 

@@ -60,12 +60,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if AppSettings.hasOnboarded {
             return RootViewController()
         }
-        let onboarding = OnboardingViewController()
-        onboarding.onFinish = { [weak onboarding] in
+        return OnboardingViewController.makeFlow { window in
             AppSettings.hasOnboarded = true
-            onboarding?.view.window?.rootViewController = RootViewController()
+            window?.rootViewController = RootViewController()
         }
-        return onboarding
     }
 
     #if DEBUG
@@ -92,6 +90,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return nav(InvoicePreviewViewController(invoice: DemoData.sampleIntraCommunityInvoice(), demoForceCompliant: true))
         case "paywall":
             return nav(PaywallViewController())
+        case "setup":
+            return nav(BusinessSettingsViewController(mode: .essentials))
         default:
             return nil
         }

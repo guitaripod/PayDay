@@ -170,8 +170,10 @@ final class InvoiceListViewController: UIViewController {
             kindControl.selectedSegmentIndex = kind == .estimate ? 1 : 0
             title = kind == .estimate ? String(localized: "Estimates") : String(localized: "Invoices")
         }
-        let editor = InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(kind: kind))
-        navigationController?.pushViewController(editor, animated: true)
+        BusinessSetupGate.beforeNewDocument(from: self) { [weak self] in
+            let editor = InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(kind: kind))
+            self?.navigationController?.pushViewController(editor, animated: true)
+        }
     }
 
     private func open(_ invoice: Invoice) {
