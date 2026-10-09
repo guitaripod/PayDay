@@ -1,8 +1,18 @@
 import UIKit
 
-/// The app's tab shell: Dashboard, Invoices, Clients, Settings. Each tab is a
-/// navigation stack so detail/editor screens push naturally.
+/// The app's tab shell: Dashboard, Invoices, Clients, Settings. The list-shaped
+/// tabs are list-and-detail splits that fold onto a plain navigation stack in a
+/// narrow window; the dashboard is a navigation stack of its own.
 final class RootViewController: UITabBarController {
+    enum Tab: Int { case dashboard, invoices, clients, settings }
+
+    let invoicesSplit = ListDetailSplitViewController(
+        list: InvoiceListViewController(kind: .invoice), placeholderSymbol: "doc.text")
+    let clientsSplit = ListDetailSplitViewController(
+        list: ClientListViewController(), placeholderSymbol: "person.2")
+    let settingsSplit = ListDetailSplitViewController(
+        list: SettingsViewController(), placeholderSymbol: "gearshape")
+
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -12,14 +22,12 @@ final class RootViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Accent the selected tab; leave bar backgrounds default so iOS 26 keeps
-        // its Liquid Glass (a custom appearance background would suppress it).
         tabBar.tintColor = DesignSystem.Color.accent
         viewControllers = [
             wrap(DashboardViewController(), title: String(localized: "Home"), symbol: "house.fill"),
-            wrap(InvoiceListViewController(kind: .invoice), title: String(localized: "Invoices"), symbol: "doc.text.fill"),
-            wrap(ClientListViewController(), title: String(localized: "Clients"), symbol: "person.2.fill"),
-            wrap(SettingsViewController(), title: String(localized: "Settings"), symbol: "gearshape.fill"),
+            tabItem(invoicesSplit, title: String(localized: "Invoices"), symbol: "doc.text.fill"),
+            tabItem(clientsSplit, title: String(localized: "Clients"), symbol: "person.2.fill"),
+            tabItem(settingsSplit, title: String(localized: "Settings"), symbol: "gearshape.fill"),
         ]
     }
 
@@ -29,5 +37,11 @@ final class RootViewController: UITabBarController {
         let nav = UINavigationController(rootViewController: vc)
         nav.navigationBar.prefersLargeTitles = true
         return nav
+    }
+
+    private func tabItem(_ split: ListDetailSplitViewController, title: String, symbol: String) -> UIViewController {
+        split.primaryList?.title = title
+        split.tabBarItem = UITabBarItem(title: title, image: UIImage(systemName: symbol), selectedImage: nil)
+        return split
     }
 }

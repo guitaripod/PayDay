@@ -23,6 +23,9 @@ final class InvoiceRowView: UIControl {
         layer.cornerRadius = DesignSystem.Radius.control
         layer.cornerCurve = .continuous
         build()
+        registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (row: InvoiceRowView, _) in
+            row.refreshChosenAppearance()
+        }
         addAction(UIAction { [weak self] _ in Haptics.tap(); self?.onTap() }, for: .touchUpInside)
         if let menu {
             let delegate = MenuDelegate(provider: menu)
@@ -42,6 +45,17 @@ final class InvoiceRowView: UIControl {
 
     override var isHighlighted: Bool {
         didSet { alpha = isHighlighted ? 0.6 : 1 }
+    }
+
+    /// Whether the detail column is showing this document.
+    var isChosen = false {
+        didSet { refreshChosenAppearance() }
+    }
+
+    private func refreshChosenAppearance() {
+        backgroundColor = isChosen ? DesignSystem.Color.accentSoft : DesignSystem.Color.surface
+        layer.borderWidth = isChosen ? 1.5 : 0
+        layer.borderColor = DesignSystem.Color.accent.resolvedColor(with: traitCollection).cgColor
     }
 
     func update(with invoice: Invoice) {
@@ -77,6 +91,8 @@ final class InvoiceRowView: UIControl {
         row.alignment = .center
         row.translatesAutoresizingMaskIntoConstraints = false
         leftStack.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        leftStack.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        for label in [numberLabel, clientLabel] { label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal) }
         addSubview(row)
         row.pinEdges(to: self, insets: UIEdgeInsets(top: 12, left: 14, bottom: 12, right: 14))
         isUserInteractionEnabled = true

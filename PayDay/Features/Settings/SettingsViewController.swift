@@ -6,7 +6,11 @@ import PayDayKit
 /// Settings: business profile, defaults, appearance, Pro status, credit balance,
 /// and the legal/support links App Review expects.
 final class SettingsViewController: UIViewController {
-    private enum Row { case business, payment, defaults, appearance, aiDrafting, pro, credits, rate, share, privacy, terms, support, moreApps, deleteAccount }
+    private enum Row {
+        case business, payment, defaults, appearance, aiDrafting, pro, credits, rate, share, privacy, terms, support, moreApps, deleteAccount
+
+        var isBusinessForm: Bool { self == .business || self == .payment || self == .defaults }
+    }
     private static let appStoreURL = URL(string: "https://apps.apple.com/app/id6779927672")!
     private static let writeReviewURL = URL(string: "https://apps.apple.com/app/id6779927672?action=write-review")!
     private let sections: [(String, [Row])] = [
@@ -38,17 +42,42 @@ final class SettingsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Task { await AICreditsManager.store.refreshPremium() }
+        reloadKeepingSelection()
+        if listDetailSplit?.isCollapsed ?? true { deselectAll() }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        showBusinessDetailIfRoomForIt()
+    }
+
+    private func reloadKeepingSelection() {
+        let selected = tableView.indexPathForSelectedRow
         tableView.reloadData()
+        if let selected { tableView.selectRow(at: selected, animated: false, scrollPosition: .none) }
+    }
+
+    private func deselectAll() {
+        guard let selected = tableView.indexPathForSelectedRow else { return }
+        tableView.deselectRow(at: selected, animated: false)
+    }
+
+    /// With room for a detail column, opens the business form beside the list so
+    /// the column is never an empty page, and highlights the row it came from.
+    private func showBusinessDetailIfRoomForIt() {
+        guard let split = listDetailSplit, !split.isCollapsed, split.showsPlaceholder else { return }
+        split.showDetail([BusinessSettingsViewController()], isAutomatic: true)
+        tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
     }
 
     private func bind() {
         AICreditsManager.store.$isPremium
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.isPremium = $0; self?.tableView.reloadData() }
+            .sink { [weak self] in self?.isPremium = $0; self?.reloadKeepingSelection() }
             .store(in: &cancellables)
         AICreditsManager.store.$balance
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.balance = $0; self?.tableView.reloadData() }
+            .sink { [weak self] in self?.balance = $0; self?.reloadKeepingSelection() }
             .store(in: &cancellables)
     }
 }
@@ -97,10 +126,12 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        switch sections[indexPath.section].1[indexPath.row] {
+        let row = sections[indexPath.section].1[indexPath.row]
+        let keepsSelection = row.isBusinessForm && !(listDetailSplit?.isCollapsed ?? true)
+        if !keepsSelection { tableView.deselectRow(at: indexPath, animated: true) }
+        switch row {
         case .business, .payment, .defaults:
-            navigationController?.pushViewController(BusinessSettingsViewController(), animated: true)
+            showDetailScreen(BusinessSettingsViewController())
         case .appearance: presentAppearance()
         case .aiDrafting: presentAIConsent()
         case .pro:

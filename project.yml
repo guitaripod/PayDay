@@ -88,6 +88,8 @@ targets:
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
         NSPhotoLibraryUsageDescription: Pay Day lets you pick a logo for your invoices and import a photo of a receipt to draft line items.
         ITSAppUsesNonExemptEncryption: false
     entitlements:

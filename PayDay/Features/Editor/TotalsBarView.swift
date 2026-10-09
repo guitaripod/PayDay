@@ -61,8 +61,8 @@ final class TotalsBarView: UIView {
         glass.contentView.addSubview(row)
         NSLayoutConstraint.activate([
             glass.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            glass.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            glass.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            glass.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 12),
+            glass.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -12),
             glass.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -8),
         ])
         row.pinEdges(to: glass.contentView, insets: UIEdgeInsets(top: 12, left: 18, bottom: 12, right: 14))

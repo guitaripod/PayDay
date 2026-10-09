@@ -9,7 +9,13 @@ final class DashboardViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
 
     private let scrollView = UIScrollView()
-    private let stack = UIStackView()
+    private let columns = UIView()
+    private let summaryColumn = UIStackView()
+    private let recentColumn = UIStackView()
+    private var summaryWidth = NSLayoutConstraint()
+    private var columnGap = NSLayoutConstraint()
+    private var stackedConstraints: [NSLayoutConstraint] = []
+    private var sideBySideConstraints: [NSLayoutConstraint] = []
     private let outstandingLabel = UILabel()
     private let outstandingCaption = UILabel()
     private let statsRow = UIStackView()
@@ -64,40 +70,122 @@ final class DashboardViewController: UIViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.alwaysBounceVertical = true
         view.addSubview(scrollView)
-        scrollView.pinEdges(to: view)
-
-        stack.axis = .vertical
-        stack.spacing = DesignSystem.Spacing.l
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(stack)
         NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: DesignSystem.Spacing.m),
-            stack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: DesignSystem.Spacing.m),
-            stack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -DesignSystem.Spacing.m),
-            stack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -DesignSystem.Spacing.l),
-            stack.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -DesignSystem.Spacing.m * 2),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
 
+        summaryColumn.axis = .vertical
+        summaryColumn.spacing = DesignSystem.Spacing.l
+        recentColumn.axis = .vertical
+        recentColumn.spacing = DesignSystem.Spacing.l
+
+        installColumns()
+
         setupBanner.isHidden = true
-        stack.addArrangedSubview(setupBanner)
-        stack.addArrangedSubview(makeOutstandingCard())
+        summaryColumn.addArrangedSubview(setupBanner)
+        summaryColumn.addArrangedSubview(makeOutstandingCard())
         statsRow.axis = .horizontal
         statsRow.distribution = .fillEqually
         statsRow.spacing = DesignSystem.Spacing.m
-        stack.addArrangedSubview(statsRow)
+        summaryColumn.addArrangedSubview(statsRow)
         mandateCard.isHidden = true
-        stack.addArrangedSubview(mandateCard)
+        summaryColumn.addArrangedSubview(mandateCard)
 
         let cta = DesignSystem.primaryButton(String(localized: "New Invoice"), symbol: "plus")
         cta.addAction(UIAction { [weak self] _ in self?.newInvoice() }, for: .touchUpInside)
-        stack.addArrangedSubview(cta)
+        summaryColumn.addArrangedSubview(cta)
 
         let recentTitle = DesignSystem.label(String(localized: "Recent"), font: DesignSystem.Typography.title())
-        stack.addArrangedSubview(recentTitle)
+        recentColumn.addArrangedSubview(recentTitle)
         recentStack.axis = .vertical
         recentStack.spacing = DesignSystem.Spacing.s
-        stack.addArrangedSubview(recentStack)
+        recentColumn.addArrangedSubview(recentStack)
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        arrangeColumns()
+    }
+
+    /// Hosts the summary and the recent documents in one column that the layout
+    /// below can switch between stacked and side by side.
+    private func installColumns() {
+        for column in [summaryColumn, recentColumn] {
+            column.translatesAutoresizingMaskIntoConstraints = false
+            columns.addSubview(column)
+        }
+        scrollView.embedColumn(columns, maxWidth: ColumnWidth.dashboard, insets: UIEdgeInsets(
+            top: DesignSystem.Spacing.m, left: DesignSystem.Spacing.m,
+            bottom: DesignSystem.Spacing.l, right: DesignSystem.Spacing.m))
+        summaryWidth = summaryColumn.widthAnchor.constraint(equalToConstant: 0)
+        columnGap = recentColumn.leadingAnchor.constraint(equalTo: summaryColumn.trailingAnchor, constant: DesignSystem.Spacing.l)
+        NSLayoutConstraint.activate([
+            summaryColumn.topAnchor.constraint(equalTo: columns.topAnchor),
+            summaryColumn.leadingAnchor.constraint(equalTo: columns.leadingAnchor),
+        ])
+        stackedConstraints = [
+            summaryColumn.trailingAnchor.constraint(equalTo: columns.trailingAnchor),
+            recentColumn.topAnchor.constraint(equalTo: summaryColumn.bottomAnchor, constant: DesignSystem.Spacing.l),
+            recentColumn.leadingAnchor.constraint(equalTo: columns.leadingAnchor),
+            recentColumn.trailingAnchor.constraint(equalTo: columns.trailingAnchor),
+            recentColumn.bottomAnchor.constraint(equalTo: columns.bottomAnchor),
+        ]
+        sideBySideConstraints = [
+            summaryWidth,
+            columnGap,
+            recentColumn.topAnchor.constraint(equalTo: columns.topAnchor),
+            recentColumn.trailingAnchor.constraint(equalTo: columns.trailingAnchor),
+            columns.bottomAnchor.constraint(greaterThanOrEqualTo: summaryColumn.bottomAnchor),
+            columns.bottomAnchor.constraint(greaterThanOrEqualTo: recentColumn.bottomAnchor),
+        ]
+        NSLayoutConstraint.activate(stackedConstraints)
+    }
+
+    /// Puts the summary and the recent documents side by side when the window is
+    /// wide, with the gap between them on the fold when there is one, so nothing
+    /// sits on the crease in book pose; stacks them in a narrow window.
+    private func arrangeColumns() {
+        let width = scrollView.bounds.width
+        let isWide = width >= Self.sideBySideWidth
+        if isWide != sideBySideConstraints.first?.isActive {
+            if isWide {
+                NSLayoutConstraint.deactivate(stackedConstraints)
+                NSLayoutConstraint.activate(sideBySideConstraints)
+            } else {
+                NSLayoutConstraint.deactivate(sideBySideConstraints)
+                NSLayoutConstraint.activate(stackedConstraints)
+            }
+        }
+        guard isWide else { return }
+        let inset = DesignSystem.Spacing.m
+        let columnsWidth = min(ColumnWidth.dashboard, width - inset * 2)
+        let columnsOrigin = (width - columnsWidth) / 2
+        let minimumColumn: CGFloat = 240
+        let gap = foldGap()
+        let gapWidth = gap.map { $0.width < columnsWidth - minimumColumn * 2 ? $0.width : nil } ?? nil
+        if let gap, let gapWidth {
+            let foldStart = scrollView.convert(CGPoint(x: gap.minX, y: 0), from: view).x
+            columnGap.constant = gapWidth
+            summaryWidth.constant = min(max(minimumColumn, foldStart - columnsOrigin), columnsWidth - gapWidth - minimumColumn)
+        } else {
+            columnGap.constant = DesignSystem.Spacing.l
+            summaryWidth.constant = (columnsWidth - DesignSystem.Spacing.l) / 2
+        }
+    }
+
+    /// The fold's frame in this view's coordinates when the device has a
+    /// vertical one that crosses this view, whether or not it is active.
+    private func foldGap() -> CGRect? {
+        guard #available(iOS 27.1, *) else { return nil }
+        return view.reservedRegions(kind: .division, options: .includeInactive)
+            .map(\.frame)
+            .first { $0.width > 0 && $0.height > $0.width }
+    }
+
+    private static let sideBySideWidth: CGFloat = 760
 
     private func makeOutstandingCard() -> UIView {
         let card = DesignSystem.card()

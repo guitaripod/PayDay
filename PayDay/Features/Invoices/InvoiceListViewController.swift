@@ -22,6 +22,12 @@ final class InvoiceCell: UITableViewCell {
 
     func configure(with invoice: Invoice) {
         row.update(with: invoice)
+        row.isChosen = isSelected
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        row.isChosen = selected
     }
 }
 
@@ -32,6 +38,7 @@ final class InvoiceListViewController: UIViewController {
     private var emptyView: UIView?
     private var documents: [Invoice] = []
     private var renderedKind: DocumentType
+    private var shownID: Invoice.ID?
 
     private lazy var dataSource = UITableViewDiffableDataSource<Int, Invoice.ID>(tableView: tableView) { [weak self] tableView, indexPath, id in
         let cell = tableView.dequeueReusableCell(withIdentifier: InvoiceCell.reuseID, for: indexPath)
@@ -73,6 +80,7 @@ final class InvoiceListViewController: UIViewController {
 
     private func switchKind() {
         viewModel.kind = kindControl.selectedSegmentIndex == 1 ? .estimate : .invoice
+        forgetShownDocument()
         title = viewModel.kind == .estimate ? String(localized: "Estimates") : String(localized: "Invoices")
         setupEmpty()
         viewModel.load()
@@ -80,7 +88,18 @@ final class InvoiceListViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if listDetailSplit?.isCollapsed ?? true { deselectAll() }
         viewModel.load()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        syncSelectionWithDetail()
+    }
+
+    private func deselectAll() {
+        guard let selected = tableView.indexPathForSelectedRow else { return }
+        tableView.deselectRow(at: selected, animated: false)
     }
 
     private func setupTable() {
@@ -131,6 +150,10 @@ final class InvoiceListViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in self?.presentError(message) }
             .store(in: &cancellables)
+        NotificationCenter.default.publisher(for: .documentsDidChange)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.viewModel.load() }
+            .store(in: &cancellables)
     }
 
     /// Diffs the new documents into the table: inserts/deletes/moves animate,
@@ -139,6 +162,9 @@ final class InvoiceListViewController: UIViewController {
     /// swap never plays as a misleading row-by-row diff.
     private func apply(_ newDocuments: [Invoice]) {
         let previousByID = Dictionary(documents.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        let removedShownDocument = shownID.map { shown in
+            previousByID[shown] != nil && !newDocuments.contains { $0.id == shown }
+        } ?? false
         let kindChanged = renderedKind != viewModel.kind
         renderedKind = viewModel.kind
         documents = newDocuments
@@ -155,6 +181,33 @@ final class InvoiceListViewController: UIViewController {
         snapshot.reconfigureItems(changed)
         let animated = !kindChanged && tableView.window != nil
         dataSource.apply(snapshot, animatingDifferences: animated)
+        if removedShownDocument { forgetShownDocument() }
+        syncSelectionWithDetail()
+    }
+
+    /// Keeps the highlighted row on the document the detail column shows, and
+    /// opens the first document when a wide window would otherwise start with
+    /// an empty detail column.
+    private func syncSelectionWithDetail() {
+        guard let split = listDetailSplit, !split.isCollapsed else { return }
+        if split.showsPlaceholder, shownID == nil, let first = documents.first {
+            open(first, isAutomatic: true)
+        }
+        selectShownRow()
+    }
+
+    private func selectShownRow() {
+        guard let shownID, let row = documents.firstIndex(where: { $0.id == shownID }) else { return }
+        let path = IndexPath(row: row, section: 0)
+        if tableView.indexPathForSelectedRow != path {
+            tableView.selectRow(at: path, animated: false, scrollPosition: .none)
+        }
+    }
+
+    private func forgetShownDocument() {
+        shownID = nil
+        deselectAll()
+        listDetailSplit?.clearDetail()
     }
 
     private func presentError(_ message: String) {
@@ -171,14 +224,25 @@ final class InvoiceListViewController: UIViewController {
             title = kind == .estimate ? String(localized: "Estimates") : String(localized: "Invoices")
         }
         BusinessSetupGate.beforeNewDocument(from: self) { [weak self] in
+            guard let self else { return }
             let editor = InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(kind: kind))
-            self?.navigationController?.pushViewController(editor, animated: true)
+            self.deselectAll()
+            self.shownID = editor.documentID
+            self.showDetailScreen(editor)
         }
     }
 
-    private func open(_ invoice: Invoice) {
+    /// Records `id` as the document the detail column shows, so its row is the
+    /// highlighted one.
+    func markShown(id: Invoice.ID) {
+        shownID = id
+        selectShownRow()
+    }
+
+    private func open(_ invoice: Invoice, isAutomatic: Bool = false) {
         let editor = InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(existing: invoice))
-        navigationController?.pushViewController(editor, animated: true)
+        shownID = invoice.id
+        showDetailScreen(editor, isAutomatic: isAutomatic)
     }
 
     private func invoice(at indexPath: IndexPath) -> Invoice? {

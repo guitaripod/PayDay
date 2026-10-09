@@ -42,8 +42,8 @@ final class DatePickerSheetViewController: UIViewController {
         view.addSubview(picker)
         NSLayoutConstraint.activate([
             picker.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            picker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            picker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            picker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            picker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
         ])
         if let sheet = sheetPresentationController { sheet.detents = [.medium()] }
     }

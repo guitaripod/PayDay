@@ -48,7 +48,7 @@ final class InvoicePreviewViewController: UIViewController {
         statusLabel.numberOfLines = 0
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         statusBar.addSubview(statusLabel)
-        statusLabel.pinEdges(to: statusBar, insets: UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16))
+        statusLabel.pinEdges(toSafeAreaOf: statusBar, insets: UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16))
 
         pdfView.autoScales = true
         pdfView.backgroundColor = DesignSystem.Color.background
@@ -70,9 +70,14 @@ final class InvoicePreviewViewController: UIViewController {
             statusBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             statusBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             pdfView.topAnchor.constraint(equalTo: statusBar.bottomAnchor),
-            pdfView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            pdfView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            pdfView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            pdfView.widthAnchor.constraint(lessThanOrEqualToConstant: ColumnWidth.document),
+            pdfView.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor),
+            pdfView.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
+        let fillWidth = pdfView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor)
+        fillWidth.priority = UILayoutPriority(850)
+        fillWidth.isActive = true
 
         if invoice.type.isEInvoiceable {
             let sendButton = DesignSystem.primaryButton(String(localized: "Send via Peppol"), symbol: "paperplane.fill")
@@ -81,8 +86,10 @@ final class InvoicePreviewViewController: UIViewController {
             view.addSubview(sendButton)
             NSLayoutConstraint.activate([
                 pdfView.bottomAnchor.constraint(equalTo: sendButton.topAnchor, constant: -12),
-                sendButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-                sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                sendButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+                sendButton.widthAnchor.constraint(lessThanOrEqualToConstant: ColumnWidth.form),
+                sendButton.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+                sendButton.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
                 sendButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
             ])
         } else {

@@ -87,7 +87,6 @@ final class AIConsentViewController: UIViewController {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.alwaysBounceVertical = true
-        scroll.addSubview(content)
         view.addSubview(scroll)
 
         let agree = DesignSystem.primaryButton(String(localized: "Agree & Continue"), symbol: "checkmark")
@@ -105,19 +104,18 @@ final class AIConsentViewController: UIViewController {
         let m = DesignSystem.Spacing.m
         NSLayoutConstraint.activate([
             scroll.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scroll.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scroll.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scroll.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             scroll.bottomAnchor.constraint(equalTo: buttons.topAnchor, constant: -m),
 
-            content.topAnchor.constraint(equalTo: scroll.contentLayoutGuide.topAnchor, constant: DesignSystem.Spacing.l),
-            content.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor, constant: -DesignSystem.Spacing.l),
-            content.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: m),
-            content.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -m),
-
-            buttons.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: m),
-            buttons.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -m),
+            buttons.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            buttons.widthAnchor.constraint(lessThanOrEqualToConstant: ColumnWidth.form),
+            buttons.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor, constant: m),
+            buttons.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -m),
             buttons.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -m),
         ])
+        scroll.embedColumn(content, maxWidth: ColumnWidth.form, insets: UIEdgeInsets(
+            top: DesignSystem.Spacing.l, left: m, bottom: DesignSystem.Spacing.l, right: m))
     }
 
     private func bullet(_ heading: String, _ body: String) -> UIView {

@@ -20,6 +20,8 @@ final class InvoiceEditorViewController: UIViewController {
     /// must stay on the pushed preview screen.
     private var popAfterSave = false
 
+    var documentID: Invoice.ID { viewModel.invoice.id }
+
     init(viewModel: InvoiceEditorViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)

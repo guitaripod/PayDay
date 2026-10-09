@@ -2,6 +2,10 @@ import Foundation
 import GRDB
 import PayDayKit
 
+extension Notification.Name {
+    static let documentsDidChange = Notification.Name("payday.documentsDidChange")
+}
+
 /// Async access to stored documents. An actor so concurrent screens (dashboard,
 /// list, editor) never race on the database queue.
 actor InvoiceRepository {
@@ -43,6 +47,7 @@ actor InvoiceRepository {
         try dbQueue.write { db in
             try DocumentRecord(invoice).save(db)
         }
+        announceChange()
         return invoice
     }
 
@@ -50,6 +55,11 @@ actor InvoiceRepository {
         _ = try dbQueue.write { db in
             try DocumentRecord.deleteOne(db, key: id)
         }
+        announceChange()
+    }
+
+    private nonisolated func announceChange() {
+        NotificationCenter.default.post(name: .documentsDidChange, object: nil)
     }
 
     /// Outstanding receivables: sum of payable amounts on issued, unpaid invoices
@@ -77,13 +87,15 @@ actor InvoiceRepository {
     /// transmission can never regress a paid/overdue invoice back to `sent`.
     @discardableResult
     func markSent(id: String) throws -> Invoice? {
-        try dbQueue.write { db in
+        let sent = try dbQueue.write { db -> Invoice? in
             guard var invoice = try DocumentRecord.fetchOne(db, key: id)?.invoice,
                   invoice.status == .draft else { return nil }
             invoice.status = .sent
             try DocumentRecord(invoice).update(db)
             return invoice
         }
+        if sent != nil { announceChange() }
+        return sent
     }
 
     /// Flip issued-but-unpaid invoices whose due date has passed to `overdue`.

@@ -24,6 +24,33 @@ extension UIView {
     }
 }
 
+enum ColumnWidth {
+    static let form: CGFloat = 560
+    static let document: CGFloat = 720
+    static let dashboard: CGFloat = 1100
+}
+
+extension UIScrollView {
+    /// Hosts `column` as a vertically scrolling, horizontally centred column no
+    /// wider than `maxWidth`, so a form or stack reads as a column on the inner
+    /// display instead of stretching across it. Narrow windows keep `insets`.
+    func embedColumn(_ column: UIView, maxWidth: CGFloat, insets: UIEdgeInsets) {
+        column.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(column)
+        let fill = column.widthAnchor.constraint(
+            equalTo: frameLayoutGuide.widthAnchor, constant: -(insets.left + insets.right))
+        fill.priority = UILayoutPriority(850)
+        NSLayoutConstraint.activate([
+            contentLayoutGuide.widthAnchor.constraint(equalTo: frameLayoutGuide.widthAnchor),
+            column.topAnchor.constraint(equalTo: contentLayoutGuide.topAnchor, constant: insets.top),
+            column.bottomAnchor.constraint(equalTo: contentLayoutGuide.bottomAnchor, constant: -insets.bottom),
+            column.centerXAnchor.constraint(equalTo: contentLayoutGuide.centerXAnchor),
+            column.widthAnchor.constraint(lessThanOrEqualToConstant: maxWidth),
+            fill,
+        ])
+    }
+}
+
 /// Locale-aware money + date formatting for the UI. Machine-facing strings come
 /// from `Money.canonicalString` / `CalendarDate`; these are for humans only.
 enum Format {

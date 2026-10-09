@@ -129,15 +129,10 @@ final class PaywallViewController: UIViewController {
         stack.addArrangedSubview(legalFooter())
 
         view.addSubview(scroll)
-        scroll.addSubview(stack)
         scroll.pinEdges(toSafeAreaOf: view)
-        NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: scroll.topAnchor, constant: DesignSystem.Spacing.l),
-            stack.leadingAnchor.constraint(equalTo: scroll.leadingAnchor, constant: DesignSystem.Spacing.m),
-            stack.trailingAnchor.constraint(equalTo: scroll.trailingAnchor, constant: -DesignSystem.Spacing.m),
-            stack.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: -DesignSystem.Spacing.l),
-            stack.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -DesignSystem.Spacing.m * 2),
-        ])
+        scroll.embedColumn(stack, maxWidth: ColumnWidth.form, insets: UIEdgeInsets(
+            top: DesignSystem.Spacing.l, left: DesignSystem.Spacing.m,
+            bottom: DesignSystem.Spacing.l, right: DesignSystem.Spacing.m))
     }
 
     private func bindStore() {

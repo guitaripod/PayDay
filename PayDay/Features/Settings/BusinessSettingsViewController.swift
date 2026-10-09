@@ -126,15 +126,10 @@ final class BusinessSettingsViewController: UIViewController {
         stack.spacing = DesignSystem.Spacing.s
         stack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scroll)
-        scroll.addSubview(stack)
         scroll.pinEdges(toSafeAreaOf: view)
-        NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: scroll.topAnchor, constant: DesignSystem.Spacing.m),
-            stack.leadingAnchor.constraint(equalTo: scroll.leadingAnchor, constant: DesignSystem.Spacing.m),
-            stack.trailingAnchor.constraint(equalTo: scroll.trailingAnchor, constant: -DesignSystem.Spacing.m),
-            stack.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: -DesignSystem.Spacing.l),
-            stack.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -DesignSystem.Spacing.m * 2),
-        ])
+        scroll.embedColumn(stack, maxWidth: ColumnWidth.form, insets: UIEdgeInsets(
+            top: DesignSystem.Spacing.m, left: DesignSystem.Spacing.m,
+            bottom: DesignSystem.Spacing.l, right: DesignSystem.Spacing.m))
     }
 
     private func commit() {
@@ -314,15 +309,10 @@ final class BusinessSettingsViewController: UIViewController {
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.keyboardDismissMode = .interactive
         view.addSubview(scroll)
-        scroll.addSubview(stack)
         scroll.pinEdges(toSafeAreaOf: view)
-        NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: scroll.topAnchor, constant: DesignSystem.Spacing.m),
-            stack.leadingAnchor.constraint(equalTo: scroll.leadingAnchor, constant: DesignSystem.Spacing.l),
-            stack.trailingAnchor.constraint(equalTo: scroll.trailingAnchor, constant: -DesignSystem.Spacing.l),
-            stack.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: -DesignSystem.Spacing.l),
-            stack.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -DesignSystem.Spacing.l * 2),
-        ])
+        scroll.embedColumn(stack, maxWidth: ColumnWidth.form, insets: UIEdgeInsets(
+            top: DesignSystem.Spacing.m, left: DesignSystem.Spacing.l,
+            bottom: DesignSystem.Spacing.l, right: DesignSystem.Spacing.l))
         refreshContinue()
     }
 

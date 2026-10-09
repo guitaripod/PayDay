@@ -88,14 +88,17 @@ final class OnboardingViewController: UIViewController {
         let frame = scrollView.frameLayoutGuide
         let fillHeight = content.heightAnchor.constraint(equalTo: frame.heightAnchor)
         fillHeight.priority = .defaultLow
+        let fillWidth = stack.widthAnchor.constraint(equalTo: frame.widthAnchor, constant: -DesignSystem.Spacing.l * 2)
+        fillWidth.priority = UILayoutPriority(850)
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            stack.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: DesignSystem.Spacing.l),
-            stack.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -DesignSystem.Spacing.l),
-            stack.widthAnchor.constraint(equalTo: frame.widthAnchor, constant: -DesignSystem.Spacing.l * 2),
+            content.widthAnchor.constraint(equalTo: frame.widthAnchor),
+            stack.centerXAnchor.constraint(equalTo: content.centerXAnchor),
+            stack.widthAnchor.constraint(lessThanOrEqualToConstant: ColumnWidth.form),
+            fillWidth,
             stack.topAnchor.constraint(greaterThanOrEqualTo: content.topAnchor, constant: DesignSystem.Spacing.l),
             stack.bottomAnchor.constraint(lessThanOrEqualTo: content.bottomAnchor, constant: -DesignSystem.Spacing.l),
             stack.centerYAnchor.constraint(equalTo: content.centerYAnchor),

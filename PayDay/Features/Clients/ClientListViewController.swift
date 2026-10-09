@@ -8,6 +8,11 @@ final class ClientListViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private var clients: [Party] = []
     private var emptyView: UIView?
+    private var shownID: Party.ID?
+
+    private var split: ListDetailSplitViewController? {
+        selection == nil ? listDetailSplit : nil
+    }
 
     init(selection: ((Party) -> Void)? = nil) {
         self.selection = selection
@@ -48,7 +53,15 @@ final class ClientListViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if split?.isCollapsed ?? true, let selected = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selected, animated: false)
+        }
         reload()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        syncSelectionWithDetail()
     }
 
     private func reload() {
@@ -58,13 +71,41 @@ final class ClientListViewController: UIViewController {
                 self.clients = loaded
                 self.emptyView?.isHidden = !loaded.isEmpty
                 self.tableView.reloadData()
+                self.syncSelectionWithDetail()
             }
         }
     }
 
-    private func edit(_ party: Party?) {
+    func edit(_ party: Party?, isAutomatic: Bool = false) {
         let editor = ClientEditorViewController(party: party) { [weak self] _ in self?.reload() }
-        navigationController?.pushViewController(editor, animated: true)
+        guard let split else {
+            navigationController?.pushViewController(editor, animated: true)
+            return
+        }
+        shownID = party?.id
+        if party == nil, let selected = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selected, animated: false)
+        }
+        split.showDetail([editor], isAutomatic: isAutomatic)
+    }
+
+    /// Keeps the highlighted row on the client the detail column shows, and
+    /// opens the first client when a wide window would otherwise start with an
+    /// empty detail column.
+    private func syncSelectionWithDetail() {
+        guard let split, !split.isCollapsed else { return }
+        if let shownID, !clients.contains(where: { $0.id == shownID }) {
+            self.shownID = nil
+            split.clearDetail()
+        }
+        if split.showsPlaceholder, shownID == nil, let first = clients.first {
+            edit(first, isAutomatic: true)
+        }
+        guard let shownID, let row = clients.firstIndex(where: { $0.id == shownID }) else { return }
+        let path = IndexPath(row: row, section: 0)
+        if tableView.indexPathForSelectedRow != path {
+            tableView.selectRow(at: path, animated: false, scrollPosition: .none)
+        }
     }
 
     private func remove(_ party: Party, done: ((Bool) -> Void)? = nil) {
@@ -76,6 +117,10 @@ final class ClientListViewController: UIViewController {
                 if let index = self.clients.firstIndex(where: { $0.id == party.id }) {
                     self.clients.remove(at: index)
                     self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                }
+                if self.shownID == party.id {
+                    self.shownID = nil
+                    self.split?.clearDetail()
                 }
                 self.emptyView?.isHidden = !self.clients.isEmpty
                 done?(true)
@@ -111,7 +156,7 @@ extension ClientListViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        if split?.isCollapsed ?? true { tableView.deselectRow(at: indexPath, animated: true) }
         guard indexPath.row < clients.count else { return }
         let party = clients[indexPath.row]
         if let selection { selection(party) } else { edit(party) }
