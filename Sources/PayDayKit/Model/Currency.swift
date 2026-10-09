@@ -36,6 +36,7 @@ public struct Currency: Sendable, Equatable, Hashable, Codable {
         "CAD": Currency(code: "CAD", minorUnitDigits: 2),
         "AUD": Currency(code: "AUD", minorUnitDigits: 2),
         "JPY": Currency(code: "JPY", minorUnitDigits: 0),
+        "KRW": Currency(code: "KRW", minorUnitDigits: 0),
         "ISK": Currency(code: "ISK", minorUnitDigits: 0),
         "HUF": Currency(code: "HUF", minorUnitDigits: 2),
         "BHD": Currency(code: "BHD", minorUnitDigits: 3),

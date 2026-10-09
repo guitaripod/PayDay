@@ -19,6 +19,10 @@ struct MoneyTests {
         #expect(jpy.minorUnitDigits == 0)
         #expect(Money(minorUnits: 1235, currency: jpy).canonicalString == "1235")
 
+        let krw = Currency("KRW")
+        #expect(krw.minorUnitDigits == 0)
+        #expect(Money(minorUnits: 1_450_000, currency: krw).canonicalString == "1450000")
+
         let bhd = Currency("BHD")
         #expect(bhd.minorUnitDigits == 3)
         #expect(Money(minorUnits: 1235, currency: bhd).canonicalString == "1.235")
