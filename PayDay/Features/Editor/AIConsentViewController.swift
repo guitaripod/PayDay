@@ -58,7 +58,7 @@ final class AIConsentViewController: UIViewController {
             bullet(String(localized: "Who it is sent to"),
                    String(localized: """
                        The request goes over an encrypted connection to Pay Day's backend \
-                       (operated by Midgar Oy), which forwards it to OpenAI for processing.
+                       (operated by Midgar Oy), which forwards it to Anthropic for processing.
                        """)),
             bullet(String(localized: "How it is used"),
                    String(localized: """

@@ -20789,78 +20789,78 @@
         }
       }
     },
-    "The request goes over an encrypted connection to Pay Day's backend (operated by Midgar Oy), which forwards it to OpenAI for processing." : {
+    "The request goes over an encrypted connection to Pay Day's backend (operated by Midgar Oy), which forwards it to Anthropic for processing." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Anfrage geht über eine verschlüsselte Verbindung an das Backend von Pay Day (betrieben von Midgar Oy), das sie zur Verarbeitung an OpenAI weiterleitet."
+            "value" : "Die Anfrage geht über eine verschlüsselte Verbindung an das Backend von Pay Day (betrieben von Midgar Oy), das sie zur Verarbeitung an Anthropic weiterleitet."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La solicitud se envía por una conexión cifrada al backend de Pay Day (operado por Midgar Oy), que la reenvía a OpenAI para su procesamiento."
+            "value" : "La solicitud se envía por una conexión cifrada al backend de Pay Day (operado por Midgar Oy), que la reenvía a Anthropic para su procesamiento."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pyyntö kulkee salattua yhteyttä pitkin Pay Dayn taustapalveluun (ylläpitäjä Midgar Oy), joka välittää sen OpenAI:lle käsiteltäväksi."
+            "value" : "Pyyntö kulkee salattua yhteyttä pitkin Pay Dayn taustapalveluun (ylläpitäjä Midgar Oy), joka välittää sen Anthropic:lle käsiteltäväksi."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La requête est transmise via une connexion chiffrée au backend de Pay Day (exploité par Midgar Oy), qui la transfère à OpenAI pour traitement."
+            "value" : "La requête est transmise via une connexion chiffrée au backend de Pay Day (exploité par Midgar Oy), qui la transfère à Anthropic pour traitement."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La richiesta viaggia su una connessione cifrata verso il backend di Pay Day (gestito da Midgar Oy), che la inoltra a OpenAI per l'elaborazione."
+            "value" : "La richiesta viaggia su una connessione cifrata verso il backend di Pay Day (gestito da Midgar Oy), che la inoltra a Anthropic per l'elaborazione."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "リクエストは暗号化された通信で Pay Day のバックエンド（運営: Midgar Oy）に送られ、そこから処理のために OpenAI へ転送されます。"
+            "value" : "リクエストは暗号化された通信で Pay Day のバックエンド（運営: Midgar Oy）に送られ、そこから処理のために Anthropic へ転送されます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "요청은 암호화된 연결을 통해 Pay Day 백엔드(운영: Midgar Oy)로 전송되며, 처리를 위해 OpenAI로 전달됩니다."
+            "value" : "요청은 암호화된 연결을 통해 Pay Day 백엔드(운영: Midgar Oy)로 전송되며, 처리를 위해 Anthropic으로 전달됩니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Het verzoek gaat via een versleutelde verbinding naar de backend van Pay Day (beheerd door Midgar Oy), die het ter verwerking doorstuurt naar OpenAI."
+            "value" : "Het verzoek gaat via een versleutelde verbinding naar de backend van Pay Day (beheerd door Midgar Oy), die het ter verwerking doorstuurt naar Anthropic."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Żądanie trafia szyfrowanym połączeniem do zaplecza Pay Day (prowadzonego przez Midgar Oy), które przekazuje je do OpenAI w celu przetworzenia."
+            "value" : "Żądanie trafia szyfrowanym połączeniem do zaplecza Pay Day (prowadzonego przez Midgar Oy), które przekazuje je do Anthropic w celu przetworzenia."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A solicitação vai por uma conexão criptografada até o backend do Pay Day (operado pela Midgar Oy), que a encaminha para a OpenAI processar."
+            "value" : "A solicitação vai por uma conexão criptografada até o backend do Pay Day (operado pela Midgar Oy), que a encaminha para a Anthropic processar."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请求通过加密连接发送到 Pay Day 的后端（由 Midgar Oy 运营），再转发给 OpenAI 处理。"
+            "value" : "请求通过加密连接发送到 Pay Day 的后端（由 Midgar Oy 运营），再转发给 Anthropic 处理。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "請求會透過加密連線傳送至 Pay Day 的後端（由 Midgar Oy 營運），再轉交 OpenAI 處理。"
+            "value" : "請求會透過加密連線傳送至 Pay Day 的後端（由 Midgar Oy 營運），再轉交 Anthropic 處理。"
           }
         }
       }

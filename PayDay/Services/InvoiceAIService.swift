@@ -7,6 +7,7 @@ import AICreditsCore
 /// becomes line items; an overdue invoice becomes a tactful reminder email.
 final class InvoiceAIService: Sendable {
     private let client: AICreditsClient
+    private static let draftingModel = "claude-haiku-5-5"
 
     init(client: AICreditsClient = AICreditsManager.shared.client) {
         self.client = client
@@ -29,7 +30,8 @@ final class InvoiceAIService: Sendable {
         let request = CapabilityRequest.chat(
             messages: [ChatTurn(role: "user", content: prompt)],
             images: [image],
-            responseJSON: true)
+            responseJSON: true,
+            model: Self.draftingModel)
         let result = try await client.run(request)
         return Self.parseLines(result.raw)
     }
@@ -45,7 +47,8 @@ final class InvoiceAIService: Sendable {
         """
         let request = CapabilityRequest.chat(
             messages: [ChatTurn(role: "user", content: prompt)],
-            responseJSON: true)
+            responseJSON: true,
+            model: Self.draftingModel)
         let result = try await client.run(request)
         return Self.parseLines(result.raw)
     }
@@ -58,7 +61,7 @@ final class InvoiceAIService: Sendable {
         \(invoice.number), amount \(total), due \(invoice.dueDate.iso8601). \
         Keep it under 120 words, professional, no placeholders. Plain text only.
         """
-        let request = CapabilityRequest.chat(messages: [ChatTurn(role: "user", content: prompt)])
+        let request = CapabilityRequest.chat(messages: [ChatTurn(role: "user", content: prompt)], model: Self.draftingModel)
         let result = try await client.run(request)
         guard let content = Self.parseMessageContent(result.raw) else {
             AppLogger.shared.error("AI reminder parse failed; raw content: \(String(decoding: result.raw, as: UTF8.self))", category: .credits)
