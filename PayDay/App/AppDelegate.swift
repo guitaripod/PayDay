@@ -8,9 +8,19 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         warmUpLaunchServicesReceiptPath()
         _ = DatabaseManager.shared
-        DemoSeeder.seedIfNeeded()
+        seedLocalData()
         AppLogger.shared.info("app launched", category: .app)
         return true
+    }
+
+    private func seedLocalData() {
+        #if DEBUG
+        if DemoWorld.isActive {
+            DemoWorld.reseed()
+            return
+        }
+        #endif
+        DemoSeeder.seedIfNeeded()
     }
 
     /// Pre-warms the LaunchServices XPC connection behind

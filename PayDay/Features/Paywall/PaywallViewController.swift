@@ -61,6 +61,14 @@ final class PaywallViewController: UIViewController {
             .store(in: &cancellables)
     }
 
+    private static var isOfflineDemo: Bool {
+        #if DEBUG
+        return DemoWorld.isActive
+        #else
+        return false
+        #endif
+    }
+
     private func loadPlans() async {
         if plans.isEmpty { renderCards() }
         await store.loadPlans()
@@ -157,7 +165,7 @@ final class PaywallViewController: UIViewController {
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
-                guard let self, self.presentedViewController == nil else { return }
+                guard let self, self.presentedViewController == nil, !Self.isOfflineDemo else { return }
                 self.presentAlert(String(localized: "Purchase Failed"), message: error.localizedDescription)
                 self.store.error = nil
             }

@@ -22,6 +22,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = Self.makeRoot()
         self.window = window
         window.makeKeyAndVisible()
+        #if DEBUG
+        if let demo = ProcessInfo.processInfo.environment["PAYDAY_DEMO"] {
+            DemoRouting.settle(window.rootViewController, screen: demo)
+        }
+        #endif
 
         Task { await AICreditsManager.store.bootstrap() }
         reportAdAttributionOnce()
@@ -53,7 +58,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private static func makeRoot() -> UIViewController {
         #if DEBUG
-        if let demo = ProcessInfo.processInfo.environment["PAYDAY_DEMO"], let root = demoRoot(demo) {
+        if let demo = ProcessInfo.processInfo.environment["PAYDAY_DEMO"], let root = DemoRouting.root(for: demo) {
             return root
         }
         #endif
@@ -66,37 +71,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    #if DEBUG
-    /// Deterministic screen routing for App Store screenshot capture.
-    /// `xcrun simctl launch <dev> com.guitaripod.payday` after
-    /// `... --console` with `PAYDAY_DEMO=<screen>` in the environment.
-    private static func demoRoot(_ screen: String) -> UIViewController? {
-        AppSettings.hasOnboarded = true
-        func nav(_ vc: UIViewController) -> UINavigationController {
-            let n = UINavigationController(rootViewController: vc)
-            n.navigationBar.prefersLargeTitles = true
-            return n
-        }
-        switch screen {
-        case "dashboard", "list", "clients", "settings":
-            let tabs = RootViewController()
-            tabs.selectedIndex = ["dashboard": 0, "list": 1, "clients": 2, "settings": 3][screen] ?? 0
-            return tabs
-        case "editor":
-            return nav(InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(existing: DemoData.sampleInvoice())))
-        case "preview":
-            return nav(InvoicePreviewViewController(invoice: DemoData.sampleInvoice(), demoForceCompliant: true))
-        case "preview-ic":
-            return nav(InvoicePreviewViewController(invoice: DemoData.sampleIntraCommunityInvoice(), demoForceCompliant: true))
-        case "paywall":
-            return nav(PaywallViewController())
-        case "setup":
-            return nav(BusinessSettingsViewController(mode: .essentials))
-        default:
-            return nil
-        }
-    }
-    #endif
 
     /// The AICredits package emits no logging of its own, so the store's
     /// published identity/error/balance transitions are the app's only trace of
