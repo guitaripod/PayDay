@@ -7,17 +7,19 @@ import PayDayKit
 /// and the legal/support links App Review expects.
 final class SettingsViewController: UIViewController {
     private enum Row {
-        case business, payment, defaults, appearance, aiDrafting, pro, credits, rate, share, privacy, terms, support, moreApps, deleteAccount
+        case business, payment, defaults, appearance, aiDrafting, pro, credits, rate, share, privacy, terms, support, midgarEntry, deleteAccount
 
         var isBusinessForm: Bool { self == .business || self == .payment || self == .defaults }
     }
+    private static let businessSection = 1
     private static let appStoreURL = URL(string: "https://apps.apple.com/app/id6779927672")!
     private static let writeReviewURL = URL(string: "https://apps.apple.com/app/id6779927672?action=write-review")!
     private let sections: [(String, [Row])] = [
+        ("", [.midgarEntry]),
         (String(localized: "Your business"), [.business, .payment, .defaults]),
         (String(localized: "Pay Day Pro"), [.pro, .credits]),
         (String(localized: "App"), [.appearance, .aiDrafting]),
-        (String(localized: "About"), [.rate, .share, .privacy, .terms, .support, .moreApps]),
+        (String(localized: "About"), [.rate, .share, .privacy, .terms, .support]),
         (String(localized: "Account"), [.deleteAccount]),
     ]
 
@@ -34,6 +36,7 @@ final class SettingsViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(MidgarEntryCell.self, forCellReuseIdentifier: MidgarEntryCell.reuseIdentifier)
         view.addSubview(tableView)
         tableView.pinEdges(to: view)
         bind()
@@ -67,7 +70,7 @@ final class SettingsViewController: UIViewController {
     private func showBusinessDetailIfRoomForIt() {
         guard let split = listDetailSplit, !split.isCollapsed, split.showsPlaceholder else { return }
         split.showDetail([BusinessSettingsViewController()], isAutomatic: true)
-        tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
+        tableView.selectRow(at: IndexPath(row: 0, section: Self.businessSection), animated: false, scrollPosition: .none)
     }
 
     private func bind() {
@@ -84,10 +87,26 @@ final class SettingsViewController: UIViewController {
 
 extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int { sections.count }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { sections[section].0 }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let title = sections[section].0
+        return title.isEmpty ? nil : title
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { sections[section].1.count }
 
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        sections[indexPath.section].1[indexPath.row] == .midgarEntry
+            ? MidgarEntryView.preferredHeight + 16
+            : UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        sections[indexPath.section].1[indexPath.row] != .midgarEntry
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if sections[indexPath.section].1[indexPath.row] == .midgarEntry {
+            return tableView.dequeueReusableCell(withIdentifier: MidgarEntryCell.reuseIdentifier, for: indexPath)
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         var config = cell.defaultContentConfiguration()
         cell.accessoryType = .disclosureIndicator
@@ -113,7 +132,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case .privacy: config.text = String(localized: "Privacy Policy"); config.image = UIImage(systemName: "hand.raised")
         case .terms: config.text = String(localized: "Terms of Use"); config.image = UIImage(systemName: "doc.text")
         case .support: config.text = String(localized: "Support"); config.image = UIImage(systemName: "envelope")
-        case .moreApps: config.text = String(localized: "More Apps"); config.image = UIImage(systemName: "square.stack.3d.up")
+        case .midgarEntry: break
         case .deleteAccount:
             config.text = String(localized: "Delete account")
             config.textProperties.color = DesignSystem.Color.overdue
@@ -143,7 +162,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case .privacy: open("https://mako.midgarcorp.cc/privacy/payday")
         case .terms: open("https://mako.midgarcorp.cc/terms/payday")
         case .support: open("mailto:support@midgarcorp.cc")
-        case .moreApps: Midgar.present(from: self)
+        case .midgarEntry: break
         case .deleteAccount: confirmDeleteAccount()
         }
     }
@@ -268,4 +287,19 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         }
         present(alert, animated: true)
     }
+}
+
+/// A settings row that hosts the Midgar portal entry card edge to edge, with no
+/// selection or separator of its own.
+private final class MidgarEntryCell: UITableViewCell {
+    static let reuseIdentifier = "midgarEntry"
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
+        backgroundConfiguration = .clear()
+        MidgarEntryView().embed(in: contentView, verticalInset: 8)
+    }
+
+    @available(*, unavailable) required init?(coder: NSCoder) { fatalError() }
 }
