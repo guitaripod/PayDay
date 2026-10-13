@@ -96,6 +96,7 @@ targets:
           - CFBundleURLName: com.guitaripod.payday
             CFBundleURLSchemes:
               - com.guitaripod.payday
+        CADisableMinimumFrameDurationOnPhone: true
         LSApplicationQueriesSchemes:
           - com.guitaripod.embr
           - com.guitaripod.helia
