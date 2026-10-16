@@ -18,7 +18,8 @@ final class AICreditsManager: Sendable {
     private let revenueCatPublicKey = Secrets.revenueCatPublicKey
 
     private init() {
-        let config = AICreditsConfig(baseURL: baseURL, appID: appID, lowBalanceThreshold: 10)
+        let config = AICreditsConfig(
+            baseURL: baseURL, appID: appID, lowBalanceThreshold: 10, premiumEntitlement: "pro")
         client = AICreditsClient(
             config: config,
             purchaseProvider: RevenueCatPurchaseProvider(apiKey: revenueCatPublicKey))

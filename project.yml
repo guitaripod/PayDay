@@ -40,7 +40,7 @@ packages:
     from: "7.0.0"
   AICredits:
     url: git@github.com:guitaripod/AICredits.git
-    from: "1.5.4"
+    from: "1.6.0"
   MidgarKit:
     url: https://github.com/guitaripod/MidgarKit
     from: "3.0.0"
