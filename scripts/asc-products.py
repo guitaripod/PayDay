@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Idempotent creation of Pay Day's IAP/subscription products in ASC.
+"""Superseded by `midgar products` (Midgar decision D13); kept until this app's store flow moves to it. See ops/runbooks/store-commands.md in guitaripod/midgar-platform.
+
+Idempotent creation of Pay Day's IAP/subscription products in ASC.
 
 Creates: subscription group "Pay Day Pro", the annual (7-day free trial) and
 monthly subscriptions, the lifetime non-consumable, and four consumable credit

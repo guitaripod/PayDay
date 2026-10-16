@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Idempotent RevenueCat (v2) setup for Pay Day.
+"""Superseded by `midgar products` (Midgar decision D13); kept until this app's store flow moves to it. See ops/runbooks/store-commands.md in guitaripod/midgar-platform.
+
+Idempotent RevenueCat (v2) setup for Pay Day.
 
 Creates the `pro` entitlement, imports the seven App Store products into the RC
 project's app, attaches the access products (annual/monthly/lifetime) to `pro`,
