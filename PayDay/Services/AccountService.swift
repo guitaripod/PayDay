@@ -16,26 +16,43 @@ enum AccountService {
         }
     }
 
+    typealias Send = @Sendable (URLRequest) async throws -> (Data, URLResponse)
+
+    /// Statuses that mean the identity no longer exists server-side. mako answers 401 for a key it does
+    /// not know, and deleting the account removes the user's keys with it, so after a deletion that
+    /// finished server-side the retry arrives as 401; a 404 is the same verdict from the route layer.
+    private static let alreadyGoneStatuses: Set<Int> = [401, 404]
+
     static func deleteAccount() async throws {
         if let apiKey = await AICreditsManager.shared.client.identity?.apiKey {
-            var request = URLRequest(url: Secrets.makoBaseURL.appendingPathComponent("v1/identity"))
-            request.httpMethod = "DELETE"
-            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-            request.setValue("payday", forHTTPHeaderField: "X-App-ID")
-            let response: URLResponse
-            do {
-                (_, response) = try await URLSession.shared.data(for: request)
-            } catch is URLError {
-                throw AccountError.offline
-            }
-            if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
-                throw AccountError.serverError(http.statusCode)
-            }
+            try await deleteRemoteIdentity(apiKey: apiKey)
         }
         await AICreditsManager.shared.client.signOut()
         try DatabaseManager.shared.eraseAllData()
         AppSettings.didSeedDemo = false
         DemoSeeder.seedIfNeeded()
         AppLogger.shared.info("account deleted, local data erased, demo re-seeded", category: .credits)
+    }
+
+    static func deleteRemoteIdentity(
+        apiKey: String,
+        baseURL: URL = Secrets.makoBaseURL,
+        send: Send = { try await URLSession.shared.data(for: $0) }
+    ) async throws {
+        var request = URLRequest(url: baseURL.appendingPathComponent("v1/identity"))
+        request.httpMethod = "DELETE"
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("payday", forHTTPHeaderField: "X-App-ID")
+        let response: URLResponse
+        do {
+            (_, response) = try await send(request)
+        } catch is URLError {
+            throw AccountError.offline
+        }
+        if let http = response as? HTTPURLResponse,
+           !(200..<300).contains(http.statusCode),
+           !alreadyGoneStatuses.contains(http.statusCode) {
+            throw AccountError.serverError(http.statusCode)
+        }
     }
 }
