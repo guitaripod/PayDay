@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "subscriptionGroups": [
+    {
+      "referenceName": "Pay Day Pro",
+      "localizations": {
+        "en-US": {
+          "name": "Pay Day Pro"
+        },
+        "pl": {
+          "name": "Pay Day Pro"
+        }
+      },
+      "subscriptions": [
+        {
+          "productId": "com.guitaripod.payday.pro.annual",
+          "referenceName": "Pay Day Pro Annual",
+          "duration": "ONE_YEAR",
+          "groupLevel": 1,
+          "familySharable": false,
+          "price": {
+            "territory": "USA",
+            "amount": "39.99"
+          },
+          "introductoryOffers": [
+            {
+              "mode": "FREE_TRIAL",
+              "duration": "ONE_WEEK",
+              "periods": 1,
+              "territories": "ALL"
+            }
+          ],
+          "localizations": {
+            "en-US": {
+              "name": "Pay Day Pro (Annual)",
+              "description": "EN 16931 e-invoices, Peppol delivery & branding."
+            },
+            "pl": {
+              "name": "Pay Day Pro (rocznie)",
+              "description": "E-faktury EN 16931, wysyłka Peppol i marka"
+            }
+          },
+          "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5",
+          "reviewNote": ""
+        },
+        {
+          "productId": "com.guitaripod.payday.pro.monthly",
+          "referenceName": "Pay Day Pro Monthly",
+          "duration": "ONE_MONTH",
+          "groupLevel": 1,
+          "familySharable": false,
+          "price": {
+            "territory": "USA",
+            "amount": "4.99"
+          },
+          "introductoryOffers": [],
+          "localizations": {
+            "en-US": {
+              "name": "Pay Day Pro (Monthly)",
+              "description": "EN 16931 e-invoices, Peppol delivery & branding."
+            },
+            "pl": {
+              "name": "Pay Day Pro (miesięcznie)",
+              "description": "E-faktury EN 16931, wysyłka Peppol i marka"
+            }
+          },
+          "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5",
+          "reviewNote": ""
+        }
+      ]
+    }
+  ],
+  "inAppPurchases": [
+    {
+      "productId": "com.guitaripod.payday.credits.business",
+      "type": "CONSUMABLE",
+      "referenceName": "Credits Business 650",
+      "price": {
+        "territory": "USA",
+        "amount": "49.99"
+      },
+      "localizations": {
+        "en-US": {
+          "name": "650 Credits",
+          "description": "Business pack, best value for heavy use"
+        },
+        "pl": {
+          "name": "650 kredytów",
+          "description": "Pakiet Business, opłacalny przy dużym ruchu"
+        }
+      },
+      "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5"
+    },
+    {
+      "productId": "com.guitaripod.payday.credits.propack",
+      "type": "CONSUMABLE",
+      "referenceName": "Credits Pro 300",
+      "price": {
+        "territory": "USA",
+        "amount": "24.99"
+      },
+      "localizations": {
+        "en-US": {
+          "name": "300 Credits",
+          "description": "Pro pack for busy invoicing workloads"
+        },
+        "pl": {
+          "name": "300 kredytów",
+          "description": "Pakiet Pro przy dużym natężeniu fakturowania"
+        }
+      },
+      "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5"
+    },
+    {
+      "productId": "com.guitaripod.payday.credits.regular",
+      "type": "CONSUMABLE",
+      "referenceName": "Credits Regular 110",
+      "price": {
+        "territory": "USA",
+        "amount": "9.99"
+      },
+      "localizations": {
+        "en-US": {
+          "name": "110 Credits",
+          "description": "Regular pack for steady monthly invoicing"
+        },
+        "pl": {
+          "name": "110 kredytów",
+          "description": "Stały pakiet do comiesięcznego fakturowania"
+        }
+      },
+      "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5"
+    },
+    {
+      "productId": "com.guitaripod.payday.credits.starter",
+      "type": "CONSUMABLE",
+      "referenceName": "Credits Starter 30",
+      "price": {
+        "territory": "USA",
+        "amount": "2.99"
+      },
+      "localizations": {
+        "en-US": {
+          "name": "30 Credits",
+          "description": "Starter pack to try AI-assisted invoicing"
+        },
+        "pl": {
+          "name": "30 kredytów",
+          "description": "Pakiet startowy — wypróbuj fakturowanie z AI"
+        }
+      },
+      "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5"
+    }
+  ]
+}
