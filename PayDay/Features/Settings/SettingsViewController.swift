@@ -1,52 +1,40 @@
 import Combine
+import MidgarPortal
+import MidgarUI
 import UIKit
-import MidgarKit
-import PayDayKit
 
-/// Settings: business profile, defaults, appearance, Pro status, credit balance,
-/// and the legal/support links App Review expects.
+/// Settings: the Midgar portal card on top of MidgarUI's settings list with Pay Day's sections, hosted as a child so
+/// the screen can sit in the Settings split view's primary column. The sections hold the business profile, defaults,
+/// appearance, Pro status, credit balance, and the legal/support links App Review expects.
+///
+/// Rows read their values when built, so a change is shown by building them again with ``refreshList()``.
 final class SettingsViewController: UIViewController {
-    private enum Row {
-        case business, payment, defaults, appearance, aiDrafting, pro, credits, rate, share, privacy, terms, support, midgarEntry, deleteAccount
+    static let appStoreURL = URL(string: "https://apps.apple.com/app/id6779927672")!
+    static let writeReviewURL = URL(string: "https://apps.apple.com/app/id6779927672?action=write-review")!
 
-        var isBusinessForm: Bool { self == .business || self == .payment || self == .defaults }
-    }
-    private static let businessSection = 1
-    private static let appStoreURL = URL(string: "https://apps.apple.com/app/id6779927672")!
-    private static let writeReviewURL = URL(string: "https://apps.apple.com/app/id6779927672?action=write-review")!
-    private let sections: [(String, [Row])] = [
-        ("", [.midgarEntry]),
-        (String(localized: "Your business"), [.business, .payment, .defaults]),
-        (String(localized: "Pay Day Pro"), [.pro, .credits]),
-        (String(localized: "App"), [.appearance, .aiDrafting]),
-        (String(localized: "About"), [.rate, .share, .privacy, .terms, .support]),
-        (String(localized: "Account"), [.deleteAccount]),
-    ]
-
-    private let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    var isPremium = false
+    var balance = 0
     private var cancellables = Set<AnyCancellable>()
-    private var isPremium = false
-    private var balance = 0
+
+    private lazy var list = MidgarSettingsViewController(
+        title: String(localized: "Settings"),
+        sections: makeSections(),
+        portalCardView: MidgarEntryView(config: PayDayMidgar.shared.portalConfig),
+        theme: .payDay
+    )
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = String(localized: "Settings")
         view.backgroundColor = DesignSystem.Color.background
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        tableView.register(MidgarEntryCell.self, forCellReuseIdentifier: MidgarEntryCell.reuseIdentifier)
-        view.addSubview(tableView)
-        tableView.pinEdges(to: view)
+        embedList()
         bind()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Task { await AICreditsManager.store.refreshPremium() }
-        reloadKeepingSelection()
-        if listDetailSplit?.isCollapsed ?? true { deselectAll() }
+        refreshList()
     }
 
     override func viewDidLayoutSubviews() {
@@ -54,252 +42,38 @@ final class SettingsViewController: UIViewController {
         showBusinessDetailIfRoomForIt()
     }
 
-    private func reloadKeepingSelection() {
-        let selected = tableView.indexPathForSelectedRow
-        tableView.reloadData()
-        if let selected { tableView.selectRow(at: selected, animated: false, scrollPosition: .none) }
+    /// Builds every row again from the current state.
+    func refreshList() {
+        list.sections = makeSections()
     }
 
-    private func deselectAll() {
-        guard let selected = tableView.indexPathForSelectedRow else { return }
-        tableView.deselectRow(at: selected, animated: false)
+    private func embedList() {
+        addChild(list)
+        list.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(list.view)
+        NSLayoutConstraint.activate([
+            list.view.topAnchor.constraint(equalTo: view.topAnchor),
+            list.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            list.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            list.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+        list.didMove(toParent: self)
     }
 
-    /// With room for a detail column, opens the business form beside the list so
-    /// the column is never an empty page, and highlights the row it came from.
+    /// With room for a detail column, opens the business form beside the list so the column is never an empty page.
     private func showBusinessDetailIfRoomForIt() {
         guard let split = listDetailSplit, !split.isCollapsed, split.showsPlaceholder else { return }
         split.showDetail([BusinessSettingsViewController()], isAutomatic: true)
-        tableView.selectRow(at: IndexPath(row: 0, section: Self.businessSection), animated: false, scrollPosition: .none)
     }
 
     private func bind() {
         AICreditsManager.store.$isPremium
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.isPremium = $0; self?.reloadKeepingSelection() }
+            .sink { [weak self] in self?.isPremium = $0; self?.refreshList() }
             .store(in: &cancellables)
         AICreditsManager.store.$balance
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.balance = $0; self?.reloadKeepingSelection() }
+            .sink { [weak self] in self?.balance = $0; self?.refreshList() }
             .store(in: &cancellables)
     }
-}
-
-extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
-    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let title = sections[section].0
-        return title.isEmpty ? nil : title
-    }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { sections[section].1.count }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        sections[indexPath.section].1[indexPath.row] == .midgarEntry
-            ? MidgarEntryView.preferredHeight + 16
-            : UITableView.automaticDimension
-    }
-
-    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        sections[indexPath.section].1[indexPath.row] != .midgarEntry
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if sections[indexPath.section].1[indexPath.row] == .midgarEntry {
-            return tableView.dequeueReusableCell(withIdentifier: MidgarEntryCell.reuseIdentifier, for: indexPath)
-        }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        var config = cell.defaultContentConfiguration()
-        cell.accessoryType = .disclosureIndicator
-        switch sections[indexPath.section].1[indexPath.row] {
-        case .business: config.text = String(localized: "Business details"); config.image = UIImage(systemName: "building.2")
-        case .payment: config.text = String(localized: "Payment & IBAN"); config.image = UIImage(systemName: "creditcard")
-        case .defaults: config.text = String(localized: "Invoice defaults"); config.image = UIImage(systemName: "slider.horizontal.3")
-        case .appearance: config.text = String(localized: "Appearance"); config.image = UIImage(systemName: "circle.lefthalf.filled")
-        case .aiDrafting:
-            config.text = String(localized: "AI drafting")
-            config.secondaryText = AppSettings.aiConsentGranted ? String(localized: "Allowed") : String(localized: "Off")
-            config.image = UIImage(systemName: "sparkles")
-        case .pro:
-            config.text = isPremium ? String(localized: "Pay Day Pro — Active") : String(localized: "Upgrade to Pro")
-            config.image = UIImage(systemName: isPremium ? "checkmark.seal.fill" : "seal")
-            config.imageProperties.tintColor = DesignSystem.Color.accent
-        case .credits:
-            config.text = String(localized: "Credits"); config.secondaryText = "\(balance)"
-            config.image = UIImage(systemName: "bolt.fill")
-            cell.accessoryType = .disclosureIndicator
-        case .rate: config.text = String(localized: "Rate Pay Day"); config.image = UIImage(systemName: "star")
-        case .share: config.text = String(localized: "Share Pay Day"); config.image = UIImage(systemName: "square.and.arrow.up")
-        case .privacy: config.text = String(localized: "Privacy Policy"); config.image = UIImage(systemName: "hand.raised")
-        case .terms: config.text = String(localized: "Terms of Use"); config.image = UIImage(systemName: "doc.text")
-        case .support: config.text = String(localized: "Support"); config.image = UIImage(systemName: "envelope")
-        case .midgarEntry: break
-        case .deleteAccount:
-            config.text = String(localized: "Delete account")
-            config.textProperties.color = DesignSystem.Color.overdue
-            config.image = UIImage(systemName: "trash")
-            config.imageProperties.tintColor = DesignSystem.Color.overdue
-            cell.accessoryType = .none
-        }
-        cell.contentConfiguration = config
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let row = sections[indexPath.section].1[indexPath.row]
-        let keepsSelection = row.isBusinessForm && !(listDetailSplit?.isCollapsed ?? true)
-        if !keepsSelection { tableView.deselectRow(at: indexPath, animated: true) }
-        switch row {
-        case .business, .payment, .defaults:
-            showDetailScreen(BusinessSettingsViewController())
-        case .appearance: presentAppearance()
-        case .aiDrafting: presentAIConsent()
-        case .pro:
-            if !isPremium { present(UINavigationController(rootViewController: PaywallViewController()), animated: true) }
-        case .credits:
-            CreditStorePresenter.present(from: self)
-        case .rate: UIApplication.shared.open(Self.writeReviewURL)
-        case .share: shareApp(from: tableView.cellForRow(at: indexPath))
-        case .privacy: open("https://mako.midgarcorp.cc/privacy/payday")
-        case .terms: open("https://mako.midgarcorp.cc/terms/payday")
-        case .support: open("mailto:support@midgarcorp.cc")
-        case .midgarEntry: break
-        case .deleteAccount: confirmDeleteAccount()
-        }
-    }
-
-    private func shareApp(from sourceView: UIView?) {
-        let pitch = String(localized: "Pay Day — free invoices and EU-compliant e-invoicing (Peppol, Factur-X) on iPhone.",
-                           comment: "Text shared alongside the App Store link")
-        let sheet = UIActivityViewController(activityItems: [pitch, Self.appStoreURL], applicationActivities: nil)
-        sheet.popoverPresentationController?.sourceView = sourceView ?? view
-        present(sheet, animated: true)
-    }
-
-    private func confirmDeleteAccount() {
-        let alert = UIAlertController(
-            title: String(localized: "Delete account?"),
-            message: String(localized: "This permanently deletes your account, credit balance, and every invoice, estimate, and client on this device. This cannot be undone."),
-            preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
-        alert.addAction(UIAlertAction(title: String(localized: "Delete account"), style: .destructive) { [weak self] _ in
-            self?.performDeleteAccount()
-        })
-        present(alert, animated: true)
-    }
-
-    private func performDeleteAccount() {
-        let progress = UIAlertController(title: String(localized: "Deleting…"), message: nil, preferredStyle: .alert)
-        present(progress, animated: true)
-        Task { [weak self] in
-            do {
-                try await AccountService.deleteAccount()
-                progress.dismiss(animated: true) { self?.resetAfterDeletion() }
-            } catch {
-                progress.dismiss(animated: true) {
-                    self?.presentDeleteFailure(error)
-                }
-            }
-        }
-    }
-
-    /// Presents the failure alert only once the progress alert has fully
-    /// dismissed, dismissing any in-flight presentation first so we never stack
-    /// an alert on an alert.
-    private func presentDeleteFailure(_ error: Error) {
-        guard presentedViewController == nil else {
-            dismiss(animated: true) { [weak self] in self?.presentDeleteFailure(error) }
-            return
-        }
-        let fail = UIAlertController(title: String(localized: "Couldn't delete account"), message: error.localizedDescription, preferredStyle: .alert)
-        fail.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
-        present(fail, animated: true)
-    }
-
-    private func resetAfterDeletion() {
-        guard presentedViewController == nil else {
-            dismiss(animated: true) { [weak self] in self?.resetAfterDeletion() }
-            return
-        }
-        AppSettings.hasOnboarded = false
-        Task { await AICreditsManager.store.bootstrap() }
-        guard let window = view.window else { return }
-        let onboarding = OnboardingViewController.makeFlow { finishedWindow in
-            AppSettings.hasOnboarded = true
-            finishedWindow?.rootViewController = RootViewController()
-        }
-        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve) {
-            window.rootViewController = onboarding
-        }
-    }
-
-    private func presentAppearance() {
-        let alert = UIAlertController(title: String(localized: "Appearance"), message: nil, preferredStyle: .actionSheet)
-        for (title, mode) in [
-            (String(localized: "System"), AppearanceMode.system),
-            (String(localized: "Light"), .light),
-            (String(localized: "Dark"), .dark),
-        ] {
-            alert.addAction(UIAlertAction(title: title, style: .default) { _ in
-                AppSettings.appearance = mode
-                self.view.window?.overrideUserInterfaceStyle = UIUserInterfaceStyle(rawValue: mode.rawValue) ?? .unspecified
-            })
-        }
-        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
-        alert.popoverPresentationController?.sourceView = view
-        present(alert, animated: true)
-    }
-
-    /// Lets the user review the AI-drafting disclosure and grant or withdraw
-    /// consent at any time, satisfying the "obtain permission" requirement with
-    /// a persistent, reversible control.
-    private func presentAIConsent() {
-        let granted = AppSettings.aiConsentGranted
-        let consent = AIConsentViewController(showsDecline: !granted) { [weak self] decision in
-            AppSettings.aiConsentGranted = decision
-            self?.tableView.reloadData()
-        }
-        present(UINavigationController(rootViewController: consent), animated: true)
-    }
-
-    private func open(_ urlString: String) {
-        guard let url = URL(string: urlString) else { return }
-        UIApplication.shared.open(url) { [weak self] success in
-            guard !success else { return }
-            self?.presentOpenFallback(for: url)
-        }
-    }
-
-    /// Shown when no handler exists for a URL (e.g. no Mail account configured):
-    /// surfaces the destination and a copy action so the user isn't stuck.
-    private func presentOpenFallback(for url: URL) {
-        let value = url.scheme == "mailto" ? String(url.absoluteString.dropFirst("mailto:".count)) : url.absoluteString
-        let alert = UIAlertController(
-            title: url.scheme == "mailto" ? String(localized: "No mail app configured") : String(localized: "Couldn't open link"),
-            message: value,
-            preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: String(localized: "Copy"), style: .default) { _ in
-            UIPasteboard.general.string = value
-        })
-        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .cancel))
-        guard presentedViewController == nil else {
-            dismiss(animated: true) { [weak self] in self?.present(alert, animated: true) }
-            return
-        }
-        present(alert, animated: true)
-    }
-}
-
-/// A settings row that hosts the Midgar portal entry card edge to edge, with no
-/// selection or separator of its own.
-private final class MidgarEntryCell: UITableViewCell {
-    static let reuseIdentifier = "midgarEntry"
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
-        backgroundConfiguration = .clear()
-        MidgarEntryView().embed(in: contentView, verticalInset: 8)
-    }
-
-    @available(*, unavailable) required init?(coder: NSCoder) { fatalError() }
 }

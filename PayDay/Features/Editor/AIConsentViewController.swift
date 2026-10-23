@@ -129,7 +129,7 @@ final class AIConsentViewController: UIViewController {
     }
 
     private func openPrivacyPolicy() {
-        guard let url = URL(string: "https://mako.midgarcorp.cc/privacy/payday") else { return }
+        guard let url = URL(string: LegalLinks.privacy) else { return }
         UIApplication.shared.open(url)
     }
 

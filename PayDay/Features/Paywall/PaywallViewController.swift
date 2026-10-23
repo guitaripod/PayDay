@@ -288,8 +288,8 @@ final class PaywallViewController: UIViewController {
         links.registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (links: UIStackView, _) in
             links.axis = links.traitCollection.preferredContentSizeCategory.isAccessibilityCategory ? .vertical : .horizontal
         }
-        for (title, url) in [(String(localized: "Terms of Use"), "https://mako.midgarcorp.cc/terms/payday"),
-                             (String(localized: "Privacy Policy"), "https://mako.midgarcorp.cc/privacy/payday"),
+        for (title, url) in [(String(localized: "Terms of Use"), LegalLinks.terms),
+                             (String(localized: "Privacy Policy"), LegalLinks.privacy),
                              (String(localized: "Restore"), "")] {
             let b = UIButton(type: .system)
             b.setTitle(title, for: .normal)
