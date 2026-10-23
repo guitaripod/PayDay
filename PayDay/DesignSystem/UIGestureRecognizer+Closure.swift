@@ -11,6 +11,8 @@ extension UITapGestureRecognizer {
 }
 
 private final class ClosureTarget: NSObject {
+    /// Only its address is used, as the key of an associated object; nothing reads or writes the value, so there is
+    /// no data to race on.
     nonisolated(unsafe) static var key = 0
     private let handler: () -> Void
     init(_ handler: @escaping () -> Void) { self.handler = handler }

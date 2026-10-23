@@ -2,11 +2,15 @@ import Foundation
 import GRDB
 import MidgarCore
 
+/// It is `@unchecked Sendable` because `dbQueue` is assigned once in `init` and GRDB's `DatabaseQueue` serializes every
+/// read and write, so no state of this type changes after construction.
 final class DatabaseManager: @unchecked Sendable {
     static let shared = DatabaseManager()
 
     let dbQueue: DatabaseQueue
 
+    /// Opens the on-disk store. A corrupt store, a failed migration or a sandbox problem degrades to an in-memory
+    /// database, which cannot fail to open, so the app still launches instead of crash-looping; the failure is logged.
     private init() {
         do {
             let support = try FileManager.default.url(
@@ -19,9 +23,6 @@ final class DatabaseManager: @unchecked Sendable {
             dbQueue = queue
             MidgarLog.info("database opened at \(path)", category: .db)
         } catch {
-            // Don't crash-loop on a corrupt store / failed migration / sandbox
-            // issue — degrade to an in-memory database so the app still launches.
-            // Logged at .error; an in-memory DatabaseQueue cannot fail to open.
             MidgarLog.error("database open failed, falling back to in-memory: \(error)", category: .db)
             // swiftlint:disable:next force_try
             let queue = try! DatabaseQueue()
