@@ -4,6 +4,7 @@ import { configRoutes } from './routes/config'
 import { vatRoutes } from './routes/vat'
 import { fxRoutes } from './routes/fx'
 import { peppolRoutes } from './routes/peppol'
+import { accountRoutes } from './routes/account'
 
 const app = new Hono<{ Bindings: Env; Variables: AppVars }>()
 
@@ -15,6 +16,7 @@ app.route('/', configRoutes)
 app.route('/', vatRoutes)
 app.route('/', fxRoutes)
 app.route('/', peppolRoutes)
+app.route('/', accountRoutes)
 
 app.onError((err, c) => {
   console.error(`unhandled ${c.req.method} ${c.req.path}:`, err)

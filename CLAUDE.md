@@ -24,7 +24,7 @@ and the spikes that gate the build. This file is the working guide.
   iOS 26 SDK, iPhone-first (iPad-capable later). Darwin-only — build on a Mac.
 - **workers/** (`payday-worker`): Cloudflare Workers (Hono v4, jose v6, KV + D1). Sign in with Apple
   → HS256 app JWT; `/v1/vat/validate` (EU VIES bridge), `/v1/fx/rates` (ECB), `/v1/peppol/send` +
-  `/v1/peppol/lookup` (access-point gateway broker — pluggable, stubbed). TypeScript, vitest.
+  `/v1/peppol/lookup` (access-point gateway broker — pluggable, stubbed), `DELETE /v1/account` (erases the caller's Peppol transmission records; the app calls it before mako's identity delete, because the worker authenticates through the mako key). TypeScript, vitest.
 - **mako** (`api.midgarcorp.cc/v1/intelligence`): the shared AI-credits backend via the **AICredits** SPM package
   (`AICreditsCore`/`AICreditsRevenueCat`/`AICreditsUI`). Identity, credits ledger, RevenueCat
   validation, AI capability `run`. App-ID `payday`. Do not reimplement credits — use AICredits.

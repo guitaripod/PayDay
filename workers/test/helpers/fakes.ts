@@ -23,11 +23,25 @@ export function makeFakeKV(): KVNamespace {
 
 type Row = Record<string, unknown>
 
+/// Removes every row matching `predicate` from `rows` in place and returns how many
+/// were removed.
+function removeWhere(rows: Row[], predicate: (row: Row) => boolean): number {
+  let removed = 0
+  for (let i = rows.length - 1; i >= 0; i--) {
+    if (predicate(rows[i])) {
+      rows.splice(i, 1)
+      removed++
+    }
+  }
+  return removed
+}
+
 /// A tiny D1 fake that understands only the statements this worker issues
-/// (users insert/select/update, and the peppol_sends idempotency ledger:
-/// select-by-key, claim-insert, and the status/charged/transmission updates).
-/// It is deliberately not a SQL engine — just enough to verify route wiring and
-/// the exactly-once send/charge semantics.
+/// (users insert/select/update/delete, and the peppol_sends idempotency ledger:
+/// select-by-key, claim-insert, the status/charged/transmission updates, and the
+/// delete-by-user purge). `batch` runs its statements in order. It is deliberately
+/// not a SQL engine, just enough to verify route wiring and the exactly-once
+/// send/charge semantics.
 export function makeFakeD1(): D1Database {
   const users: Row[] = []
   const sends: Row[] = []
@@ -97,6 +111,10 @@ export function makeFakeD1(): D1Database {
             row.charged = 1
             changes = 1
           }
+        } else if (/DELETE FROM peppol_sends WHERE user_id = \?/.test(sql)) {
+          changes = removeWhere(sends, (s) => s.user_id === binds[0])
+        } else if (/DELETE FROM users WHERE id = \?/.test(sql)) {
+          changes = removeWhere(users, (u) => u.id === binds[0])
         }
         return { success: true, meta: { changes } }
       },
@@ -107,8 +125,15 @@ export function makeFakeD1(): D1Database {
     return stmt
   }
 
+  async function batch(statements: Array<{ run(): Promise<unknown> }>) {
+    const results: unknown[] = []
+    for (const statement of statements) results.push(await statement.run())
+    return results
+  }
+
   return {
     prepare,
+    batch,
     __users: users,
     __sends: sends,
   } as unknown as D1Database
