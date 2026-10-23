@@ -2,6 +2,7 @@ import Combine
 import PDFKit
 import UIKit
 import PayDayKit
+import MidgarCore
 
 /// Renders the document to PDF and offers the export paths: share the PDF,
 /// share the compliant Factur-X hybrid + sidecar XML (Pro), and transmit over
@@ -189,7 +190,7 @@ final class InvoicePreviewViewController: UIViewController {
             if self.invoice.status == .draft {
                 Task {
                     if (try? await InvoiceRepository.shared.markSent(id: id)) != nil {
-                        AppLogger.shared.info("share completed: \(id) marked sent", category: .invoice)
+                        MidgarLog.info("share completed: \(id) marked sent", category: .invoice)
                     }
                 }
             }
@@ -260,7 +261,7 @@ final class InvoicePreviewViewController: UIViewController {
                 case .accepted: hud.message = String(localized: "Accepted by the network.")
                 case .delivered(let id):
                     Haptics.success()
-                    AppLogger.shared.info("delivered \(invoice.number): transmission \(id)", category: .peppol)
+                    MidgarLog.info("delivered \(invoice.number): transmission \(id)", category: .peppol)
                     try? await InvoiceRepository.shared.markSent(id: invoice.id)
                     await AICreditsManager.store.refresh()
                     hud.dismiss(animated: true) {
@@ -287,7 +288,7 @@ final class InvoicePreviewViewController: UIViewController {
     /// explains why it is held back and offers to put the user's business on it.
     private func ensureOwnSeller() -> Bool {
         guard !BusinessSetupGate.canDeliver(invoice) else { return true }
-        AppLogger.shared.info("delivery held: \(invoice.id) has no own seller", category: .invoice)
+        MidgarLog.info("delivery held: \(invoice.id) has no own seller", category: .invoice)
         Haptics.warning()
         Task { @MainActor [weak self] in
             let profile = try? await BusinessRepository.shared.load()
@@ -327,14 +328,14 @@ final class InvoicePreviewViewController: UIViewController {
         Task { @MainActor in
             do {
                 invoice = try await InvoiceRepository.shared.save(updated)
-                AppLogger.shared.info("reissued \(invoice.id) under the user's business", category: .invoice)
+                MidgarLog.info("reissued \(invoice.id) under the user's business", category: .invoice)
                 Haptics.success()
                 renderedPDF = nil
                 embed = nil
                 spinner.startAnimating()
                 renderAsync()
             } catch {
-                AppLogger.shared.error("reissue save failed: \(error)", category: .db)
+                MidgarLog.error("reissue save failed: \(error)", category: .db)
                 presentAlert(String(localized: "Couldn't Save"), error.localizedDescription)
             }
         }
@@ -354,7 +355,7 @@ final class InvoicePreviewViewController: UIViewController {
     private func writeTemp(_ data: Data, name: String) -> URL? {
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(name)
         do { try data.write(to: url); return url } catch {
-            AppLogger.shared.error("temp export write failed for \(name): \(error)", category: .pdf)
+            MidgarLog.error("temp export write failed for \(name): \(error)", category: .pdf)
             return nil
         }
     }

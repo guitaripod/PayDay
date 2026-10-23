@@ -1,6 +1,7 @@
 import Foundation
 import GRDB
 import PayDayKit
+import MidgarCore
 
 /// Seeds an example business, two clients, and two worked-example documents on
 /// first launch — so a new user (and App Review) immediately sees real output.
@@ -33,9 +34,9 @@ enum DemoSeeder {
                     type: .estimate, template: NumberSequence.defaultTemplate(for: .estimate), nextValue: 4)).insert(db)
             }
             AppSettings.didSeedDemo = true
-            AppLogger.shared.info("seeded demo data", category: .db)
+            MidgarLog.info("seeded demo data", category: .db)
         } catch {
-            AppLogger.shared.error("demo seed failed: \(error)", category: .db)
+            MidgarLog.error("demo seed failed: \(error)", category: .db)
         }
     }
 }

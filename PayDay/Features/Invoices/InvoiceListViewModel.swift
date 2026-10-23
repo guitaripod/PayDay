@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import PayDayKit
+import MidgarCore
 
 @MainActor
 final class InvoiceListViewModel {
@@ -23,7 +24,7 @@ final class InvoiceListViewModel {
                 if kind == .invoice { try? await invoices.refreshOverdue(today: Format.today()) }
                 documentsPublisher.send(try await invoices.documents(ofType: kind))
             } catch {
-                AppLogger.shared.error("list load failed: \(error)", category: .db)
+                MidgarLog.error("list load failed: \(error)", category: .db)
                 documentsPublisher.send([])
             }
         }

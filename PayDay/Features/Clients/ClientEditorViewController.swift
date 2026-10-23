@@ -1,5 +1,6 @@
 import UIKit
 import PayDayKit
+import MidgarCore
 
 /// Create or edit a client, including the VAT id (with a live VIES check) and
 /// the Peppol participant id needed for network delivery.
@@ -143,7 +144,7 @@ final class ClientEditorViewController: UIViewController {
                 self.onSave(saved)
                 self.navigationController?.popViewController(animated: true)
             } catch {
-                AppLogger.shared.error("client save failed: \(error)", category: .db)
+                MidgarLog.error("client save failed: \(error)", category: .db)
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 let alert = UIAlertController(title: String(localized: "Couldn't Save"), message: error.localizedDescription, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))

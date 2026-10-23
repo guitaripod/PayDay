@@ -1,4 +1,5 @@
 import Foundation
+import MidgarCore
 
 /// Deletes the user's account end to end (App Store 5.1.1(v)): the server-side
 /// mako identity + credit ledger, the local AICredits identity, and all
@@ -16,13 +17,6 @@ enum AccountService {
         }
     }
 
-    typealias Send = @Sendable (URLRequest) async throws -> (Data, URLResponse)
-
-    /// Statuses that mean the identity no longer exists server-side. mako answers 401 for a key it does
-    /// not know, and deleting the account removes the user's keys with it, so after a deletion that
-    /// finished server-side the retry arrives as 401; a 404 is the same verdict from the route layer.
-    private static let alreadyGoneStatuses: Set<Int> = [401, 404]
-
     static func deleteAccount() async throws {
         if let apiKey = await AICreditsManager.shared.client.identity?.apiKey {
             try await deleteRemoteIdentity(apiKey: apiKey)
@@ -31,28 +25,34 @@ enum AccountService {
         try DatabaseManager.shared.eraseAllData()
         AppSettings.didSeedDemo = false
         DemoSeeder.seedIfNeeded()
-        AppLogger.shared.info("account deleted, local data erased, demo re-seeded", category: .credits)
+        MidgarLog.info("account deleted, local data erased, demo re-seeded", category: .credits)
     }
 
+    /// Deletes the mako identity behind the gateway. The call is sent once, because a repeat of an erasure could be
+    /// mistaken for the first.
     static func deleteRemoteIdentity(
         apiKey: String,
-        baseURL: URL = Secrets.makoBaseURL,
-        send: Send = { try await URLSession.shared.data(for: $0) }
+        gateway: PayDayGateway = PayDayMidgar.shared.gateway
     ) async throws {
-        var request = URLRequest(url: baseURL.appendingPathComponent("v1/identity"))
-        request.httpMethod = "DELETE"
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.setValue("payday", forHTTPHeaderField: "X-App-ID")
-        let response: URLResponse
-        do {
-            (_, response) = try await send(request)
-        } catch is URLError {
-            throw AccountError.offline
+        do throws(MidgarHTTPError) {
+            try await gateway.send(
+                .delete, service: PayDayGateway.makoService, path: "v1/identity", apiKey: apiKey, neverRetries: true)
+        } catch {
+            try acceptOrThrow(error)
         }
-        if let http = response as? HTTPURLResponse,
-           !(200..<300).contains(http.statusCode),
-           !alreadyGoneStatuses.contains(http.statusCode) {
-            throw AccountError.serverError(http.statusCode)
+    }
+
+    /// mako answers 401 for a key it does not know, and deleting the account removes the user's keys with it, so after
+    /// a deletion that finished server-side the retry arrives as 401; a 404 is the same verdict from the route layer.
+    /// Both count as deleted. Any other status surfaces as a server error and a call that never got an answer as
+    /// offline.
+    private static func acceptOrThrow(_ error: MidgarHTTPError) throws {
+        switch error {
+        case .unauthorized, .notFound: return
+        case .server(let status, _, _): throw AccountError.serverError(status)
+        case .paymentRequired: throw AccountError.serverError(402)
+        case .rateLimited: throw AccountError.serverError(429)
+        default: throw AccountError.offline
         }
     }
 }

@@ -1,5 +1,6 @@
 import UIKit
 import PayDayKit
+import MidgarCore
 
 /// Keeps the example business off real documents: a new one started before the
 /// seller is set up routes through the essentials setup first, and a document
@@ -11,7 +12,7 @@ enum BusinessSetupGate {
     static func beforeNewDocument(from presenter: UIViewController, proceed: @escaping @MainActor () -> Void) {
         Task { @MainActor in
             guard let profile = try? await BusinessRepository.shared.load(), !profile.isConfigured else { return proceed() }
-            AppLogger.shared.info("new document routed to business setup", category: .ui)
+            MidgarLog.info("new document routed to business setup", category: .ui)
             presentSetup(from: presenter) { _ in proceed() }
         }
     }

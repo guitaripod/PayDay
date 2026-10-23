@@ -1,4 +1,5 @@
 import Foundation
+import MidgarCore
 import PayDayKit
 
 /// Worker-backed VAT validation. Conforms to the Kit protocol so view models
@@ -8,13 +9,13 @@ final class VATValidationService: VATValidating {
     private let client: WorkerClient
     init(client: WorkerClient = .shared) { self.client = client }
 
-    private struct Body: Encodable { let vatID: String }
+    private struct Body: Encodable, Sendable { let vatID: String }
 
     func validate(vatID: String) async throws -> VATValidationResult {
         do {
             return try await client.post("v1/vat/validate", body: Body(vatID: vatID), as: VATValidationResult.self)
         } catch {
-            AppLogger.shared.warn("VAT validation unreachable: \(error)", category: .vat)
+            MidgarLog.notice("VAT validation unreachable: \(error)", category: .vat)
             return .unreachable(vatID)
         }
     }
@@ -26,8 +27,8 @@ final class PeppolService: PeppolTransmitting {
     private let client: WorkerClient
     init(client: WorkerClient = .shared) { self.client = client }
 
-    private struct LookupBody: Encodable { let recipient: PeppolRecipient }
-    private struct SendBody: Encodable {
+    private struct LookupBody: Encodable, Sendable { let recipient: PeppolRecipient }
+    private struct SendBody: Encodable, Sendable {
         let ublXML: String
         let recipient: PeppolRecipient
         let invoiceNumber: String
@@ -88,7 +89,10 @@ final class ExchangeRateService: ExchangeRateProviding {
     private struct RateResponse: Decodable { let rate: Double }
 
     func rate(from base: String, to quote: String) async throws -> Decimal {
-        let response = try await client.get("v1/fx/rates?base=\(base)&quote=\(quote)", as: RateResponse.self)
+        let response = try await client.get(
+            "v1/fx/rates",
+            query: [URLQueryItem(name: "base", value: base), URLQueryItem(name: "quote", value: quote)],
+            as: RateResponse.self)
         return Decimal(response.rate)
     }
 }

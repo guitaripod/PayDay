@@ -1,5 +1,6 @@
 import UIKit
 import PayDayKit
+import MidgarCore
 
 /// Lists clients. When constructed with a `selection` handler it acts as a
 /// picker for the invoice editor; otherwise it is the Clients tab.
@@ -125,7 +126,7 @@ final class ClientListViewController: UIViewController {
                 self.emptyView?.isHidden = !self.clients.isEmpty
                 done?(true)
             } catch {
-                AppLogger.shared.error("client delete failed: \(error)", category: .db)
+                MidgarLog.error("client delete failed: \(error)", category: .db)
                 done?(false)
                 let alert = UIAlertController(title: String(localized: "Couldn't Delete"), message: error.localizedDescription, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))

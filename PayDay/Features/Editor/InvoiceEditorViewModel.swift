@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import PayDayKit
+import MidgarCore
 
 /// Owns the in-progress document. Every mutation republishes the whole invoice
 /// and its freshly-computed totals, so the view stays a pure function of state.
@@ -158,7 +159,7 @@ final class InvoiceEditorViewModel {
                         invoice.number = reserved
                         numberReserved = true
                     } else {
-                        AppLogger.shared.error("invoice number reservation failed, will retry on next save", category: .db)
+                        MidgarLog.error("invoice number reservation failed, will retry on next save", category: .db)
                     }
                 }
                 if !invoice.buyer.id.isEmpty { try await clients.save(invoice.buyer) }
@@ -167,7 +168,7 @@ final class InvoiceEditorViewModel {
                 savedPublisher.send(invoice)
                 completion?(invoice)
             } catch {
-                AppLogger.shared.error("save failed: \(error)", category: .db)
+                MidgarLog.error("save failed: \(error)", category: .db)
                 completion?(nil)
             }
         }

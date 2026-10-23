@@ -1,6 +1,7 @@
 import Foundation
 import GRDB
 import PayDayKit
+import MidgarCore
 
 /// Persistence wraps the Kit value types as JSON payloads with a few indexed,
 /// queryable columns for listing and sorting. The Kit `Invoice` / `Party` stay
@@ -44,7 +45,7 @@ struct DocumentRecord: Codable, FetchableRecord, PersistableRecord, Sendable {
         do {
             return try jsonDecoder.decode(Invoice.self, from: payload)
         } catch {
-            AppLogger.shared.error("document \(id) failed to decode: \(error)", category: .db)
+            MidgarLog.error("document \(id) failed to decode: \(error)", category: .db)
             return nil
         }
     }

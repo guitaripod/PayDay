@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 import PayDayKit
+import MidgarCore
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -30,7 +31,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         Task { await AICreditsManager.store.bootstrap() }
         reportAdAttributionOnce()
-        AppLogger.shared.info("scene connected", category: .app)
+        MidgarLog.info("scene connected", category: .app)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
@@ -80,16 +81,16 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         store.$identity
             .compactMap { $0 }
             .removeDuplicates()
-            .sink { AppLogger.shared.info("credits identity \($0.kind.rawValue) \($0.userID.prefix(8))", category: .credits) }
+            .sink { MidgarLog.info("credits identity \($0.kind.rawValue) \($0.userID.prefix(8))", category: .credits) }
             .store(in: &creditsObservers)
         store.$error
             .compactMap { $0 }
-            .sink { AppLogger.shared.error("credits error: \($0.localizedDescription)", category: .credits) }
+            .sink { MidgarLog.error("credits error: \($0.localizedDescription)", category: .credits) }
             .store(in: &creditsObservers)
         store.$balance
             .removeDuplicates()
             .dropFirst()
-            .sink { AppLogger.shared.info("credits balance \($0)", category: .credits) }
+            .sink { MidgarLog.info("credits balance \($0)", category: .credits) }
             .store(in: &creditsObservers)
     }
 

@@ -1,5 +1,6 @@
 import Foundation
 import GRDB
+import MidgarCore
 
 final class DatabaseManager: @unchecked Sendable {
     static let shared = DatabaseManager()
@@ -16,12 +17,12 @@ final class DatabaseManager: @unchecked Sendable {
             let queue = try DatabaseQueue(path: path)
             try Self.runMigrations(queue)
             dbQueue = queue
-            AppLogger.shared.info("database opened at \(path)", category: .db)
+            MidgarLog.info("database opened at \(path)", category: .db)
         } catch {
             // Don't crash-loop on a corrupt store / failed migration / sandbox
             // issue — degrade to an in-memory database so the app still launches.
             // Logged at .error; an in-memory DatabaseQueue cannot fail to open.
-            AppLogger.shared.error("database open failed, falling back to in-memory: \(error)", category: .db)
+            MidgarLog.error("database open failed, falling back to in-memory: \(error)", category: .db)
             // swiftlint:disable:next force_try
             let queue = try! DatabaseQueue()
             try? Self.runMigrations(queue)

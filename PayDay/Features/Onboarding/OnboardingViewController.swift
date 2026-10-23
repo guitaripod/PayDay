@@ -1,4 +1,5 @@
 import UIKit
+import MidgarCore
 
 /// First-run welcome. Sells the wedge in one screen, asks for the few business
 /// details a first invoice needs (or lets the user defer them), then drops the
@@ -42,7 +43,7 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func finish(savedBusiness: Bool) {
-        AppLogger.shared.info("onboarding finished, business \(savedBusiness ? "saved" : "deferred")", category: .ui)
+        MidgarLog.info("onboarding finished, business \(savedBusiness ? "saved" : "deferred")", category: .ui)
         onFinish?()
     }
 

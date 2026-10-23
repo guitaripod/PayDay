@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import PayDayKit
+import MidgarCore
 
 @MainActor
 final class DashboardViewModel {
@@ -50,7 +51,7 @@ final class DashboardViewModel {
                     sellerPeppolConfigured: !(ownSeller?.peppolParticipant.isEmpty ?? true))
                 snapshotPublisher.send(snapshot)
             } catch {
-                AppLogger.shared.error("dashboard load failed: \(error)", category: .db)
+                MidgarLog.error("dashboard load failed: \(error)", category: .db)
             }
         }
     }

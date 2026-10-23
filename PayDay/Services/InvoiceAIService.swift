@@ -1,6 +1,7 @@
 import Foundation
 import PayDayKit
 import AICreditsCore
+import MidgarCore
 
 /// AI actions powered by mako (metered as credits). Each genuinely changes the
 /// outcome: a photo of a quote/receipt becomes line items; plain language
@@ -64,7 +65,7 @@ final class InvoiceAIService: Sendable {
         let request = CapabilityRequest.chat(messages: [ChatTurn(role: "user", content: prompt)], model: Self.draftingModel)
         let result = try await client.run(request)
         guard let content = Self.parseMessageContent(result.raw) else {
-            AppLogger.shared.error("AI reminder parse failed; raw content: \(String(decoding: result.raw, as: UTF8.self))", category: .credits)
+            MidgarLog.error("AI reminder parse failed: \(result.raw.count) bytes, content withheld", category: .credits)
             return ""
         }
         return content
@@ -101,7 +102,7 @@ final class InvoiceAIService: Sendable {
     private static func parseLines(_ data: Data) -> [DraftedLine] {
         guard let content = parseMessageContent(data) else { return [] }
         guard let payload = decodeLines(content) else {
-            AppLogger.shared.error("AI line-item parse failed; raw content: \(content)", category: .credits)
+            MidgarLog.error("AI line-item parse failed: \(content.count) characters, content withheld", category: .credits)
             return []
         }
         return payload.lines.map {

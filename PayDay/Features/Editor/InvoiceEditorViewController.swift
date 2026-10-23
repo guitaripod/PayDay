@@ -219,8 +219,9 @@ extension InvoiceEditorViewController: PHPickerViewControllerDelegate {
         }
     }
 
-    /// Downscale to keep the upload small and the vision cost bounded.
-    private static func downscaledJPEGBase64(_ image: UIImage, maxDimension: CGFloat = 1536) -> String? {
+    /// Downscale to keep the upload small and the vision cost bounded. Runs on the item provider's queue, so it
+    /// touches no UI state.
+    nonisolated private static func downscaledJPEGBase64(_ image: UIImage, maxDimension: CGFloat = 1536) -> String? {
         let scale = min(1, maxDimension / max(image.size.width, image.size.height))
         let target = CGSize(width: image.size.width * scale, height: image.size.height * scale)
         let format = UIGraphicsImageRendererFormat()

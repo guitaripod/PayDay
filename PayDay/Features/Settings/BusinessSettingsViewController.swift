@@ -1,5 +1,6 @@
 import UIKit
 import PayDayKit
+import MidgarCore
 
 /// Edits the seller business profile and invoice defaults. Saved values pre-fill
 /// every new document, so this is the one form that pays off on every invoice.
@@ -166,7 +167,7 @@ final class BusinessSettingsViewController: UIViewController {
         AppSettings.defaultCurrencyCode = profile.defaultCurrencyCode
         AppSettings.defaultEInvoiceProfile = profile.defaultEInvoiceProfile.rawValue
         persist(profile) { [weak self] in
-            AppLogger.shared.info("business essentials saved (\(self?.selectedCountryCode ?? ""))", category: .ui)
+            MidgarLog.info("business essentials saved (\(self?.selectedCountryCode ?? ""))", category: .ui)
             self?.onFinish?(true)
         }
     }
@@ -179,7 +180,7 @@ final class BusinessSettingsViewController: UIViewController {
                 try await BusinessRepository.shared.save(saved)
                 done()
             } catch {
-                AppLogger.shared.error("business profile save failed: \(error)", category: .db)
+                MidgarLog.error("business profile save failed: \(error)", category: .db)
                 self.setSaving(false)
                 let alert = UIAlertController(title: String(localized: "Couldn't Save"), message: error.localizedDescription, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
@@ -288,7 +289,7 @@ final class BusinessSettingsViewController: UIViewController {
         later.titleLabel?.font = DesignSystem.Typography.scaledSystem(16, .medium, relativeTo: .callout)
         later.titleLabel?.adjustsFontForContentSizeCategory = true
         later.addAction(UIAction { [weak self] _ in
-            AppLogger.shared.info("business setup deferred", category: .ui)
+            MidgarLog.info("business setup deferred", category: .ui)
             self?.view.endEditing(true)
             self?.onFinish?(false)
         }, for: .touchUpInside)

@@ -1,4 +1,5 @@
 import UIKit
+import MidgarCore
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -6,10 +7,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        PayDayMidgar.configureLogging()
+        PayDayMidgar.shared.start()
+        ReviewPrompt.beginSession()
         warmUpLaunchServicesReceiptPath()
         _ = DatabaseManager.shared
         seedLocalData()
-        AppLogger.shared.info("app launched", category: .app)
+        MidgarLog.info("app launched", category: .app)
         return true
     }
 

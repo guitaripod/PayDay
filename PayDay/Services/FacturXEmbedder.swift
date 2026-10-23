@@ -1,6 +1,7 @@
 import Foundation
 import CryptoKit
 import PayDayKit
+import MidgarCore
 
 /// Turns a rendered visual PDF into a Factur-X / PDF-A-3 hybrid by appending a
 /// classic incremental update that adds, to satisfy veraPDF's PDF/A-3b rules:
@@ -34,10 +35,10 @@ final class FacturXEmbedder {
         let xml = (try? CIIInvoiceWriter(profile: profile).xml(for: invoice)) ?? ""
         let sidecar = Data(xml.utf8)
         guard !xml.isEmpty, let hybrid = appendIncrementalUpdate(to: visualPDF, ciiXML: sidecar, invoice: invoice) else {
-            AppLogger.shared.warn("Factur-X embed fell back to sidecar XML", category: .einvoice)
+            MidgarLog.notice("Factur-X embed fell back to sidecar XML", category: .einvoice)
             return Output(pdf: visualPDF, embedded: false, sidecarXML: sidecar)
         }
-        AppLogger.shared.info("embedded Factur-X (\(profile.rawValue)) into PDF", category: .einvoice)
+        MidgarLog.info("embedded Factur-X (\(profile.rawValue)) into PDF", category: .einvoice)
         return Output(pdf: hybrid, embedded: true, sidecarXML: sidecar)
     }
 

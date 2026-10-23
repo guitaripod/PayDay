@@ -1,66 +1,52 @@
 import Foundation
 import AICreditsCore
+import MidgarCore
 
-/// Authenticated HTTP to the Pay Day worker (VIES, FX, Peppol). Reuses the
-/// AICredits identity's API key as the bearer — the worker shares the same
-/// SIWA-linked identity for cross-device sync, so a separate auth flow is not
-/// needed for these advisory services.
+/// Authenticated HTTP to the Pay Day worker (VIES, FX, Peppol) through the Midgar gateway at `/v1/payday/`. Reuses
+/// the AICredits identity's API key as the bearer, because the worker shares the same SIWA-linked identity for
+/// cross-device sync, so a separate auth flow is not needed for these advisory services. Every call is sent once with
+/// a short timeout: the calls are advisory and must degrade promptly when an upstream is unreachable, and the Peppol
+/// send is never repeated by the transport.
 final class WorkerClient: Sendable {
     static let shared = WorkerClient()
 
-    private let baseURL: URL
-    private let session: URLSession
+    private let gateway: PayDayGateway
     private let identityProvider: @Sendable () async -> String?
 
     init(
-        baseURL: URL = Secrets.workerBaseURL,
-        session: URLSession = WorkerClient.advisorySession,
+        gateway: PayDayGateway = PayDayMidgar.shared.gateway,
         identityProvider: @escaping @Sendable () async -> String? = {
             await AICreditsManager.shared.client.identity?.apiKey
         }
     ) {
-        self.baseURL = baseURL
-        self.session = session
+        self.gateway = gateway
         self.identityProvider = identityProvider
     }
 
-    /// These calls are advisory (VIES/FX/Peppol lookup) and must degrade
-    /// promptly when an upstream is unreachable, so they use a short per-request
-    /// timeout rather than `URLSession.shared`'s 60s default.
-    private static let advisorySession: URLSession = {
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 12
-        return URLSession(configuration: configuration)
-    }()
-
     enum WorkerError: Error { case http(Int, reason: String?), decoding, offline }
 
-    func get<T: Decodable>(_ path: String, as type: T.Type) async throws -> T {
-        try await send(path: path, method: "GET", body: nil, as: type)
+    func get<T: Decodable>(_ path: String, query: [URLQueryItem] = [], as type: T.Type) async throws -> T {
+        try await send(.get, path: path, query: query, body: nil, as: type)
     }
 
-    func post<T: Decodable>(_ path: String, body: Encodable, as type: T.Type) async throws -> T {
-        let data = try JSONEncoder().encode(AnyEncodable(body))
-        return try await send(path: path, method: "POST", body: data, as: type)
+    func post<T: Decodable>(_ path: String, body: any Encodable & Sendable, as type: T.Type) async throws -> T {
+        try await send(.post, path: path, query: [], body: body, as: type)
     }
 
-    private func send<T: Decodable>(path: String, method: String, body: Data?, as: T.Type) async throws -> T {
-        var request = URLRequest(url: baseURL.appendingPathComponent(path))
-        request.httpMethod = method
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        if let token = await identityProvider() {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        request.httpBody = body
-        let (data, response): (Data, URLResponse)
-        do {
-            (data, response) = try await session.data(for: request)
+    private func send<T: Decodable>(
+        _ method: MidgarHTTPMethod,
+        path: String,
+        query: [URLQueryItem],
+        body: (any Encodable & Sendable)?,
+        as: T.Type
+    ) async throws -> T {
+        let data: Data
+        do throws(MidgarHTTPError) {
+            data = try await gateway.send(
+                method, service: PayDayGateway.workerService, path: path, query: query,
+                apiKey: await identityProvider(), body: body, neverRetries: true)
         } catch {
-            throw WorkerError.offline
-        }
-        guard let http = response as? HTTPURLResponse else { throw WorkerError.decoding }
-        guard (200..<300).contains(http.statusCode) else {
-            throw WorkerError.http(http.statusCode, reason: Self.decodeErrorReason(from: data))
+            throw Self.workerError(for: error)
         }
         do {
             return try JSONDecoder().decode(T.self, from: data)
@@ -69,14 +55,26 @@ final class WorkerClient: Sendable {
         }
     }
 
-    private struct ErrorBody: Decodable {
-        let reason: String?
-        let error: String?
-    }
-
-    private static func decodeErrorReason(from data: Data) -> String? {
-        guard let body = try? JSONDecoder().decode(ErrorBody.self, from: data) else { return nil }
-        return body.reason ?? body.error
+    /// The worker answers a failure with `{"error": "<reason>"}`, which the gateway client reports as the message of
+    /// a server error, so the reason a Peppol send was refused reaches the alert as it always did. A status with no
+    /// message of its own keeps the nil reason and falls back to the generic text.
+    private static func workerError(for error: MidgarHTTPError) -> WorkerError {
+        switch error {
+        case .server(let status, _, let message):
+            return .http(status, reason: message.hasPrefix("HTTP ") ? nil : message)
+        case .unauthorized(let code):
+            return .http(401, reason: code)
+        case .paymentRequired(let code):
+            return .http(402, reason: code)
+        case .notFound(let code):
+            return .http(404, reason: code)
+        case .rateLimited(_, let code):
+            return .http(429, reason: code)
+        case .decoding:
+            return .decoding
+        default:
+            return .offline
+        }
     }
 }
 
@@ -95,10 +93,4 @@ extension WorkerClient.WorkerError: LocalizedError {
                           comment: "Generic HTTP failure with the numeric status code")
         }
     }
-}
-
-private struct AnyEncodable: Encodable {
-    private let encodeImpl: (Encoder) throws -> Void
-    init(_ wrapped: Encodable) { encodeImpl = wrapped.encode }
-    func encode(to encoder: Encoder) throws { try encodeImpl(encoder) }
 }

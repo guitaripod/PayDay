@@ -2,6 +2,7 @@
 import Foundation
 import GRDB
 import PayDayKit
+import MidgarCore
 
 /// An offline, deterministic freelancer business for App Store captures and
 /// layout checks: a fictional seller in the device's market, a dozen clients
@@ -37,9 +38,9 @@ enum DemoWorld {
             AppSettings.didSeedDemo = true
             AppSettings.defaultCurrencyCode = world.currency.code
             AppSettings.defaultVATRatePercent = world.profile.defaultVATRatePercent
-            AppLogger.shared.info("seeded demo world", category: .db)
+            MidgarLog.info("seeded demo world", category: .db)
         } catch {
-            AppLogger.shared.error("demo world seed failed: \(error)", category: .db)
+            MidgarLog.error("demo world seed failed: \(error)", category: .db)
         }
     }
 

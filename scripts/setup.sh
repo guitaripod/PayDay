@@ -36,7 +36,7 @@ fi
 if [ ! -f PayDay/Secrets.swift ]; then
   echo "==> Creating PayDay/Secrets.swift from example"
   cp PayDay/Secrets.example.swift PayDay/Secrets.swift
-  echo "    edit PayDay/Secrets.swift: workerBaseURL + revenueCatPublicKey"
+  echo "    edit PayDay/Secrets.swift: revenueCatPublicKey"
 else
   echo "·  PayDay/Secrets.swift already exists, leaving it"
 fi

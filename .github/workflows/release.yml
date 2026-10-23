@@ -67,10 +67,7 @@ jobs:
           import Foundation
 
           enum Secrets {
-              static let workerBaseURL = URL(string: "https://payday-worker.guitaripod.workers.dev")!
-              static let makoBaseURL = URL(string: "https://mako.midgarcorp.cc")!
               static let revenueCatPublicKey = "${{ secrets.REVENUECAT_PUBLIC_KEY }}"
-              static let redirectURI = "https://mako.midgarcorp.cc/auth/callback"
           }
           EOF
           xcodegen generate
