@@ -38,6 +38,7 @@ and the spikes that gate the build. This file is the working guide.
 - **Logging**: `MidgarLog` (MidgarCore) with the categories in `PayDay/Logging/LogCategories.swift`; the file is `Library/Logs/payday.log`, rotated into numbered archives. Never log invoice contents, prompts or model output.
 - **Settings**: `SettingsViewController` hosts MidgarUI's `MidgarSettingsViewController` (portal card on top, theme `MidgarTheme.payDay`); sections are in `SettingsSections.swift`, actions in `SettingsActions.swift`.
 - **Review prompt**: `ReviewPrompt` reports each delivered invoice to `MidgarReviewPolicy` (no ask before 3 days and 6 sessions); `LegacyReviewState` carries the old ask history over.
+- **Account deletion order**: `AccountService.deleteAccount` runs the worker's `DELETE /v1/payday/v1/account` first (it needs the mako key), then mako's identity delete, then the local data.
 - **Privacy**: `PayDay/PrivacyInfo.xcprivacy`, `store/privacy-label.md` and the policy under `web/midgarcorp/src/content/legal/pay-day/` move together; the published policy URL is `https://midgarcorp.cc/legal/pay-day/privacy/` (`LegalLinks`).
 - **Network exceptions** (registry): none. RevenueCat and Apple services are SDK-internal.
 

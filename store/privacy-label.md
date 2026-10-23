@@ -33,7 +33,7 @@ Everything else is "Data Not Collected".
 ## Check before the label is entered
 
 - Every call to mako and to the Pay Day worker now goes through `api.midgarcorp.cc`; the legacy `mako.midgarcorp.cc` and `payday-worker.guitaripod.workers.dev` addresses are no longer used by this build, so the data collected is unchanged apart from the Midgar ID and the portal counts.
-- Deleting the account in the app erases the mako account and the local data. It does not erase the Midgar ID, which Midgar's other apps share, and it does not erase the worker's Peppol transmission records (`peppol_sends`, keyed by the mako user id). The policy says so and gives the support address. A worker deletion route like Helia's would close that gap and is a founder call.
+- Delete Account in the app erases the worker's Peppol transmission records first (`DELETE /v1/payday/v1/account`, `peppol_sends` keyed by the mako user id), then the mako account, then the local data. It does not erase the Midgar ID, which Midgar's other apps share; the policy gives the support address for that.
 - The Midgar ID is not sent to RevenueCat and Pay Day's purchases still go through AICredits and RevenueCat only, so Purchase History is unchanged.
 
 ## Third-party SDK notes
