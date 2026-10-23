@@ -39,11 +39,9 @@ packages:
     url: https://github.com/groue/GRDB.swift
     from: "7.0.0"
   AICredits:
-    url: git@github.com:guitaripod/AICredits.git
-    exactVersion: 1.7.0
+    path: ../../packages/AICredits
   MidgarKit:
-    url: https://github.com/guitaripod/MidgarKit
-    exactVersion: 4.3.1
+    path: ../../packages/MidgarKit
 
 x-midgar-keychain-groups: &midgarKeychainGroups
   - $(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)
