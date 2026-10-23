@@ -25,9 +25,21 @@ and the spikes that gate the build. This file is the working guide.
 - **workers/** (`payday-worker`): Cloudflare Workers (Hono v4, jose v6, KV + D1). Sign in with Apple
   → HS256 app JWT; `/v1/vat/validate` (EU VIES bridge), `/v1/fx/rates` (ECB), `/v1/peppol/send` +
   `/v1/peppol/lookup` (access-point gateway broker — pluggable, stubbed). TypeScript, vitest.
-- **mako** (`mako.midgarcorp.cc`): the shared AI-credits backend via the **AICredits** SPM package
+- **mako** (`api.midgarcorp.cc/v1/intelligence`): the shared AI-credits backend via the **AICredits** SPM package
   (`AICreditsCore`/`AICreditsRevenueCat`/`AICreditsUI`). Identity, credits ledger, RevenueCat
   validation, AI capability `run`. App-ID `payday`. Do not reimplement credits — use AICredits.
+
+## Midgar platform
+
+- **MidgarKit 4.3.1** and **AICredits 1.7.0**, both `exactVersion` in `project.yml`. The app target links the `MidgarKit` umbrella product. Swift 6 language mode with complete checking; the app target has no MainActor default isolation, so keep it that way unless the whole app moves. Launch the app in the simulator after any isolation change: a trap only shows at runtime.
+- **Midgar ID**: `PayDayMidgar` (`PayDay/App/`) builds the identity, the gateway client behind the portal card and the `PayDayGateway` (`PayDay/Services/`) for mako and the worker. `keychain-access-groups` in `project.yml` lists the app's own group first (AICredits keeps its api key there, so the order matters) and `$(AppIdentifierPrefix)cc.midgarcorp.shared` second. App Attest is not in the entitlements until the App ID capability and a regenerated profile exist; the ID mints at the unverified tier.
+- **Gateway**: mako is `https://api.midgarcorp.cc/v1/intelligence` (`PayDayMidgar.intelligenceURL`, AICredits' base URL) and AICredits sends the Midgar token through `additionalHeaders` (`midgarTokenHeaders()`, never waited on). The worker is `https://api.midgarcorp.cc/v1/payday/...`; `WorkerClient` sends the mako api key in `Authorization`, which the gateway forwards to the worker, each call once with a 12 second timeout. The tenant id is `payday` (mako and the worker know the app by it); the Midgar ID, signals and the portal use the registry slug `pay-day`. The worker repeats a refused send's `reason` as `error`, which is how the gateway client's error message carries it to the alert; deploy the worker before the app release so the reason shows.
+- **Commerce**: registry engine `aicredits`, entitlement `pro`. AICredits and RevenueCat still buy, restore and meter; do not change product ids, prices or the RevenueCat app user id without the founder.
+- **Logging**: `MidgarLog` (MidgarCore) with the categories in `PayDay/Logging/LogCategories.swift`; the file is `Library/Logs/payday.log`, rotated into numbered archives. Never log invoice contents, prompts or model output.
+- **Settings**: `SettingsViewController` hosts MidgarUI's `MidgarSettingsViewController` (portal card on top, theme `MidgarTheme.payDay`); sections are in `SettingsSections.swift`, actions in `SettingsActions.swift`.
+- **Review prompt**: `ReviewPrompt` reports each delivered invoice to `MidgarReviewPolicy` (no ask before 3 days and 6 sessions); `LegacyReviewState` carries the old ask history over.
+- **Privacy**: `PayDay/PrivacyInfo.xcprivacy`, `store/privacy-label.md` and the policy under `web/midgarcorp/src/content/legal/pay-day/` move together; the published policy URL is `https://midgarcorp.cc/legal/pay-day/privacy/` (`LegalLinks`).
+- **Network exceptions** (registry): none. RevenueCat and Apple services are SDK-internal.
 
 ## Backend split (do not confuse the two)
 
@@ -82,7 +94,7 @@ CLOUDFLARE_API_TOKEN=$(cat ~/.cloudflare-api-token) npx wrangler deploy   # prod
 
 ## Logging — agents read this
 
-`AppLogger` mirrors os_log AND `Library/Logs/payday.log` (rotates at 2 MB). Categories:
+`MidgarLog` mirrors os_log AND `Library/Logs/payday.log` (rotates at 2 MB). Categories:
 `app, auth, db, invoice, pdf, einvoice, peppol, vat, credits, ui`. Pull from a device with the
 `ios-device-logs` skill / `devicectl ... copy from --source Library/Logs/payday.log`.
 
@@ -90,7 +102,8 @@ CLOUDFLARE_API_TOKEN=$(cat ~/.cloudflare-api-token) npx wrangler deploy   # prod
 
 `.env.local` (gitignored, made by `setup.sh`): `PAYDAY_BUNDLE_ID`, `PAYDAY_TEAM_ID`,
 `PAYDAY_DEVICE_UDID`, `PAYDAY_DEVICE_NAME`. `PayDay/Secrets.swift` (gitignored, from
-`Secrets.example.swift`): `workerBaseURL`, `makoBaseURL`, `revenueCatPublicKey`, `redirectURI`.
+`Secrets.example.swift`): `revenueCatPublicKey`; the mako and worker addresses are the gateway's and live in
+`PayDayMidgar`.
 Worker secrets via `wrangler secret put` (prod) + `workers/.dev.vars` (local): `APP_JWT_SECRET`,
 `APPLE_CLIENT_ID`, `APPLE_TEAM_ID`, `PEPPOL_API_KEY`, `PEPPOL_API_SECRET`, `PEPPOL_LEGAL_ENTITY_ID`.
 Plaintext vars in `wrangler.jsonc`: `PEPPOL_PROVIDER` (`recommand` default, or `storecove`),
