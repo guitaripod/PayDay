@@ -1,127 +1,54 @@
-# Pay Day — Agent Instructions
+# Pay Day
 
-Native UIKit iOS **invoice & estimate app for EU freelancers and small businesses**, wedged on
-**e-invoicing compliance**: free, beautiful invoices for everyone; **Pro** turns them into legally
-compliant **Factur-X / ZUGFeRD** hybrid PDFs (a PDF/A-3 carrying embedded **EN 16931** CII XML) and
-delivers them over the **Peppol** network. The competitive bet is the compliance wedge no mobile
-incumbent ships — not the saturated "invoice maker" keyword.
+Native UIKit iOS invoice and estimate app for EU freelancers, wedged on e-invoicing compliance: free invoices for everyone, Pro adds Factur-X / ZUGFeRD hybrid PDFs (PDF/A-3 with embedded EN 16931 CII XML) and Peppol delivery.
+`DESIGN.md` is the authoritative architecture, data model and EN 16931 / Factur-X plan.
 
-See `DESIGN.md` for the authoritative architecture, the data model, the EN 16931 / Factur-X plan,
-and the spikes that gate the build. This file is the working guide.
+## Layout
 
-## Stack
+- `Sources/PayDayKit`: platform-agnostic Swift 6 (`Money`, `Invoice` model, `TaxEngine`, `CIIInvoiceWriter`, `UBLInvoiceWriter`, `InvoiceValidator`); no UIKit, PDFKit or Combine, builds on Linux and macOS
+- `PayDay/` (xcodegen, programmatic UIKit, MVVM, Darwin only): `DatabaseManager` (GRDB), actor repositories, `InvoicePDFRenderer` + `FacturXEmbedder`, `AICreditsManager`, `PeppolService`, `VATValidationService`, `App/PayDayMidgar`, `Services/PayDayGateway`, `Logging/LogCategories.swift`
+- `workers/` (`payday-worker`): Cloudflare Workers, Hono v4, jose v6, KV + D1, TypeScript, vitest. SIWA to HS256 JWT, `/v1/vat/validate` (VIES), `/v1/fx/rates` (ECB), `/v1/peppol/send` and `/lookup`, `DELETE /v1/account`
+- mako (`https://api.midgarcorp.cc/v1/intelligence`) owns identity, credits ledger, RevenueCat validation and AI `run`. The payday-worker owns VIES, FX and Peppol. Do not confuse them.
 
-- **PayDayKit** (`Sources/PayDayKit`): platform-agnostic Swift 6 — `Money`/`Currency` value types,
-  the `Invoice`/`Party`/`LineItem` domain model, the **`TaxEngine`** (EN 16931 VAT categories +
-  breakdown + monetary summation), **`CIIInvoiceWriter`** (Factur-X / EN 16931 CII XML) and
-  **`UBLInvoiceWriter`** (Peppol BIS Billing 3.0 UBL), `InvoiceValidator` (BR-* business rules),
-  `NumberSequence`, GRDB record structs, and **Sendable** protocols exposing `AsyncStream`. **No
-  UIKit / PDFKit / Combine imports — compiles and tests on Linux and macOS via `swift build`.**
-- **PayDay** (`PayDay/`, xcodegen): programmatic UIKit, MVVM. Combine `PassthroughSubject` lives
-  **only** at the VM↔VC seam. `DatabaseManager` (GRDB `DatabaseQueue`), `actor` repositories,
-  `InvoicePDFRenderer` + `FacturXEmbedder` (PDFKit/Core Graphics), `AICreditsManager` (mako),
-  `PeppolService` + `VATValidationService` (Worker). Swift 6 strict concurrency, iOS 18+ deploy /
-  iOS 26 SDK, iPhone-first (iPad-capable later). Darwin-only — build on a Mac.
-- **workers/** (`payday-worker`): Cloudflare Workers (Hono v4, jose v6, KV + D1). Sign in with Apple
-  → HS256 app JWT; `/v1/vat/validate` (EU VIES bridge), `/v1/fx/rates` (ECB), `/v1/peppol/send` +
-  `/v1/peppol/lookup` (access-point gateway broker — pluggable, stubbed), `DELETE /v1/account` (erases the caller's Peppol transmission records; the app calls it before mako's identity delete, because the worker authenticates through the mako key). TypeScript, vitest.
-- **mako** (`api.midgarcorp.cc/v1/intelligence`): the shared AI-credits backend via the **AICredits** SPM package
-  (`AICreditsCore`/`AICreditsRevenueCat`/`AICreditsUI`). Identity, credits ledger, RevenueCat
-  validation, AI capability `run`. App-ID `payday`. Do not reimplement credits — use AICredits.
-
-## Midgar platform
-
-- **MidgarKit** and **AICredits** from the monorepo's `packages/MidgarKit` and `packages/AICredits` by path (`project.yml`, decision D15). The app target links the `MidgarKit` umbrella product. Swift 6 language mode with complete checking; the app target has no MainActor default isolation, so keep it that way unless the whole app moves. Launch the app in the simulator after any isolation change: a trap only shows at runtime.
-- **Midgar ID**: `PayDayMidgar` (`PayDay/App/`) builds the identity, the gateway client behind the portal card and the `PayDayGateway` (`PayDay/Services/`) for mako and the worker. `keychain-access-groups` in `project.yml` lists the app's own group first (AICredits keeps its api key there, so the order matters) and `$(AppIdentifierPrefix)cc.midgarcorp.shared` second. No App Attest entitlement is needed: App Store and TestFlight builds attest in Apple's production environment regardless, and development builds attest in the sandbox, which the identity service accepts as the development tier.
-- **Gateway**: mako is `https://api.midgarcorp.cc/v1/intelligence` (`PayDayMidgar.intelligenceURL`, AICredits' base URL) and AICredits sends the Midgar token through `additionalHeaders` (`midgarTokenHeaders()`, never waited on). The worker is `https://api.midgarcorp.cc/v1/payday/...`; `WorkerClient` sends the mako api key in `Authorization`, which the gateway forwards to the worker, each call once with a 12 second timeout. The tenant id is `payday` (mako and the worker know the app by it); the Midgar ID, signals and the portal use the registry slug `pay-day`. The worker repeats a refused send's `reason` as `error`, which is how the gateway client's error message carries it to the alert; deploy the worker before the app release so the reason shows.
-- **Commerce**: registry engine `aicredits`, entitlement `pro`. AICredits and RevenueCat still buy, restore and meter; do not change product ids, prices or the RevenueCat app user id without the founder.
-- **Logging**: `MidgarLog` (MidgarCore) with the categories in `PayDay/Logging/LogCategories.swift`; the file is `Library/Logs/payday.log`, rotated into numbered archives. Never log invoice contents, prompts or model output.
-- **Settings**: `SettingsViewController` hosts MidgarUI's `MidgarSettingsViewController` (portal card on top, theme `MidgarTheme.payDay`); sections are in `SettingsSections.swift`, actions in `SettingsActions.swift`.
-- **Review prompt**: `ReviewPrompt` reports each delivered invoice to `MidgarReviewPolicy` (no ask before 3 days and 6 sessions); `LegacyReviewState` carries the old ask history over.
-- **Account deletion order**: `AccountService.deleteAccount` runs the worker's `DELETE /v1/payday/v1/account` first (it needs the mako key), then mako's identity delete, then the local data.
-- **Privacy**: `PayDay/PrivacyInfo.xcprivacy`, `store/privacy-label.md` and the policy under `web/midgarcorp/src/content/legal/pay-day/` move together; the published policy URL is `https://midgarcorp.cc/legal/pay-day/privacy/` (`LegalLinks`).
-- **Network exceptions** (registry): none. RevenueCat and Apple services are SDK-internal.
-
-## Backend split (do not confuse the two)
-
-- **mako / AICredits** owns identity, the credits ledger, RevenueCat purchase validation, and the AI
-  hot path (`/v1/run/*`). Entitlement `pro`. Reuse the package; never hand-roll RevenueCat.
-- **payday-worker** owns the invoice-domain services that need server secrets or CORS-free access:
-  VIES VAT validation, ECB FX rates, and Peppol AS4 transmission through an access-point gateway.
-  It authenticates with the same SIWA→JWT used for cross-device sync.
-
-## Code style (non-negotiable)
-
-- `final class` for classes; `nonisolated struct: Sendable` for value types.
-- `@available(*, unavailable) required init?(coder: NSCoder) { fatalError() }` on every custom view/VC.
-- Programmatic only — no storyboards/XIB. `UIStackView` first, then anchors.
-- Core surfaces expose `AsyncStream`/`AsyncSequence` and **Sendable** protocols — no Combine in
-  `PayDayKit`. The `@MainActor` VM consumes streams in a `Task` and republishes via its own
-  `PassthroughSubject<T, Never>` (never `@Published`); VCs bind in `viewDidLoad`, hold
-  `Set<AnyCancellable>`, `.receive(on: DispatchQueue.main)`.
-- Service protocols in `PayDayKit` where platform-agnostic; concrete singletons (`.shared`) injected
-  through inits with defaults.
-- GRDB: `nonisolated struct` records, `DatabaseMigrator.registerMigration("vN")`, never edited after
-  release. On-device only — business + client data never leaves the phone except what the user sends.
-- Money is **integer minor units + ISO-4217 code**, never `Double`. All rounding is half-up at the
-  document boundary, per EN 16931.
-- `UIBackgroundConfiguration.listCell()` on list cells. SF Symbol effects (`.bounce`/`.replace` on
-  status change, `.pulse` on processing). Liquid Glass (`UIGlassEffect`/`UIGlassContainerEffect`) on
-  iOS 26, `.systemThinMaterial` fallback on iOS 18.
-- No comments, no MARK, no file headers. `///` doc comments sparingly. SPM only.
-- Swift Testing (`@Test`, `#expect`) — never XCTest.
-
-## Build & deploy — use the scripts (Mac only)
-
-xcodegen regenerates `PayDay.xcodeproj` from `project.yml` on every build, so:
+## Build, test, deploy (Mac only, use the scripts)
 
 ```bash
 scripts/setup.sh         # one-time: .env.local + Secrets.swift + xcodegen + spm
 scripts/ios-build.sh     # build, with xcodegen + staleness assertion
 scripts/ios-deploy.sh    # build + install + relaunch on PAYDAY_DEVICE_UDID
 scripts/ios-test.sh      # PayDayKit (SPM) + hosted iOS tests on a simulator
-swift test               # PayDayKit only — runs anywhere, no Xcode/device needed
-```
-
-`ios-build.sh` runs `xcodegen generate` first, captures the real xcodebuild exit code via
-`pipefail`, surfaces Swift 6 concurrency errors, and asserts no `.swift` is newer than the built
-binary. Adding/removing any file → just run `ios-build.sh`. Never call `xcodebuild` raw.
-
-```bash
+swift test               # PayDayKit only, runs anywhere
 cd workers
 npm install && npm run typecheck && npm test
 CLOUDFLARE_API_TOKEN=$(cat ~/.cloudflare-api-token) npx wrangler deploy   # prod
 ```
 
-## Logging — agents read this
+- Never call `xcodebuild` raw. `ios-build.sh` runs `xcodegen generate` first, asserts no `.swift` is newer than the binary; adding or removing a file just means running it.
+- Logs: `MidgarLog` writes `Library/Logs/payday.log` (rotates at 2 MB). Pull with the `ios-device-logs` skill or `devicectl ... copy from --source Library/Logs/payday.log`. Never log invoice contents, prompts or model output; never `print`.
 
-`MidgarLog` mirrors os_log AND `Library/Logs/payday.log` (rotates at 2 MB). Categories:
-`app, auth, db, invoice, pdf, einvoice, peppol, vat, credits, ui`. Pull from a device with the
-`ios-device-logs` skill / `devicectl ... copy from --source Library/Logs/payday.log`.
+## Rules that break things
 
-## Secrets / config
+- MidgarKit and AICredits come from the monorepo's `packages/MidgarKit` and `packages/AICredits` by path (`project.yml`, D15). The app links the `MidgarKit` umbrella product. Do not reimplement credits or RevenueCat: use AICredits.
+- Commerce engine is `aicredits`, entitlement `pro`: AICredits and RevenueCat buy, restore and meter. Never change product ids, prices or the RevenueCat app user id without the founder.
+- Swift 6 complete checking; the app target has no MainActor default isolation, keep it that way unless the whole app moves.
+- `keychain-access-groups` in `project.yml`: the app's own group first (AICredits keeps its api key there), `$(AppIdentifierPrefix)cc.midgarcorp.shared` second. No App Attest entitlement is needed.
+- Gateway: `PayDayMidgar.intelligenceURL` is AICredits' base URL, the Midgar token goes through `additionalHeaders` (`midgarTokenHeaders()`, never waited on). The worker is `https://api.midgarcorp.cc/v1/payday/...`; `WorkerClient` sends the mako api key in `Authorization`, each call once with a 12 second timeout. Tenant id `payday`; Midgar ID, signals and portal use slug `pay-day`. Deploy the worker before the app release.
+- Account deletion order in `AccountService.deleteAccount`: worker `DELETE /v1/payday/v1/account` first (needs the mako key), then mako's identity delete, then local data.
+- Privacy: `PayDay/PrivacyInfo.xcprivacy`, `store/privacy-label.md` and the policy under `web/midgarcorp/src/content/legal/pay-day/` move together; policy URL `https://midgarcorp.cc/legal/pay-day/privacy/` (`LegalLinks`). No network exceptions in the registry.
+- Secrets: `.env.local` (gitignored: `PAYDAY_BUNDLE_ID`, `PAYDAY_TEAM_ID`, `PAYDAY_DEVICE_UDID`, `PAYDAY_DEVICE_NAME`) and gitignored `PayDay/Secrets.swift` (`revenueCatPublicKey`, from `Secrets.example.swift`). Worker secrets via `wrangler secret put` and `workers/.dev.vars`: `APP_JWT_SECRET`, `APPLE_CLIENT_ID`, `APPLE_TEAM_ID`, `PEPPOL_API_KEY`, `PEPPOL_API_SECRET`, `PEPPOL_LEGAL_ENTITY_ID`; `wrangler.jsonc` vars `PEPPOL_PROVIDER`, `PEPPOL_GATEWAY_BASE`. If any required secret is missing the stub Peppol gateway silently runs. Never commit secrets.
+- Money is integer minor units plus ISO-4217 code, never `Double`; rounding is half-up at the document boundary (EN 16931).
+- The PDF and the EN 16931 XML render from one `Invoice` value so they never disagree.
+- Never block issuing on the network: VIES, FX and Peppol degrade gracefully, offline invoicing must work.
+- Peppol AS4 is brokered through the worker's gateway, never implemented on device. Free stays genuinely good (unlimited invoices, clients, multi-currency, full VAT); the paywall sits on compliance, delivery and automation.
 
-`.env.local` (gitignored, made by `setup.sh`): `PAYDAY_BUNDLE_ID`, `PAYDAY_TEAM_ID`,
-`PAYDAY_DEVICE_UDID`, `PAYDAY_DEVICE_NAME`. `PayDay/Secrets.swift` (gitignored, from
-`Secrets.example.swift`): `revenueCatPublicKey`; the mako and worker addresses are the gateway's and live in
-`PayDayMidgar`.
-Worker secrets via `wrangler secret put` (prod) + `workers/.dev.vars` (local): `APP_JWT_SECRET`,
-`APPLE_CLIENT_ID`, `APPLE_TEAM_ID`, `PEPPOL_API_KEY`, `PEPPOL_API_SECRET`, `PEPPOL_LEGAL_ENTITY_ID`.
-Plaintext vars in `wrangler.jsonc`: `PEPPOL_PROVIDER` (`recommand` default, or `storecove`),
-`PEPPOL_GATEWAY_BASE`. The provider gateway runs only when all of API_KEY + (Recommand: API_SECRET) +
-GATEWAY_BASE + LEGAL_ENTITY_ID are set; otherwise the stub gateway runs (so a missing secret silently
-ships the stub). For Recommand, LEGAL_ENTITY_ID carries the sending company id. Never commit secrets.
+## Conventions
 
-## Reality
+- `final class`; `nonisolated struct: Sendable` for values; `@available(*, unavailable) required init?(coder: NSCoder) { fatalError() }` on every custom view/VC.
+- Programmatic UIKit, no storyboards, `UIStackView` first then anchors. No Combine in `PayDayKit`: the `@MainActor` VM consumes streams in a `Task` and republishes via its own `PassthroughSubject<T, Never>` (never `@Published`); VCs bind in `viewDidLoad` with `Set<AnyCancellable>` and `.receive(on: DispatchQueue.main)`.
+- GRDB: `nonisolated struct` records, `registerMigration("vN")`, never edited after release.
+- Liquid Glass on iOS 26 with `.systemThinMaterial` fallback.
+- No comments, no MARK, no file headers; SPM only; Swift Testing, never XCTest.
 
-- **The wedge is compliance, not the keyword.** Lead store metadata with "EU e-invoicing / Peppol /
-  Factur-X / EN 16931", not "invoice maker" — both for ASO differentiation and App Review 4.3.
-- **Free must be genuinely good.** Unlimited invoices, clients, logo, multi-currency, full VAT math.
-  The paywall sits on compliance + delivery + automation, which is where the proven money is and the
-  only place we should ask freelancers to pay.
-- **Never block issuing on the network.** VIES, FX, and Peppol lookups degrade gracefully —
-  validation is advisory; a freelancer offline on a job site must still produce an invoice.
-- **The XML and the PDF come from one `Invoice` value.** Render the human PDF and the EN 16931 XML
-  from the same source so a Pro e-invoice can never show different numbers to human and machine.
-- **Peppol AS4 is brokered, never hand-rolled.** The worker calls a pluggable access-point gateway;
-  we are not an access point and do not implement AS4/SML/SMP on device.
+## More in docs/agent-notes.md
+
+Stack detail, backend split, Midgar platform wiring, Peppol provider config, product reality (compliance wedge, store metadata lead), settings, review prompt, log categories (`app, auth, db, invoice, pdf, einvoice, peppol, vat, credits, ui`).
