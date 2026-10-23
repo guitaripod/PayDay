@@ -24,7 +24,7 @@ and the spikes that gate the build. This file is the working guide.
   `InvoicePDFRenderer` + `FacturXEmbedder` (PDFKit/Core Graphics), `AICreditsManager` (mako),
   `PeppolService` + `VATValidationService` (Worker). Swift 6 strict concurrency, iOS 18+ deploy /
   iOS 26 SDK, iPhone-first (iPad-capable later). Darwin-only — build on a Mac.
-- **workers/** (`payday-worker`): Cloudflare Workers (Hono v4, jose v6, KV + D1). Sign in with Apple
+- **services/pay-day** (`payday-worker`, moved out of `workers/` on 2026-10-23): Cloudflare Workers (Hono v4, jose v6, KV + D1). Sign in with Apple
   → HS256 app JWT; `/v1/vat/validate` (EU VIES bridge), `/v1/fx/rates` (ECB), `/v1/peppol/send` +
   `/v1/peppol/lookup` (access-point gateway broker — pluggable, stubbed), `DELETE /v1/account` (erases the caller's Peppol transmission records; the app calls it before mako's identity delete, because the worker authenticates through the mako key). TypeScript, vitest.
 - **mako** (`api.midgarcorp.cc/v1/intelligence`): the shared AI-credits backend via the **AICredits** SPM package
@@ -107,7 +107,7 @@ CLOUDFLARE_API_TOKEN=$(cat ~/.cloudflare-api-token) npx wrangler deploy   # prod
 `PAYDAY_DEVICE_UDID`, `PAYDAY_DEVICE_NAME`. `PayDay/Secrets.swift` (gitignored, from
 `Secrets.example.swift`): `revenueCatPublicKey`; the mako and worker addresses are the gateway's and live in
 `PayDayMidgar`.
-Worker secrets via `wrangler secret put` (prod) + `workers/.dev.vars` (local): `APP_JWT_SECRET`,
+Worker secrets via `wrangler secret put` (prod) + `services/pay-day/.dev.vars` (local): `APP_JWT_SECRET`,
 `APPLE_CLIENT_ID`, `APPLE_TEAM_ID`, `PEPPOL_API_KEY`, `PEPPOL_API_SECRET`, `PEPPOL_LEGAL_ENTITY_ID`.
 Plaintext vars in `wrangler.jsonc`: `PEPPOL_PROVIDER` (`recommand` default, or `storecove`),
 `PEPPOL_GATEWAY_BASE`. The provider gateway runs only when all of API_KEY + (Recommand: API_SECRET) +

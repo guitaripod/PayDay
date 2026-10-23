@@ -63,7 +63,7 @@ hand-rolled AS4 on device.
                          └────────────────────┬───────────────────────┘
                                               │ HTTPS (authed)
             ┌─────────────────────────────────┴─────────────────────────┐
-            │ workers/payday-worker (Hono, Cloudflare)                    │
+            │ services/pay-day = payday-worker (Hono, Cloudflare)         │
             │  SIWA → app JWT (sync identity)                             │
             │  /v1/vat/validate   → EU VIES SOAP bridge                   │
             │  /v1/fx/rates       → ECB reference rates (cached)          │

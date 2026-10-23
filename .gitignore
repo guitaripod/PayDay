@@ -10,11 +10,6 @@ xcuserdata/
 # Local config & secrets (never commit)
 .env.local
 PayDay/Secrets.swift
-workers/.dev.vars
-workers/.wrangler/
-
-# Node
-workers/node_modules/
 
 # macOS
 .DS_Store

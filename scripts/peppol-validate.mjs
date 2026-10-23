@@ -1,6 +1,6 @@
 // Validate a UBL file against Recommand's EN16931/PEPPOL-BIS schematron via the
 // PLAYGROUND (free, simulated AS4, no real delivery). Prints the FULL error list.
-//   PEPPOL_API_KEY/SECRET/LEGAL_ENTITY_ID from workers/.dev.vars (playground).
+//   PEPPOL_API_KEY/SECRET/LEGAL_ENTITY_ID from services/pay-day/.dev.vars (playground).
 //   usage: node scripts/peppol-validate.mjs <ubl.xml> [recipient]
 import { readFileSync } from 'node:fs'
 

@@ -16,7 +16,7 @@ Sources/PayDayKit/   Platform-agnostic core (builds on Linux/macOS via `swift bu
   Tax/               TaxEngine (EN 16931 VAT breakdown + monetary summation)
   EInvoice/          CIIInvoiceWriter (Factur-X), UBLInvoiceWriter (Peppol), InvoiceValidator
 PayDay/              UIKit app (MVVM, GRDB, PDFKit renderer + Factur-X embedder, AICredits, services)
-workers/             Cloudflare Worker (Hono): VIES VAT, ECB FX, Peppol gateway broker
+(services/pay-day  at the repo root: Cloudflare Worker (Hono): VIES VAT, ECB FX, Peppol gateway broker)
 Tests/ PayDayTests/  PayDayKit (SPM) + hosted iOS rendering tests
 ```
 

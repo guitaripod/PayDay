@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Drives the Recommand Peppol adapter against the live PLAYGROUND (simulated AS4,
-# zero cost, no real network). Loads the four Recommand vars from workers/.dev.vars
+# zero cost, no real network). Loads the four Recommand vars from services/pay-day/.dev.vars
 # and runs the gated live smoke test. Safe to re-run.
 #
-#   workers/.dev.vars must contain:
+#   services/pay-day/.dev.vars must contain:
 #     PEPPOL_PROVIDER=recommand
 #     PEPPOL_GATEWAY_BASE=https://app.recommand.eu
 #     PEPPOL_API_KEY=<playground api key>
@@ -14,10 +14,11 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ENV_FILE="$ROOT/workers/.dev.vars"
+WORKER_DIR="$ROOT/../../services/pay-day"
+ENV_FILE="$WORKER_DIR/.dev.vars"
 
 if [[ ! -f "$ENV_FILE" ]]; then
-  echo "✗ $ENV_FILE not found. Create it from workers/.dev.vars.example with the playground creds." >&2
+  echo "✗ $ENV_FILE not found. Create it from services/pay-day/.dev.vars.example with the playground creds." >&2
   exit 1
 fi
 
@@ -42,5 +43,5 @@ fi
 
 echo "▸ Recommand playground: $PEPPOL_GATEWAY_BASE  company=$PEPPOL_LEGAL_ENTITY_ID"
 export PEPPOL_LIVE_SMOKE=1
-cd "$ROOT/workers"
+cd "$WORKER_DIR"
 npx vitest run peppol.live --reporter=verbose
