@@ -82,12 +82,9 @@ then `asc review submit --app 6779927672 --version <version> --build-id <id> --c
 `PayDay/Secrets.swift` (gitignored) rides along in the rsync; `--marketing` drives
 `CFBundleShortVersionString` because project.yml binds it to `MARKETING_VERSION`.
 
-## Release CI (fallback)
+## Release
 
-- `.github/workflows/release.yml` — `macos-26` runner, beta-host guard (ITMS-90111), manual signing
-  (p12 + provisioning profile "PayDay App Store 2026"), Secrets.swift materialized inline, IPA zipped
-  by hand, `altool --upload-app`. Repo secrets: SIGNING_P12_BASE64, P12_PASSWORD,
-  PROVISIONING_PROFILE_BASE64, ASC_API_KEY_P8_BASE64, AICREDITS_DEPLOY_KEY, REVENUECAT_PUBLIC_KEY.
+- Release with `midgar ship pay-day` (see `ops/runbooks/ship-parity.md`). It archives locally on a stable or point-beta macOS host and in the buildvm guest (stable macOS 27, Xcode 27.1) during a major macOS beta; the GitHub Actions release workflows were removed on 2026-10-23.
 - Mint the provisioning profile via `POST /v1/profiles` (bundle `com.guitaripod.payday` + cert
   WXA29XJHK2). The app uses Sign in with Apple → enable APPLE_ID_AUTH on the bundle id first.
 

@@ -153,5 +153,5 @@ PRIVACY / DATA: business and client data is stored on-device (GRDB). Nothing lea
 - [ ] Screenshots: produce all 6 per the scene/caption spec on iPhone Air. Verify screenshot 1 badge reads 'EN 16931 valid — independently validated (Mustangproject)' NOT a 'compliant' seal; verify screenshot 2 endpoint is the fake demo 9930:DE123456789; verify screenshot 6 shows the real 3-SKU paywall (no weekly).
 - [ ] ASC App Privacy: declare on-device storage; data sent only on explicit user action (VIES VAT ID, Peppol e-invoice, optional AI content); no tracking.
 - [ ] Paste Review Notes (demo-data walkthrough + Peppol sandbox path + Pro inspection path + IAP/credit costs). Attach a demo run note that no account is required.
-- [ ] Build on a STABLE-macOS CI runner (per CLAUDE.md ITMS-90111 guard) — never a beta-host build; verify BuildMachineOSBuild is not a beta pattern before upload.
+- [ ] Build and upload with `midgar ship pay-day` (see `ops/runbooks/ship-parity.md`); never a beta-host build, so verify BuildMachineOSBuild is not a beta pattern before upload.
 - [ ] Final preflight: run release_preflight against the build, confirm all 3 subs + 4 consumables + lifetime are 'Ready to Submit', then submit for review with the Peppol/compliance angle leading.
