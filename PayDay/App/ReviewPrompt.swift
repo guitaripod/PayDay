@@ -1,78 +1,82 @@
-import PayDayKit
+import MidgarCommerce
+import MidgarCore
 import StoreKit
 import UIKit
 
-/// Asks for an App Store rating after a real invoice goes out, and again
-/// later if the first ask didn't come from an already-happy user — never
-/// more than Apple's own cap of three prompts in any rolling year.
+/// Asks for an App Store rating after a real invoice goes out. `MidgarReviewPolicy` decides whether an ask is due (the
+/// shared Midgar rules: not in the first days or sessions, not within 120 days of the last ask or on the version that
+/// asked, not within a week of a failed purchase); this type reports each delivery to it and, when it says yes, asks
+/// StoreKit a beat later, once the success UI has landed and only while nothing else is covering the screen.
 ///
-/// Rating count is both a ranking input and the strongest conversion signal on
-/// a product page — an app showing "5 ratings" and one showing "300" convert
-/// very differently from the same impressions. Prompting before any value has
-/// landed buys one-star reviews instead, so the counter only advances on a
-/// document the user actually delivered. The timing math itself lives in
-/// `ReviewEligibility`, in PayDayKit, so it's testable without StoreKit.
+/// A rating count is both a ranking input and the strongest conversion signal on a product page. Prompting before any
+/// value has landed buys one-star reviews instead, so the only positive moment reported is a document the user
+/// actually delivered: a completed share sheet or an accepted Peppol transmission.
 @MainActor
 enum ReviewPrompt {
-    private static let askDelay: TimeInterval = 1.5
+    static let askDelay: Duration = .milliseconds(1_500)
 
-    /// Call after an invoice reaches its recipient — a completed share sheet or
-    /// an accepted Peppol transmission.
-    static func recordDelivery(from viewController: UIViewController) {
-        AppSettings.migrateLegacyReviewStateIfNeeded()
-        AppSettings.reviewSuccessCount += 1
-        let successCount = AppSettings.reviewSuccessCount
-        AppLogger.shared.info("review: recorded delivery #\(successCount)", category: .app)
-        askIfEligible(from: viewController, successCount: successCount)
+    /// Guards against a second delivery landing while the first ask is still delayed: without it, two deliveries
+    /// within the same delay could each see themselves as due and both call StoreKit.
+    private static var askPending = false
+
+    nonisolated static let policy: MidgarReviewPolicy = {
+        let storage = MidgarReviewFileStorage(appID: PayDayMidgar.appID)
+        LegacyReviewState.migrate(from: .standard, into: storage)
+        return MidgarReviewPolicy(storage: storage)
+    }()
+
+    /// Counts one session. Call it once per launch.
+    nonisolated static func beginSession() {
+        policy.beginSession()
     }
 
-    private static func askIfEligible(from viewController: UIViewController, successCount: Int) {
-        let now = Date()
-        let askDates = AppSettings.reviewAskDates
-        let eligible = ReviewEligibility.shouldAsk(
-            successCount: successCount,
-            askDates: askDates,
-            successCountAtLastAsk: AppSettings.reviewSuccessCountAtLastAsk,
-            now: now)
-        guard eligible else {
-            AppLogger.shared.info("review: skipped (not eligible — \(successCount) deliveries, \(askDates.count) prior asks)", category: .app)
+    /// Reports a purchase that failed, which holds the prompt back for a week.
+    nonisolated static func notePurchaseFailure() {
+        policy.notePurchaseFailure()
+    }
+
+    /// Call after an invoice reaches its recipient. Tallies the delivery with the policy and, if it allows an ask,
+    /// asks for a rating a beat later. The scene is captured now, because by the time the ask runs the screen may be
+    /// gone.
+    static func recordDelivery(from viewController: UIViewController) {
+        guard policy.noteSuccess() else {
+            MidgarLog.info("review prompt skipped: \(policy.evaluate())", category: .app)
             return
         }
         guard let scene = viewController.view.window?.windowScene else {
-            AppLogger.shared.info("review: skipped (no window scene)", category: .app)
+            MidgarLog.info("review prompt skipped (no window scene)", category: .app)
             return
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + askDelay) { [weak viewController] in
-            request(in: viewController, scene: scene, now: now, successCount: successCount, priorAskCount: askDates.count)
+        guard !askPending else {
+            MidgarLog.info("review prompt skipped: an ask is already pending", category: .app)
+            return
+        }
+        askPending = true
+        Task { [weak viewController] in
+            defer { askPending = false }
+            try? await Task.sleep(for: askDelay)
+            ask(in: scene, from: viewController)
         }
     }
 
-    /// Re-checks that nothing moved between the eligibility decision and the
-    /// delayed ask: the view still on screen with nothing presented over it
-    /// (no paywall, purchase sheet, alert, or error that appeared in the
-    /// meantime), and the scene still the one the user is actively looking at.
-    private static func request(
-        in viewController: UIViewController?,
-        scene: UIWindowScene,
-        now: Date,
-        successCount: Int,
-        priorAskCount: Int
-    ) {
+    /// Re-checks that nothing moved between the policy's decision and the delayed ask: the view still on screen with
+    /// nothing presented over it (no paywall, purchase sheet, alert, or error that appeared in the meantime), and the
+    /// scene still the one the user is actively looking at.
+    private static func ask(in scene: UIWindowScene, from viewController: UIViewController?) {
         guard let viewController, viewController.viewIfLoaded?.window != nil else {
-            AppLogger.shared.info("review: skipped (the originating screen left the window)", category: .app)
+            MidgarLog.info("review prompt skipped (the originating screen left the window)", category: .app)
             return
         }
         guard viewController.presentedViewController == nil else {
-            AppLogger.shared.info("review: skipped (something presented before the delay elapsed)", category: .app)
+            MidgarLog.info("review prompt skipped (something presented before the delay elapsed)", category: .app)
             return
         }
         guard scene.activationState == .foregroundActive else {
-            AppLogger.shared.info("review: skipped (scene not foreground-active)", category: .app)
+            MidgarLog.info("review prompt skipped (scene not foreground-active)", category: .app)
             return
         }
-        AppSettings.reviewAskDates += [now]
-        AppSettings.reviewSuccessCountAtLastAsk = successCount
-        AppLogger.shared.info("review: asked (#\(priorAskCount + 1))", category: .app)
+        policy.notePrompted()
+        MidgarLog.info("review prompt requested", category: .app)
         AppStore.requestReview(in: scene)
     }
 }
