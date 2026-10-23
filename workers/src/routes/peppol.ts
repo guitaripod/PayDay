@@ -79,12 +79,12 @@ peppolRoutes.post('/v1/peppol/send', requireAuth, async (c) => {
   try {
     result = await gateway.send(ublXML, recipient)
   } catch {
-    return c.json({ status: 'failed', reason: 'gateway_unavailable', retriable: true }, 502)
+    return c.json({ status: 'failed', reason: 'gateway_unavailable', error: 'gateway_unavailable', retriable: true }, 502)
   }
 
   if (result.status !== 'accepted') {
     await recordSend(c.env.DB, userId, key, invoiceNumber, recipient.endpointID, 'failed', null, result.reason ?? null)
-    return c.json(result, 502)
+    return c.json({ ...result, error: result.reason }, 502)
   }
 
   const claim = await c.env.DB.prepare(

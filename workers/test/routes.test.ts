@@ -131,6 +131,9 @@ describe('peppol send hardening', () => {
     // An endpoint without a scheme separator is unreachable to the stub gateway.
     const res = await sendRequest(env, { recipient: { endpointID: 'unreachable', schemeID: '9930', countryCode: 'DE' } })
     expect(res.status).toBe(502)
+    const body = await res.json<{ status: string; reason: string; error: string }>()
+    expect(body.status).toBe('failed')
+    expect(body.error).toBe(body.reason)
     const rows = ledger(env)
     expect(rows.length).toBe(1)
     expect(rows[0].status).toBe('failed')
