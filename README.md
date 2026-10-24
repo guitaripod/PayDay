@@ -28,7 +28,7 @@ See `CLAUDE.md` for working conventions and `DESIGN.md` for the authoritative ar
 
 ```bash
 swift test --package-path Core/PayDayCore  # PayDayCore — runs anywhere, no Xcode/device
-scripts/setup.sh            # one-time: .env.local + Secrets.swift + xcodegen + spm (Mac)
+scripts/setup.sh            # one-time: .env.local + xcodegen + spm (Mac)
 scripts/ios-build.sh        # build the app with staleness assertion (Mac)
 scripts/ios-test.sh         # PayDayCore + hosted iOS tests (Mac)
 cd workers && npm install && npm run typecheck && npm test

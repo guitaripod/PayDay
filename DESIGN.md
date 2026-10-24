@@ -72,7 +72,7 @@ hand-rolled AS4 on device.
             └─────────────────────────────────────────────────────────────┘
                                               │
             mako.midgarcorp.cc (shared AI-credits backend, AICredits SPM) ──┘
-            credits ledger · RevenueCat validation · AI capability run
+            credits wallet · purchase validation · AI capability run
 ```
 
 The VM↔VC contract is identical to Psybeam/DreamEater: the `@MainActor` view model holds its
@@ -117,11 +117,11 @@ as **integer minor units** (cents) + ISO-4217 currency code — never `Double` c
 
 ## Monetization
 
-- RevenueCat via the **AICredits** SPM package (`AICreditsCore`/`AICreditsRevenueCat`/`AICreditsUI`),
-  exactly as Psybeam/DreamEater. Entitlement `pro`. Subscription group "Pay Day Pro": monthly
+- StoreKit 2 through **MidgarStore** (MidgarKit), with the Midgar ID as `appAccountToken`; RevenueCat left the app
+  in the P2.09 move. Entitlement `pro`. Subscription group "Pay Day Pro": monthly
   €4.99, annual €39.99 (7-day trial). (Lifetime was cut before 1.0 — an unreachable IAP is an App Review risk; the paywall sells annual + monthly only.)
-- Credits packs (consumable IAP) validated server-side by mako
-  (`/v1/credits/purchase/revenuecat/validate`, product↔pack bound). Peppol send = N credits;
+- Credits packs (consumable IAP) sold through **MidgarCredits** and validated server-side by mako from the signed
+  transaction (`/v1/credits/purchase/revenuecat/validate`, product↔pack bound). Peppol send = N credits;
   AI action = N credits. Free tier never needs credits for local PDF export.
 
 ## App Review gates

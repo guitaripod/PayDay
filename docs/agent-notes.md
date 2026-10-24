@@ -27,27 +27,28 @@ and the spikes that gate the build. This file is the working guide.
 - **services/pay-day** (`payday-worker`, moved out of `workers/` on 2026-10-23): Cloudflare Workers (Hono v4, jose v6, KV + D1). Sign in with Apple
   → HS256 app JWT; `/v1/vat/validate` (EU VIES bridge), `/v1/fx/rates` (ECB), `/v1/peppol/send` +
   `/v1/peppol/lookup` (access-point gateway broker — pluggable, stubbed), `DELETE /v1/account` (erases the caller's Peppol transmission records; the app calls it before mako's identity delete, because the worker authenticates through the mako key). TypeScript, vitest.
-- **mako** (`api.midgarcorp.cc/v1/intelligence`): the shared AI-credits backend via the **AICredits** SPM package
-  (`AICreditsCore`/`AICreditsRevenueCat`/`AICreditsUI`). Identity, credits ledger, RevenueCat
-  validation, AI capability `run`. App-ID `payday`. Do not reimplement credits — use AICredits.
+- **mako** (`api.midgarcorp.cc/v1/intelligence`): the shared AI-credits backend. Identity, the credits wallet,
+  purchase validation, AI capability `run`. App-ID `payday`. The credit packs and Pro plans are sold by MidgarStore and
+  MidgarCredits (MidgarKit); the **AICredits** SPM package (`AICreditsCore`, `AICreditsUI` for the Apple link row)
+  only runs the AI calls and holds the old account and its api key.
 
 ## Midgar platform
 
 - **MidgarKit** and **AICredits** from the monorepo's `packages/MidgarKit` and `packages/AICredits` by path (`project.yml`, decision D15). The app target links the `MidgarKit` umbrella product. Swift 6 language mode with complete checking; the app target has no MainActor default isolation, so keep it that way unless the whole app moves. Launch the app in the simulator after any isolation change: a trap only shows at runtime.
 - **Midgar ID**: `PayDayMidgar` (`App/`) builds the identity, the gateway client behind the portal card and the `PayDayGateway` (`App/Services/`) for mako and the worker. `keychain-access-groups` in `project.yml` lists the app's own group first (AICredits keeps its api key there, so the order matters) and `$(AppIdentifierPrefix)cc.midgarcorp.shared` second. No App Attest entitlement is needed: App Store and TestFlight builds attest in Apple's production environment regardless, and development builds attest in the sandbox, which the identity service accepts as the development tier.
 - **Gateway**: mako is `https://api.midgarcorp.cc/v1/intelligence` (`PayDayMidgar.intelligenceURL`, AICredits' base URL) and AICredits sends the Midgar token through `additionalHeaders` (`midgarTokenHeaders()`, never waited on). The worker is `https://api.midgarcorp.cc/v1/payday/...`; `WorkerClient` sends the mako api key in `Authorization`, which the gateway forwards to the worker, each call once with a 12 second timeout. The tenant id is `payday` (mako and the worker know the app by it); the Midgar ID, signals and the portal use the registry slug `pay-day`. The worker repeats a refused send's `reason` as `error`, which is how the gateway client's error message carries it to the alert; deploy the worker before the app release so the reason shows.
-- **Commerce**: registry engine `aicredits`, entitlement `pro`. AICredits and RevenueCat still buy, restore and meter; do not change product ids, prices or the RevenueCat app user id without the founder.
+- **Commerce**: registry engine `storekit2` since the P2.09 move, entitlement `pro`: `MidgarStore` and `MidgarCredits` sell the two Pro plans and the four packs on the Midgar ID (see `CLAUDE.md`), RevenueCat is gone, AICredits keeps the old account's api key and the AI calls. Do not change product ids, prices or credit amounts without the founder.
 - **Logging**: `MidgarLog` (MidgarCore) with the categories in `App/Logging/LogCategories.swift`; the file is `Library/Logs/payday.log`, rotated into numbered archives. Never log invoice contents, prompts or model output.
 - **Settings**: `SettingsViewController` hosts MidgarUI's `MidgarSettingsViewController` (portal card on top, theme `MidgarTheme.payDay`); sections are in `SettingsSections.swift`, actions in `SettingsActions.swift`.
 - **Review prompt**: `ReviewPrompt` reports each delivered invoice to `MidgarReviewPolicy` (no ask before 3 days and 6 sessions); `LegacyReviewState` carries the old ask history over.
-- **Account deletion order**: `AccountService.deleteAccount` runs the worker's `DELETE /v1/payday/v1/account` first (it needs the mako key), then mako's identity delete, then the local data.
+- **Account deletion order**: `AccountService.deleteAccount` runs the worker's `DELETE /v1/payday/v1/account` first (it needs the mako key), then the old mako account through `MidgarCredits.deleteLegacyAccount()`, then the local data.
 - **Privacy**: `Resources/PrivacyInfo.xcprivacy`, `store/privacy-label.md` and the policy under `web/midgarcorp/src/content/legal/pay-day/` move together; the published policy URL is `https://midgarcorp.cc/legal/pay-day/privacy/` (`LegalLinks`).
-- **Network exceptions** (registry): none. RevenueCat and Apple services are SDK-internal.
+- **Network exceptions** (registry): none. Apple services are StoreKit-internal.
 
 ## Backend split (do not confuse the two)
 
-- **mako / AICredits** owns identity, the credits ledger, RevenueCat purchase validation, and the AI
-  hot path (`/v1/run/*`). Entitlement `pro`. Reuse the package; never hand-roll RevenueCat.
+- **mako** owns identity, the credits wallet, purchase validation (from the signed App Store transaction), and the AI
+  hot path (`/v1/run/*`). Entitlement `pro`. Reuse MidgarCredits and AICredits; never hand-roll purchases.
 - **payday-worker** owns the invoice-domain services that need server secrets or CORS-free access:
   VIES VAT validation, ECB FX rates, and Peppol AS4 transmission through an access-point gateway.
   It authenticates with the same SIWA→JWT used for cross-device sync.
@@ -78,7 +79,7 @@ and the spikes that gate the build. This file is the working guide.
 xcodegen regenerates `PayDay.xcodeproj` from `project.yml` on every build, so:
 
 ```bash
-scripts/setup.sh         # one-time: .env.local + Secrets.swift + xcodegen + spm
+scripts/setup.sh         # one-time: .env.local + xcodegen + spm
 scripts/ios-build.sh     # build, with xcodegen + staleness assertion
 scripts/ios-deploy.sh    # build + install + relaunch on PAYDAY_DEVICE_UDID
 scripts/ios-test.sh      # PayDayCore (SPM) + hosted iOS tests on a simulator
@@ -104,9 +105,8 @@ CLOUDFLARE_API_TOKEN=$(cat ~/.cloudflare-api-token) npx wrangler deploy   # prod
 ## Secrets / config
 
 `.env.local` (gitignored, made by `setup.sh`): `PAYDAY_BUNDLE_ID`, `PAYDAY_TEAM_ID`,
-`PAYDAY_DEVICE_UDID`, `PAYDAY_DEVICE_NAME`. `App/Secrets.swift` (gitignored, from
-`Secrets.example.swift`): `revenueCatPublicKey`; the mako and worker addresses are the gateway's and live in
-`PayDayMidgar`.
+`PAYDAY_DEVICE_UDID`, `PAYDAY_DEVICE_NAME`. The app has no other secrets (the RevenueCat key left with RevenueCat);
+the mako and worker addresses are the gateway's and live in `PayDayMidgar`.
 Worker secrets via `wrangler secret put` (prod) + `services/pay-day/.dev.vars` (local): `APP_JWT_SECRET`,
 `APPLE_CLIENT_ID`, `APPLE_TEAM_ID`, `PEPPOL_API_KEY`, `PEPPOL_API_SECRET`, `PEPPOL_LEGAL_ENTITY_ID`.
 Plaintext vars in `wrangler.jsonc`: `PEPPOL_PROVIDER` (`recommand` default, or `storecove`),

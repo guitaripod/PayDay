@@ -12,13 +12,13 @@ Answers for App Store Connect, App Privacy section. Apple does not expose this s
 
 | Data type (Apple) | Linked to the user | Used to track | Purpose | What it is in Pay Day |
 | --- | --- | --- | --- | --- |
-| Identifiers, User ID | Yes | No | App Functionality | The anonymous account key mako issues for the credit balance and Pro status, and the random Midgar ID, kept in iCloud Keychain and shared with Midgar's other apps on the person's devices. The Midgar ID goes to `api.midgarcorp.cc` (the identity service), rides on mako calls so mako can link it to the account, and authorizes the portal's "Your Midgar" panel. RevenueCat also holds its own anonymous app user id. (New with this release.) |
+| Identifiers, User ID | Yes | No | App Functionality | The anonymous account key mako issues for the credit balance and Pro status, and the random Midgar ID, kept in iCloud Keychain and shared with Midgar's other apps on the person's devices. The Midgar ID goes to `api.midgarcorp.cc` (the identity service), rides on mako calls so mako can link it to the account, and authorizes the portal's "Your Midgar" panel. (New with this release.) |
 | Identifiers, Device ID | Yes | No | App Functionality | The app reads no advertising identifier and no vendor identifier. The first mako account is created with a DeviceCheck token that mako checks with Apple, which answers only yes or no; the app also keeps a random per-install id in the Keychain. MidgarKit's App Attest key id, per app and per device, stored with the Midgar ID when the ID is created or joined. App Store and TestFlight builds use App Attest's production environment whether or not the app has the App Attest entitlement (Apple, App Attest Environment entitlement), so released builds create it. |
 | Contact Info, Name; Email Address; Physical Address | Yes | No | App Functionality | The buyer and seller details inside an invoice, only in the Peppol document the person sends, which travels with the account key to the worker and on to the access-point provider. |
 | Financial Info, Other Financial Info | Yes | No | App Functionality | The amounts, VAT breakdown and bank details inside a sent Peppol document. |
 | Photos or Videos | Yes | No | App Functionality | The photo picked for "draft line items from a photo", sent to mako and on to the AI provider after the person allows AI drafting. |
 | User Content, Other User Content | Yes | No | App Functionality | The text of an AI description or reminder request, and the Peppol transmission record the worker keeps (invoice number, recipient address, result). |
-| Purchases, Purchase History | Yes | No | App Functionality, Analytics, Developer's Advertising | The App Store transactions of Pay Day Pro and credit packs, verified by RevenueCat and recorded by mako; the install attribution is joined to whether the person subscribed. |
+| Purchases, Purchase History | Yes | No | App Functionality, Analytics, Developer's Advertising | The App Store transactions of Pay Day Pro and credit packs. mako verifies each one from the signed App Store transaction and records it against the account and the Midgar ID, so Purchase History stays linked; the install attribution is joined to whether the person subscribed. |
 | Usage Data, Advertising Data | Yes | No | Analytics, Developer's Advertising | Apple Ads attribution (campaign, ad group, keyword, country) that mako stores against the anonymous account. No advertising identifier. |
 | Usage Data, Product Interaction | No | No | Analytics | The anonymous More Apps card events (opened, shown, tapped) that the portal sends to `api.midgarcorp.cc/v1/signals` through MidgarKit's anonymous signals client, with no Midgar ID, device identifier or `Authorization` header. Reading "Your Midgar" sends no event. (New with this release.) |
 
@@ -34,11 +34,10 @@ Everything else is "Data Not Collected".
 
 - Every call to mako and to the Pay Day worker now goes through `api.midgarcorp.cc`; the legacy `mako.midgarcorp.cc` and `payday-worker.guitaripod.workers.dev` addresses are no longer used by this build, so the data collected is unchanged apart from the Midgar ID and the portal counts.
 - Delete Account in the app erases the worker's Peppol transmission records first (`DELETE /v1/payday/v1/account`, `peppol_sends` keyed by the mako user id), then the mako account, then the local data. It does not erase the Midgar ID, which Midgar's other apps share; the policy gives the support address for that.
-- The Midgar ID is not sent to RevenueCat and Pay Day's purchases still go through AICredits and RevenueCat only, so Purchase History is unchanged.
+- Pay Day's purchases go through StoreKit 2 and MidgarStore: every purchase carries the Midgar ID as the App Store `appAccountToken`, and mako and the purchase ledger record it, so Purchase History stays linked to the account and the Midgar ID. RevenueCat is no longer in the app.
 
 ## Third-party SDK notes
 
-- RevenueCat: processes purchase data on our behalf (Purchase History, User ID above).
 - MidgarKit 4.3.1: `MidgarPortal` ships a manifest that declares Product Interaction for Analytics, not linked, matching the row above. `MidgarCore` (identity, HTTP, logging, signals) ships none and uses no required-reason API beyond the ones listed below. Anonymous signals send nothing else: MetricKit collection is not started.
 - Cloudflare: hosts the gateway (`api.midgarcorp.cc`) and the services behind it, mako and the Pay Day worker, and may keep standard request logs (IP address) for a limited time; IP address is not a data type in the label.
 
