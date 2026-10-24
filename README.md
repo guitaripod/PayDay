@@ -11,13 +11,15 @@ but **none of them ship EN 16931 / Peppol on mobile**, and EU e-invoicing mandat
 ## Layout
 
 ```
-Sources/PayDayKit/   Platform-agnostic core (builds on Linux/macOS via `swift build`)
+Core/PayDayCore/     Swift package: platform-agnostic core (builds on Linux/macOS via `swift build`)
+  Sources/PayDayCore/
   Model/             Money, Currency, Invoice, Party, LineItem, VATCategory, …
   Tax/               TaxEngine (EN 16931 VAT breakdown + monetary summation)
   EInvoice/          CIIInvoiceWriter (Factur-X), UBLInvoiceWriter (Peppol), InvoiceValidator
-PayDay/              UIKit app (MVVM, GRDB, PDFKit renderer + Factur-X embedder, AICredits, services)
+App/, Features/      UIKit app (MVVM, GRDB, PDFKit renderer + Factur-X embedder, AICredits, services)
 (services/pay-day  at the repo root: Cloudflare Worker (Hono): VIES VAT, ECB FX, Peppol gateway broker)
-Tests/ PayDayTests/  PayDayKit (SPM) + hosted iOS rendering tests
+Resources/           Localizable.xcstrings, Assets.xcassets, PrivacyInfo.xcprivacy
+Tests/PayDayTests/   hosted iOS rendering tests (PayDayCore's own tests live in Core/PayDayCore/Tests)
 ```
 
 See `CLAUDE.md` for working conventions and `DESIGN.md` for the authoritative architecture.
@@ -25,10 +27,10 @@ See `CLAUDE.md` for working conventions and `DESIGN.md` for the authoritative ar
 ## Build & test
 
 ```bash
-swift test                  # PayDayKit — runs anywhere, no Xcode/device
+swift test --package-path Core/PayDayCore  # PayDayCore — runs anywhere, no Xcode/device
 scripts/setup.sh            # one-time: .env.local + Secrets.swift + xcodegen + spm (Mac)
 scripts/ios-build.sh        # build the app with staleness assertion (Mac)
-scripts/ios-test.sh         # PayDayKit + hosted iOS tests (Mac)
+scripts/ios-test.sh         # PayDayCore + hosted iOS tests (Mac)
 cd workers && npm install && npm run typecheck && npm test
 ```
 

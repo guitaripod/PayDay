@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run Pay Day's test suites.
 #
-# 1. PayDayKit (SPM) — platform-agnostic, runs anywhere via `swift test`.
+# 1. PayDayCore (SPM) — platform-agnostic, runs anywhere via `swift test`.
 # 2. Hosted iOS unit tests (PayDayTests) on a simulator via xcodebuild.
 
 set -u
@@ -17,17 +17,17 @@ if [ -f "$ROOT/.env.local" ]; then
   set -a; . "$ROOT/.env.local"; set +a
 fi
 
-echo "▸ swift test (PayDayKit)"
-swift test
+echo "▸ swift test (PayDayCore)"
+swift test --package-path Core/PayDayCore
 kit_status=$?
 if [ $kit_status -ne 0 ]; then
-  echo "❌ PayDayKit tests failed (exit $kit_status)." >&2
+  echo "❌ PayDayCore tests failed (exit $kit_status)." >&2
   exit $kit_status
 fi
 
 if ! command -v xcodegen >/dev/null 2>&1; then
   echo "·  xcodegen not installed — skipping hosted iOS tests."
-  echo "✅ PayDayKit tests passed."
+  echo "✅ PayDayCore tests passed."
   exit 0
 fi
 

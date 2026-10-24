@@ -79,7 +79,7 @@ marketing/appstore/framed --device-type IPHONE_67 --replace --confirm`. Captions
 
 `buildvm build --dir ~/Dev/ios/PayDay --scheme PayDay --profile ~/.config/midgar/signing/PayDay_AppStore_2026.mobileprovision --env PAYDAY_BUNDLE_ID=com.guitaripod.payday --env PAYDAY_TEAM_ID=<team> --deploy-key ~/.config/midgar/signing/aicredits_deploy_key --archive-flags "-skipPackagePluginValidation -skipMacroValidation -scmProvider system" --build <YYYYMMDDHHMM> --marketing <version>`
 then `asc review submit --app 6779927672 --version <version> --build-id <id> --confirm`.
-`PayDay/Secrets.swift` (gitignored) rides along in the rsync; `--marketing` drives
+`App/Secrets.swift` (gitignored) rides along in the rsync; `--marketing` drives
 `CFBundleShortVersionString` because project.yml binds it to `MARKETING_VERSION`.
 
 ## Release

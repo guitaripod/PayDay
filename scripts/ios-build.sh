@@ -5,7 +5,7 @@
 #   source files are always picked up.
 # - Captures xcodebuild's true exit code via `set -o pipefail`.
 # - On failure, surfaces the first error / Swift 6 concurrency lines.
-# - After a successful build, asserts that no .swift under PayDay/ or Sources/
+# - After a successful build, asserts that no .swift under App/, Features/ or Core/
 #   is newer than the built binary. If anything is, the build was stale → abort.
 #
 # Usage: scripts/ios-build.sh [destination]
@@ -29,8 +29,8 @@ if [ -z "${PAYDAY_TEAM_ID:-}" ] || [ -z "${PAYDAY_BUNDLE_ID:-}" ]; then
   exit 1
 fi
 
-if [ ! -f "$ROOT/PayDay/Secrets.swift" ]; then
-  echo "❌ PayDay/Secrets.swift missing — run scripts/setup.sh." >&2
+if [ ! -f "$ROOT/App/Secrets.swift" ]; then
+  echo "❌ App/Secrets.swift missing — run scripts/setup.sh." >&2
   exit 1
 fi
 
@@ -84,7 +84,7 @@ if [ ! -f "$BIN" ]; then
   exit 1
 fi
 
-NEWER="$(find PayDay Sources -name '*.swift' -newer "$BIN" 2>/dev/null || true)"
+NEWER="$(find App Features Core -name '*.swift' -newer "$BIN" 2>/dev/null || true)"
 if [ -n "$NEWER" ]; then
   echo "" >&2
   echo "❌ BUILD IS STALE — source files newer than the binary:" >&2

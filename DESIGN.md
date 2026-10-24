@@ -16,7 +16,7 @@ So we compete on the wedge, not the keyword.
 
 ## Status
 
-Greenfield — foundation scaffolded. **PayDayKit (the EN 16931 CII + Peppol UBL generators and the
+Greenfield — foundation scaffolded. **PayDayCore (the EN 16931 CII + Peppol UBL generators and the
 VAT engine) is the differentiated, fully unit-tested core and builds on Linux/macOS via
 `swift build`.** The UIKit app, the PDF/A-3 Factur-X embedder, and the Cloudflare Worker (VIES VAT
 validation + Peppol access-point broker) build on top. The Peppol AS4 transmission is brokered
@@ -42,7 +42,7 @@ hand-rolled AS4 on device.
 
 ```
                          ┌──────────────────────────────────────────┐
-                         │ PayDayKit  (platform-agnostic, Swift 6)    │
+                         │ PayDayCore  (platform-agnostic, Swift 6)    │
    pure value types  ←→  │  Money · Currency · Invoice · Party        │
    no UIKit/PDFKit       │  TaxEngine (EN 16931 VAT categories)       │
    builds on Linux       │  CIIInvoiceWriter  (Factur-X / EN16931)    │
@@ -81,7 +81,7 @@ domain state and republishes changes to the view controller via its own
 `Set<AnyCancellable>`, and `.receive(on: DispatchQueue.main)`. Repositories are an `actor` over the
 GRDB `DatabaseQueue`; the VM consumes their `async` reads/writes from a `Task`.
 
-## Data model (GRDB, on-device; structs in PayDayKit)
+## Data model (GRDB, on-device; structs in PayDayCore)
 
 - `Business` — the user's own company (seller): legal name, address, VAT id, IBAN/BIC, tax scheme,
   logo, default currency, payment terms, invoice/estimate number sequences. One row (the operator).

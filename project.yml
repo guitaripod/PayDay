@@ -33,8 +33,8 @@ settings:
       SWIFT_OPTIMIZATION_LEVEL: "-O"
 
 packages:
-  PayDayKit:
-    path: .
+  PayDayCore:
+    path: Core/PayDayCore
   GRDB:
     url: https://github.com/groue/GRDB.swift
     from: "7.0.0"
@@ -52,16 +52,16 @@ targets:
     type: application
     platform: iOS
     sources:
-      - path: PayDay
+      - path: App
         excludes:
           - "Secrets.example.swift"
-      - path: PayDay/Secrets.swift
+      - path: App/Secrets.swift
         optional: true
-      - path: PayDay/Localizable.xcstrings
-        buildPhase: resources
+      - path: Features
+      - path: Resources
     dependencies:
-      - package: PayDayKit
-        product: PayDayKit
+      - package: PayDayCore
+        product: PayDayCore
       - package: GRDB
       - package: AICredits
         product: AICreditsCore
@@ -71,7 +71,7 @@ targets:
         product: AICreditsUI
       - package: MidgarKit
     info:
-      path: PayDay/Info.plist
+      path: App/Info.plist
       properties:
         CFBundleDisplayName: Pay Day
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
@@ -117,7 +117,7 @@ targets:
           - com.midgarcorp.flaccy
           - com.midgarcorp.flaccy.mac
     entitlements:
-      path: PayDay/PayDay.entitlements
+      path: App/PayDay.entitlements
       properties:
         com.apple.developer.applesignin:
           - Default
@@ -139,11 +139,11 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - PayDayTests
+      - Tests/PayDayTests
     dependencies:
       - target: PayDay
-      - package: PayDayKit
-        product: PayDayKit
+      - package: PayDayCore
+        product: PayDayCore
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
