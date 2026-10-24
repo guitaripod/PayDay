@@ -122,7 +122,7 @@ final class InvoicePreviewViewController: UIViewController {
 
             // Then resolve Pro and upgrade to the embedded Factur-X if eligible.
             guard invoice.type.isEInvoiceable else { return }
-            let premium = self.demoForceCompliant ? true : await AICreditsManager.store.client.isPremium()
+            let premium = self.demoForceCompliant ? true : await ProAccess.shared.refresh()
             self.isPremium = premium
             guard premium else { self.updateStatus(); return }
             let profile = (try? await BusinessRepository.shared.load())?.defaultEInvoiceProfile ?? .en16931
@@ -211,17 +211,16 @@ final class InvoicePreviewViewController: UIViewController {
     private func sendPeppol() {
         guard ensureOwnSeller() else { return }
         Task {
-            guard await AICreditsManager.store.client.isPremium() else {
+            guard await ProAccess.shared.refresh() else {
                 presentPaywall(reason: String(localized: "Peppol delivery is a Pay Day Pro feature."))
                 return
             }
             // Peppol delivery is metered: each send costs credits (charged
             // server-side on an accepted transmission). Gate here so the user
             // tops up before sending rather than discovering it failed.
-            await AICreditsManager.store.refresh()
-            let peppolSendCost = 30
-            if AICreditsManager.store.balance < peppolSendCost {
-                CreditStorePresenter.present(from: self, shortfall: peppolSendCost - AICreditsManager.store.balance)
+            let balance = await CreditsModel.shared.refresh() ?? CreditsModel.shared.balance
+            if let shortfall = CreditsModel.shortfall(cost: CreditsModel.peppolSendCost, balance: balance) {
+                CreditStorePresenter.present(from: self, shortfall: shortfall)
                 return
             }
             guard !invoice.seller.peppolParticipant.isEmpty else {
@@ -263,7 +262,7 @@ final class InvoicePreviewViewController: UIViewController {
                     Haptics.success()
                     MidgarLog.info("delivered \(invoice.number): transmission \(id)", category: .peppol)
                     try? await InvoiceRepository.shared.markSent(id: invoice.id)
-                    await AICreditsManager.store.refresh()
+                    await CreditsModel.shared.refresh()
                     hud.dismiss(animated: true) {
                         self.presentAlert(String(localized: "Delivered"),
                                           String(localized: "Transmission \(id) accepted by Peppol.",

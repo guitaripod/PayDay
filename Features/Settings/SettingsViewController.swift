@@ -12,8 +12,8 @@ final class SettingsViewController: UIViewController {
     static let appStoreURL = URL(string: "https://apps.apple.com/app/id6779927672")!
     static let writeReviewURL = URL(string: "https://apps.apple.com/app/id6779927672?action=write-review")!
 
-    var isPremium = false
-    var balance = 0
+    var isPremium = ProAccess.shared.isPro
+    var balance = CreditsModel.shared.balance
     private var cancellables = Set<AnyCancellable>()
 
     private lazy var list = MidgarSettingsViewController(
@@ -33,7 +33,7 @@ final class SettingsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        Task { await AICreditsManager.store.refreshPremium() }
+        Task { await ProAccess.shared.refresh() }
         refreshList()
     }
 
@@ -67,11 +67,11 @@ final class SettingsViewController: UIViewController {
     }
 
     private func bind() {
-        AICreditsManager.store.$isPremium
+        ProAccess.shared.$isPro
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.isPremium = $0; self?.refreshList() }
             .store(in: &cancellables)
-        AICreditsManager.store.$balance
+        CreditsModel.shared.balanceChanges
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.balance = $0; self?.refreshList() }
             .store(in: &cancellables)

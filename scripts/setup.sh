@@ -3,7 +3,6 @@
 #
 # - Creates .env.local from .env.local.example if missing (auto-detecting the
 #   signing Team ID when possible).
-# - Copies App/Secrets.example.swift -> App/Secrets.swift if missing.
 # - Regenerates PayDay.xcodeproj from project.yml (xcodegen).
 # - Resolves the local PayDayKit package + GRDB + AICredits.
 #
@@ -33,14 +32,6 @@ else
   echo "·  .env.local already exists, leaving it"
 fi
 
-if [ ! -f App/Secrets.swift ]; then
-  echo "==> Creating App/Secrets.swift from example"
-  cp App/Secrets.example.swift App/Secrets.swift
-  echo "    edit App/Secrets.swift: revenueCatPublicKey"
-else
-  echo "·  App/Secrets.swift already exists, leaving it"
-fi
-
 if ! command -v xcodegen >/dev/null 2>&1; then
   echo "error: xcodegen not installed (brew install xcodegen)." >&2
   exit 1
@@ -52,4 +43,4 @@ xcodegen generate
 echo "==> swift package resolve"
 swift package resolve >/dev/null 2>&1 || true
 
-echo "==> Done. Next: edit .env.local + App/Secrets.swift, then scripts/ios-build.sh"
+echo "==> Done. Next: edit .env.local, then scripts/ios-build.sh"

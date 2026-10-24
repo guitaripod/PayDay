@@ -5,6 +5,7 @@ import MidgarCore
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    private let credits = CreditsModel.shared
     private var creditsObservers: Set<AnyCancellable> = []
     private var didReportAdAttribution = false
 
@@ -16,6 +17,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         observeCreditsEvents()
+        Task { await credits.start() }
 
         let window = UIWindow(windowScene: windowScene)
         window.overrideUserInterfaceStyle = UIUserInterfaceStyle(rawValue: AppSettings.appearance.rawValue) ?? .unspecified
@@ -29,13 +31,13 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         #endif
 
-        Task { await AICreditsManager.store.bootstrap() }
         reportAdAttributionOnce()
         MidgarLog.info("scene connected", category: .app)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         reportAdAttributionOnce()
+        Task { await credits.refresh() }
     }
 
     /// Reports the install attribution once per launch, driven from scene
@@ -46,15 +48,17 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     /// permission alert is typically on screen, and a presented system alert keeps
     /// the scene `inactive` until the user answers it. The AdServices token is
     /// short-lived, so deferring capture until then loses the install. Nothing
-    /// here touches the launch critical path: the reporter returns immediately and
-    /// does its work on a detached task.
+    /// here touches the launch critical path: the wallet does the work on its own
+    /// actor and remembers mako's verdict, so an install is settled once. A test
+    /// host, a demo capture and a debug build have no wallet or say it is not a
+    /// production launch, and report nothing.
     private func reportAdAttributionOnce() {
-        #if DEBUG
-        if ProcessInfo.processInfo.environment["PAYDAY_DEMO"] != nil { return }
-        #endif
-        guard !didReportAdAttribution else { return }
+        guard !didReportAdAttribution, let wallet = PayDayMidgar.shared.credits else { return }
         didReportAdAttribution = true
-        AICreditsManager.shared.reportAdAttribution()
+        Task {
+            let result = await wallet.reportAdAttributionOnce()
+            MidgarLog.info("ad attribution \(result.logDescription)", category: .credits)
+        }
     }
 
     private static func makeRoot() -> UIViewController {
@@ -72,26 +76,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-
-    /// The AICredits package emits no logging of its own, so the store's
-    /// published identity/error/balance transitions are the app's only trace of
-    /// bootstrap, Apple-link, refresh, and purchase outcomes.
+    /// The balance transitions are the only app-visible trace of the wallet, so each change is written to the file log.
     private func observeCreditsEvents() {
-        let store = AICreditsManager.store
-        store.$identity
-            .compactMap { $0 }
-            .removeDuplicates()
-            .sink { MidgarLog.info("credits identity \($0.kind.rawValue) \($0.userID.prefix(8))", category: .credits) }
-            .store(in: &creditsObservers)
-        store.$error
-            .compactMap { $0 }
-            .sink { MidgarLog.error("credits error: \($0.localizedDescription)", category: .credits) }
-            .store(in: &creditsObservers)
-        store.$balance
-            .removeDuplicates()
-            .dropFirst()
+        credits.balanceChanges
             .sink { MidgarLog.info("credits balance \($0)", category: .credits) }
             .store(in: &creditsObservers)
     }
-
 }

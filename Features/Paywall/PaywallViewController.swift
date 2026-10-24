@@ -1,12 +1,11 @@
 import Combine
 import UIKit
-import AICreditsCore
 
 /// Pay Day Pro paywall. Sells the compliance wedge with the post-3.1.2 pattern:
 /// three selectable plan cards where the billed price + full term dominate, a
 /// trial badged on the annual card only (no toggle), a single dynamic CTA, and
-/// Terms/Privacy/Restore in the first screenful. Real prices come from the
-/// AICredits store; a DEBUG fallback renders the decided prices so the page is
+/// Terms/Privacy/Restore in the first screenful. Real prices come from StoreKit
+/// through `ProAccess`; a DEBUG fallback renders the decided prices so the page is
 /// complete for screenshots before StoreKit products resolve.
 final class PaywallViewController: UIViewController {
     private struct PlanVM {
@@ -20,7 +19,7 @@ final class PaywallViewController: UIViewController {
     }
 
     private let reason: String
-    private let store = AICreditsManager.store
+    private let access = ProAccess.shared
     private var cancellables = Set<AnyCancellable>()
     private let cardsStack = UIStackView()
     private let ctaButton = DesignSystem.primaryButton(String(localized: "Continue"))
@@ -71,8 +70,8 @@ final class PaywallViewController: UIViewController {
 
     private func loadPlans() async {
         if plans.isEmpty { renderCards() }
-        await store.loadPlans()
-        if store.plans.isEmpty && plans.isEmpty { renderPlansLoadFailure() }
+        await access.loadPlans()
+        if access.plans.isEmpty && plans.isEmpty { renderPlansLoadFailure() }
     }
 
     private func renderPlansLoadFailure() {
@@ -144,7 +143,7 @@ final class PaywallViewController: UIViewController {
     }
 
     private func bindStore() {
-        store.$plans
+        access.$plans
             .receive(on: DispatchQueue.main)
             .sink { [weak self] storePlans in
                 guard let self, !storePlans.isEmpty else { return }
@@ -153,22 +152,17 @@ final class PaywallViewController: UIViewController {
                 self.renderCards()
             }
             .store(in: &cancellables)
-        // dropFirst: $isPremium replays its current value on subscribe, so without
-        // this an already-Pro user opening the paywall (e.g. Settings → Credits)
-        // would have it dismiss instantly. Only a transition to Pro should close it.
-        store.$isPremium
+        closeWhenProUnlocks()
+    }
+
+    /// Closes the paywall when Pro turns on, which is also how an Ask to Buy plan closes it once approved. `$isPro` replays
+    /// its current value on subscribe, so the first value is dropped: an already-Pro person opening the paywall (from
+    /// Settings, say) must not see it dismiss instantly.
+    private func closeWhenProUnlocks() {
+        access.$isPro
             .dropFirst()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isPremium in if isPremium { self?.dismiss(animated: true) } }
-            .store(in: &cancellables)
-        store.$error
-            .compactMap { $0 }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] error in
-                guard let self, self.presentedViewController == nil, !Self.isOfflineDemo else { return }
-                self.presentAlert(String(localized: "Purchase Failed"), message: error.localizedDescription)
-                self.store.error = nil
-            }
+            .sink { [weak self] isPro in if isPro { self?.dismiss(animated: true) } }
             .store(in: &cancellables)
     }
 
@@ -314,14 +308,32 @@ final class PaywallViewController: UIViewController {
     private func purchaseSelected() {
         guard plans.indices.contains(selectedIndex) else { return }
         let id = plans[selectedIndex].id
-        guard let plan = store.plans.first(where: { $0.id == id }) else {
+        guard let plan = access.plans.first(where: { $0.id == id }) else {
             presentAlert(String(localized: "Plans are still loading"), message: String(localized: "Try again in a moment."))
             return
         }
         setPurchasing(true)
         Task { [weak self] in
-            _ = await self?.store.subscribe(plan)
-            self?.setPurchasing(false)
+            guard let self else { return }
+            let outcome = await self.access.purchase(plan)
+            self.setPurchasing(false)
+            self.show(outcome)
+        }
+    }
+
+    /// A failure is a sentence, a pending approval says Pro unlocks by itself, and a cancel or a purchase that closed the
+    /// paywall shows nothing.
+    private func show(_ outcome: ProPurchaseOutcome) {
+        switch outcome {
+        case .failed(let message):
+            guard presentedViewController == nil, !Self.isOfflineDemo else { return }
+            presentAlert(String(localized: "Purchase Failed"), message: message)
+        case .pending:
+            presentAlert(
+                String(localized: "Waiting for Approval"),
+                message: String(localized: "Pay Day Pro unlocks as soon as the purchase is approved."))
+        case .purchased, .cancelled:
+            break
         }
     }
 
@@ -341,12 +353,17 @@ final class PaywallViewController: UIViewController {
         setPurchasing(true)
         Task { [weak self] in
             guard let self else { return }
-            await self.store.restore()
+            let outcome = await self.access.restore()
             self.setPurchasing(false)
-            if !self.store.isPremium && self.store.error == nil {
+            switch outcome {
+            case .restored:
+                break
+            case .nothingToRestore:
                 self.presentAlert(
                     String(localized: "No Purchases to Restore"),
                     message: String(localized: "No active Pay Day Pro subscription was found for this Apple ID."))
+            case .failed(let message):
+                self.presentAlert(String(localized: "Purchase Failed"), message: message)
             }
         }
     }
@@ -369,7 +386,7 @@ final class PaywallViewController: UIViewController {
         return row
     }
 
-    private static func map(_ plan: SubscriptionPlan) -> PlanVM {
+    private static func map(_ plan: ProPlan) -> PlanVM {
         let term = planTerm(plan.period)
         let trial = (plan.trialEligible && (plan.trialDays ?? 0) > 0)
             ? String(localized: "\(plan.trialDays!) days free, then \(plan.localizedPrice)/\(term). Auto-renews. Cancel anytime.")
@@ -381,9 +398,8 @@ final class PaywallViewController: UIViewController {
                           : String(localized: "Subscribe"))
     }
 
-    private static func planTitle(_ period: SubscriptionPlan.Period) -> String {
+    private static func planTitle(_ period: ProPlan.Period) -> String {
         switch period {
-        case .weekly: return String(localized: "Weekly")
         case .monthly: return String(localized: "Billed monthly")
         case .annual: return String(localized: "Billed annually")
         }
@@ -402,11 +418,10 @@ final class PaywallViewController: UIViewController {
                cta: String(localized: "Subscribe")),
     ]
 
-    private static func planTerm(_ period: SubscriptionPlan.Period) -> String {
+    private static func planTerm(_ period: ProPlan.Period) -> String {
         switch period {
         case .annual: return String(localized: "year", comment: "Billing term shown after a price, e.g. €39.99 / year")
         case .monthly: return String(localized: "month", comment: "Billing term shown after a price, e.g. €4.99 / month")
-        case .weekly: return String(localized: "week", comment: "Billing term shown after a price, e.g. €1.99 / week")
         }
     }
 }

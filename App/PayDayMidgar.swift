@@ -1,10 +1,13 @@
 import Foundation
+import MidgarCommerce
 import MidgarCore
+import MidgarCredits
 import MidgarPortal
 
 /// The composition root of everything Pay Day shares with the other Midgar apps: the Midgar ID, the gateway client
-/// built on it, the client of Pay Day's own worker and the gateway addresses of mako and the worker. One instance
-/// lives for the whole process, so there is one identity.
+/// built on it, the purchase engine and the credit wallet, the client of Pay Day's own worker and the gateway addresses
+/// of mako and the worker. One instance lives for the whole process, so there is one identity and one
+/// `Transaction.updates` listener.
 final class PayDayMidgar: Sendable {
     /// The registry slug: the `X-App-ID` of every gateway call.
     static let appID = "pay-day"
@@ -40,15 +43,47 @@ final class PayDayMidgar: Sendable {
     /// The gateway client for mako and Pay Day's worker, which keep the mako api key in `Authorization`.
     let gateway: PayDayGateway
 
+    /// The purchase engine for the Pro plans and the credit packs: StoreKit 2 with the Midgar ID as `appAccountToken`.
+    /// Nil in a test host or a demo capture, which must not reach the ledger.
+    let store: MidgarStore?
+
+    /// The wallet behind the credit packs: the balance, the purchase and the credit on the Midgar ID, with the old
+    /// AICredits api key as the legacy key so the balance from before the move stays linked. Nil where `store` is.
+    let credits: MidgarCredits?
+
     private init() {
         let configuration = MidgarHTTPConfiguration(appID: Self.appID)
         let identity = MidgarIdentity(httpConfiguration: configuration, bundleID: Self.bundleID)
         self.identity = identity
-        account = MidgarHTTPClient(configuration: identity.authorizing(configuration))
+        let account = MidgarHTTPClient(configuration: identity.authorizing(configuration))
+        self.account = account
         gateway = PayDayGateway(
             client: MidgarHTTPClient(
                 configuration: MidgarHTTPConfiguration(
                     appID: Self.tenantID, timeout: Self.workerTimeout)))
+        let commerce = Self.makeCommerce(identity: identity, account: account, configuration: configuration)
+        store = commerce?.store
+        credits = commerce?.credits
+    }
+
+    /// Builds the store and the wallet on it, or nothing where the app reaches no Midgar service. The wallet takes the
+    /// plain configuration, because it authorizes its own requests: the legacy key and the Midgar token travel in
+    /// different headers, and it sends the registry slug as `X-App-ID`, which mako accepts next to its own tenant ids.
+    private static func makeCommerce(
+        identity: MidgarIdentity,
+        account: MidgarHTTPClient,
+        configuration: MidgarHTTPConfiguration
+    ) -> (store: MidgarStore, credits: MidgarCredits)? {
+        guard reachesMidgarServices else { return nil }
+        let store = MidgarStore(configuration: PayDayPacks.storeConfiguration(), identity: identity, http: account)
+        let credits = MidgarCredits(
+            configuration: PayDayPacks.creditsConfiguration(),
+            http: configuration,
+            identity: identity,
+            purchasing: store,
+            legacyAPIKey: { await AICreditsManager.shared.legacyAPIKey() }
+        )
+        return (store, credits)
     }
 
     /// The `X-Midgar-Token` header for a call to mako, which is how mako links the legacy api key to the Midgar ID,
@@ -82,8 +117,9 @@ final class PayDayMidgar: Sendable {
     }
 
     /// Configures anonymous signals for the portal and starts the Midgar ID in the background, so the app holds one
-    /// before mako is first asked to link it. Call once at launch. A test host or a demo capture talks to no Midgar
-    /// service.
+    /// before mako is first asked to link it, and queues the Pro plans StoreKit already holds for the ledger (once per
+    /// install), so a subscriber from before the move reaches their Midgar ID. Call once at launch. A test host or a demo
+    /// capture talks to no Midgar service.
     func start() {
         guard Self.reachesMidgarServices else {
             MidgarLog.info("Midgar services not started: test host or demo", category: .auth)
@@ -91,6 +127,9 @@ final class PayDayMidgar: Sendable {
         }
         MidgarSignals.configure(configuration: MidgarHTTPConfiguration(appID: Self.appID))
         let identity = identity
+        if let store {
+            Task { await store.reportPurchaseHistory() }
+        }
         Task {
             do {
                 _ = try await identity.midgarId
@@ -99,6 +138,16 @@ final class PayDayMidgar: Sendable {
                 MidgarLog.info("Midgar ID not available yet: \(error)", category: .auth)
             }
         }
+    }
+
+    /// True only for the shipped app on a real launch: the Apple Ads install attribution is reported then and never from a
+    /// debug build, a test host or a demo capture.
+    static var isProductionLaunch: Bool {
+        #if DEBUG
+        false
+        #else
+        reachesMidgarServices
+        #endif
     }
 
     /// False inside an XCTest or Swift Testing host and in a DEBUG demo capture, which must not mint identities or

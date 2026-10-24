@@ -53,10 +53,6 @@ targets:
     platform: iOS
     sources:
       - path: App
-        excludes:
-          - "Secrets.example.swift"
-      - path: App/Secrets.swift
-        optional: true
       - path: Features
       - path: Resources
     dependencies:
@@ -65,8 +61,6 @@ targets:
       - package: GRDB
       - package: AICredits
         product: AICreditsCore
-      - package: AICredits
-        product: AICreditsRevenueCat
       - package: AICredits
         product: AICreditsUI
       - package: MidgarKit
@@ -169,6 +163,7 @@ schemes:
         PayDayTests: [test]
     run:
       config: Debug
+      storeKitConfiguration: Products.storekit
     test:
       config: Debug
       targets:

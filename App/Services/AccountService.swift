@@ -1,9 +1,11 @@
 import Foundation
 import MidgarCore
+import MidgarCredits
 
 /// Deletes the user's account end to end (App Store 5.1.1(v)): the worker's Peppol transmission records first, then
-/// the server-side mako identity + credit ledger, the local AICredits identity, and all on-device business data.
-/// The worker step has to run before mako, because the worker authenticates with the mako api key.
+/// the server-side mako account (through the wallet, which also erases this app's partition of it), the local
+/// AICredits identity, and all on-device business data. The worker step has to run before mako, because the worker
+/// authenticates with the mako api key. The Midgar ID is shared with the other Midgar apps and stays.
 enum AccountService {
     enum AccountError: LocalizedError {
         case offline
@@ -32,10 +34,40 @@ enum AccountService {
     /// key that authenticates the worker call still works for the retry.
     static func deleteRemoteData(
         apiKey: String,
-        gateway: PayDayGateway = PayDayMidgar.shared.gateway
+        gateway: PayDayGateway = PayDayMidgar.shared.gateway,
+        credits: MidgarCredits? = PayDayMidgar.shared.credits
     ) async throws {
         try await deleteWorkerData(apiKey: apiKey, gateway: gateway)
-        try await deleteRemoteIdentity(apiKey: apiKey, gateway: gateway)
+        try await deleteLegacyAccount(apiKey: apiKey, gateway: gateway, credits: credits)
+    }
+
+    /// Deletes the old per-app account at mako through the wallet, which sends the api key as its only credential and
+    /// counts 200, 204, 401 and 404 as done. A host without a wallet deletes it through the gateway, with the same
+    /// answers accepted. A wallet failure keeps the account, so the person can retry.
+    static func deleteLegacyAccount(
+        apiKey: String,
+        gateway: PayDayGateway,
+        credits: MidgarCredits?
+    ) async throws {
+        guard let credits else {
+            try await deleteRemoteIdentity(apiKey: apiKey, gateway: gateway)
+            return
+        }
+        do {
+            try await credits.deleteLegacyAccount()
+        } catch let error as MidgarCreditsError {
+            throw accountError(for: error)
+        }
+    }
+
+    private static func accountError(for error: MidgarCreditsError) -> AccountError {
+        switch error {
+        case .server(let status, _, _): return .serverError(status)
+        case .walletUnavailable: return .serverError(503)
+        case .rateLimited: return .serverError(429)
+        case .insufficientCredits: return .serverError(402)
+        default: return .offline
+        }
     }
 
     /// Deletes the worker's Peppol transmission records for the key's user through the gateway's worker route. The

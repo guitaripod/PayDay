@@ -188,8 +188,8 @@ final class InvoiceEditorViewController: UIViewController {
                 }
             } catch {
                 // AI is credit-metered; the most common failure is an empty balance.
-                await AICreditsManager.store.refresh()
-                if AICreditsManager.store.isEmpty {
+                await CreditsModel.shared.refresh()
+                if CreditsModel.shared.isEmpty {
                     CreditStorePresenter.present(from: self)
                 } else {
                     self.presentInfo(String(localized: "Couldn't draft"),

@@ -55,7 +55,7 @@ final class DashboardViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.apply($0) }
             .store(in: &cancellables)
-        AICreditsManager.store.$isPremium
+        ProAccess.shared.$isPro
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let self else { return }

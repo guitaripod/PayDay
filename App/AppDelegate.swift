@@ -10,7 +10,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         PayDayMidgar.configureLogging()
         PayDayMidgar.shared.start()
         ReviewPrompt.beginSession()
-        warmUpLaunchServicesReceiptPath()
         _ = DatabaseManager.shared
         seedLocalData()
         MidgarLog.info("app launched", category: .app)
@@ -25,14 +24,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         #endif
         DemoSeeder.seedIfNeeded()
-    }
-
-    /// Pre-warms the LaunchServices XPC connection behind
-    /// `Bundle.main.appStoreReceiptURL` on the main thread, before RevenueCat's
-    /// background queue reads it during configuration (insurance against the
-    /// iOS 26.5 launch race in purchases-ios#6886).
-    private func warmUpLaunchServicesReceiptPath() {
-        _ = Bundle.main.appStoreReceiptURL
     }
 
     func application(

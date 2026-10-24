@@ -19,7 +19,9 @@ extension SettingsViewController {
 
     private func resetAfterDeletion() {
         AppSettings.hasOnboarded = false
-        Task { await AICreditsManager.store.bootstrap() }
+        let credits = CreditsModel.shared
+        credits.forget()
+        Task { await credits.refresh() }
         guard let window = view.window else { return }
         let onboarding = OnboardingViewController.makeFlow { finishedWindow in
             AppSettings.hasOnboarded = true

@@ -1,19 +1,24 @@
 import AICreditsCore
 import AICreditsUI
+import MidgarCredits
 import SwiftUI
 
-/// Pay Day's credit store: same AICredits store/purchase/restore plumbing as the
-/// package's CreditStoreView, but renders each pack with its gold-coin icon
-/// (asset `pack-<id>`) and adds an explicit Done button.
+/// Pay Day's credit store: the wallet's packs and purchase through MidgarCredits, each pack rendered with its gold-coin
+/// icon (asset `pack-<id>`), an explicit Done button, and the Sign in with Apple row that links the old account.
 struct PayDayCreditStoreView: View {
-    @ObservedObject var store: AICreditsStore
+    @State private var model: PayDayCreditStoreModel
+    @ObservedObject private var accountLink: AICreditsStore
     @Environment(\.dismiss) private var dismiss
-    let shortfall: Int?
+
+    init(model: PayDayCreditStoreModel, accountLink: AICreditsStore) {
+        _model = State(initialValue: model)
+        self.accountLink = accountLink
+    }
 
     var body: some View {
         NavigationStack {
             List {
-                if let shortfall, shortfall > 0 {
+                if let shortfall = model.shortfall {
                     Section {
                         Text(String(localized: "You need \(shortfall) more credits to send this invoice."))
                             .font(.callout)
@@ -21,33 +26,18 @@ struct PayDayCreditStoreView: View {
                 }
                 Section(String(localized: "Your balance")) {
                     HStack {
-                        Text(String(localized: "\(store.balance) credits")).font(.title3.weight(.semibold))
+                        Text(String(localized: "\(model.balance ?? 0) credits")).font(.title3.weight(.semibold))
                         Spacer()
-                        if store.isWorking { ProgressView() }
+                        if model.isWorking { ProgressView() }
                     }
                 }
+                noticeSection
                 Section(String(localized: "Credit packs")) {
-                    let packs = store.catalog?.packs ?? []
-                    if store.catalog == nil {
-                        HStack(spacing: 10) {
-                            ProgressView()
-                            Text(String(localized: "Loading packs…")).foregroundStyle(.secondary)
-                        }
-                    } else if packs.allSatisfy({ $0.storePackageID == nil }) {
-                        Text(String(localized: "Credit packs are temporarily unavailable from the App Store. You can keep using the app fully — please try again later."))
-                            .font(.callout).foregroundStyle(.secondary)
-                    } else {
-                        ForEach(packs) { pack in
-                            let available = pack.storePackageID != nil
-                            Button { Task { if await store.purchase(pack) { dismiss() } } } label: {
-                                packRow(pack, available: available)
-                            }
-                            .disabled(store.isWorking || !available)
-                        }
-                    }
+                    packs
                 }
                 Section {
-                    Button(String(localized: "Restore Purchases")) { Task { await store.restore() } }
+                    Button(String(localized: "Restore Purchases")) { Task { await model.restore() } }
+                        .disabled(model.isWorking)
                     AppleWalletLinkSection()
                 }
                 Section {
@@ -59,39 +49,92 @@ struct PayDayCreditStoreView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Done")) { dismiss() } }
             }
-            .task { await store.loadCatalog() }
+            .task { await model.observe() }
+            .task { await model.load() }
+            .task { await accountLink.bootstrap() }
             .alert(
                 String(localized: "Something Went Wrong"),
-                isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } }),
-                presenting: store.error
+                isPresented: Binding(get: { accountLink.error != nil }, set: { if !$0 { accountLink.error = nil } }),
+                presenting: accountLink.error
             ) { _ in
                 Button(String(localized: "OK"), role: .cancel) {}
             } message: { error in
                 Text(error.localizedDescription)
             }
         }
+        .environmentObject(accountLink)
     }
 
     @ViewBuilder
-    private func packRow(_ pack: PurchasablePack, available: Bool) -> some View {
+    private var noticeSection: some View {
+        let showsConfirming = model.confirming > 0
+        if showsConfirming || model.notice != nil {
+            Section {
+                if showsConfirming {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(String(localized: "Your purchase is being confirmed")).font(.headline)
+                        Text(String(localized: "Your credits arrive as soon as it is confirmed. You do not need to buy again."))
+                            .font(.callout).foregroundStyle(.secondary)
+                    }
+                }
+                switch model.notice {
+                case .awaitingApproval:
+                    Text(String(localized: "Waiting for approval. Your credits arrive as soon as it is approved."))
+                        .font(.callout)
+                case .failure(let message):
+                    Text(message).font(.callout).foregroundStyle(.red)
+                case nil:
+                    EmptyView()
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var packs: some View {
+        switch model.phase {
+        case .loading:
+            HStack(spacing: 10) {
+                ProgressView()
+                Text(String(localized: "Loading packs…")).foregroundStyle(.secondary)
+            }
+        case .unavailable:
+            VStack(alignment: .leading, spacing: 8) {
+                Text(String(localized: "Credit packs are temporarily unavailable from the App Store. You can keep using the app fully — please try again later."))
+                    .font(.callout).foregroundStyle(.secondary)
+                Button(String(localized: "Try again")) { Task { await model.load() } }
+            }
+        case .ready:
+            ForEach(model.offers) { offer in
+                Button {
+                    Task { if await model.buy(offer) == .credited { dismiss() } }
+                } label: {
+                    packRow(offer)
+                }
+                .disabled(model.isWorking)
+            }
+        }
+    }
+
+    private func packRow(_ offer: MidgarCreditsOffer) -> some View {
         HStack(spacing: 14) {
-            Image("pack-\(pack.id)")
+            Image("pack-\(offer.pack.id)")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 52, height: 52)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             VStack(alignment: .leading, spacing: 2) {
-                Text(pack.pack.name).font(.headline)
-                Text(pack.pack.bonusCredits > 0
-                    ? String(localized: "\(pack.pack.totalCredits) credits (+\(pack.pack.bonusCredits) bonus)")
-                    : String(localized: "\(pack.pack.totalCredits) credits"))
+                Text(verbatim: PayDayPacks.name(of: offer.pack)).font(.headline)
+                Text(String(localized: "\(offer.pack.credits) credits"))
                     .font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
-            Text(available ? (pack.localizedPrice ?? "—") : String(localized: "Unavailable"))
-                .font(.callout.weight(.semibold))
-                .foregroundStyle(available ? Color.primary : Color.secondary)
+            if model.buyingPackID == offer.pack.id {
+                ProgressView()
+            } else {
+                Text(offer.product.displayPrice).font(.callout.weight(.semibold))
+            }
         }
-        .opacity(available ? 1 : 0.5)
+        .accessibilityElement(children: .combine)
     }
 }
