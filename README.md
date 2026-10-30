@@ -1,41 +1,35 @@
 # Pay Day
 
-A native iOS invoice & estimate app for EU freelancers and small businesses — beautiful invoices
-for free, and **legally compliant e-invoices** (Factur-X / ZUGFeRD / Peppol BIS Billing 3.0) when
-you need them. Built in modern programmatic UIKit on a platform-agnostic Swift 6 core.
+Invoices and estimates for EU freelancers and small businesses on iPhone. Making and sending invoices is free. Pro adds legally compliant e-invoices: Factur-X / ZUGFeRD hybrid PDFs (PDF/A-3 with embedded EN 16931 XML) and delivery over the Peppol network (BIS Billing 3.0), as EU e-invoicing mandates arrive.
 
-The wedge: the "invoice maker" keyword is owned by entrenched incumbents we won't out-rank head-on,
-but **none of them ship EN 16931 / Peppol on mobile**, and EU e-invoicing mandates are rolling out
-(Belgium 2026, France 2027, Germany, Poland). Pay Day competes on compliance, not the keyword.
+## What it does
+
+- Invoices and estimates with your logo, any currency and an EN 16931 VAT engine (reverse charge, exemptions, per-rate breakdown)
+- EU VAT number checks against VIES and ECB exchange rates
+- Pro (monthly or annual): Factur-X PDFs, Peppol sending, recurring invoices and branding
+- Credit packs pay for Peppol sends and AI drafting, on the person's Midgar ID wallet
 
 ## Layout
 
 ```
-Core/PayDayCore/     Swift package: platform-agnostic core (builds on Linux/macOS via `swift build`)
-  Sources/PayDayCore/
-  Model/             Money, Currency, Invoice, Party, LineItem, VATCategory, …
-  Tax/               TaxEngine (EN 16931 VAT breakdown + monetary summation)
-  EInvoice/          CIIInvoiceWriter (Factur-X), UBLInvoiceWriter (Peppol), InvoiceValidator
-App/, Features/      UIKit app (MVVM, GRDB, PDFKit renderer + Factur-X embedder, AICredits, services)
-(services/pay-day  at the repo root: Cloudflare Worker (Hono): VIES VAT, ECB FX, Peppol gateway broker)
-Resources/           Localizable.xcstrings, Assets.xcassets, PrivacyInfo.xcprivacy
-Tests/PayDayTests/   hosted iOS rendering tests (PayDayCore's own tests live in Core/PayDayCore/Tests)
+Core/PayDayCore/      Swift package, platform agnostic (builds and tests on Linux)
+  Model/              Money, Currency, Invoice, Party, LineItem, VATCategory
+  Tax/                TaxEngine: EN 16931 VAT breakdown and totals
+  EInvoice/           CII (Factur-X) and UBL (Peppol) writers, InvoiceValidator
+App/ Features/        programmatic UIKit app (XcodeGen, MVVM, GRDB), PDF renderer and Factur-X embedder
+Resources/            string catalog, assets, privacy manifest
+Tests/PayDayTests/    hosted iOS tests
 ```
 
-See `CLAUDE.md` for working conventions and `DESIGN.md` for the authoritative architecture.
+The backend is `services/pay-day` in the Midgar monorepo, a Cloudflare Worker for VIES, exchange rates and the Peppol access point. [DESIGN.md](DESIGN.md) has the architecture.
 
-## Build & test
+## Build and test
 
-```bash
-swift test --package-path Core/PayDayCore  # PayDayCore — runs anywhere, no Xcode/device
-scripts/setup.sh            # one-time: .env.local + xcodegen + spm (Mac)
-scripts/ios-build.sh        # build the app with staleness assertion (Mac)
-scripts/ios-test.sh         # PayDayCore + hosted iOS tests (Mac)
-cd workers && npm install && npm run typecheck && npm test
+iOS 18 or later. MidgarKit and AICredits are local packages in the Midgar monorepo (`packages/`).
+
 ```
-
-## Monetization
-
-Free: unlimited invoices/estimates, logo, multi-currency, the full VAT engine. **Pro** (subscription)
-unlocks compliant Factur-X PDFs, Peppol delivery, recurring invoices, branding, and VAT validation.
-**Credit packs** (consumable) meter per-Peppol-send cost and AI actions, via the shared mako backend.
+swift test --package-path Core/PayDayCore   # anywhere, no Xcode
+scripts/setup.sh                            # once: .env.local, xcodegen, package resolve
+scripts/ios-build.sh
+scripts/ios-test.sh                         # core and hosted iOS tests
+```
