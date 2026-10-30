@@ -117,15 +117,6 @@ final class PaywallViewController: UIViewController {
             ("paperplane.fill",
              String(localized: "Peppol delivery"),
              String(localized: "Send straight into your client's accounting system.")),
-            ("arrow.triangle.2.circlepath",
-             String(localized: "Recurring invoices"),
-             String(localized: "Set it once, get paid every month.")),
-            ("paintbrush.fill",
-             String(localized: "Your branding"),
-             String(localized: "Logo, accent colour, custom templates.")),
-            ("checkmark.circle.fill",
-             String(localized: "VAT validation"),
-             String(localized: "Live VIES checks on every client.")),
         ] {
             stack.addArrangedSubview(benefitRow(symbol: symbol, title: label, detail: detail))
         }
