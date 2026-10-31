@@ -400,8 +400,8 @@ final class PaywallViewController: UIViewController {
         PlanVM(id: "com.guitaripod.payday.pro.annual", title: planTitle(.annual), price: "€39.99",
                term: planTerm(.annual), badge: String(localized: "Save 33%"),
                footnote: String(
-                   localized: "\(7) days free, then \("€39.99")/\(planTerm(.annual)). Auto-renews. Cancel anytime."),
-               cta: String(localized: "Start \(7)-day free trial")),
+                   localized: "Billed \("€39.99") every \(planTerm(.annual)). Auto-renews. Cancel anytime."),
+               cta: String(localized: "Subscribe")),
         PlanVM(id: "com.guitaripod.payday.pro.monthly", title: planTitle(.monthly), price: "€4.99",
                term: planTerm(.monthly), badge: nil,
                footnote: String(
