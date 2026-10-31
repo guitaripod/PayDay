@@ -22,14 +22,6 @@
             "territory": "USA",
             "amount": "39.99"
           },
-          "introductoryOffers": [
-            {
-              "mode": "FREE_TRIAL",
-              "duration": "ONE_WEEK",
-              "periods": 1,
-              "territories": "ALL"
-            }
-          ],
           "localizations": {
             "en-US": {
               "name": "Pay Day Pro (Annual)",
@@ -53,7 +45,6 @@
             "territory": "USA",
             "amount": "4.99"
           },
-          "introductoryOffers": [],
           "localizations": {
             "en-US": {
               "name": "Pay Day Pro (Monthly)",
