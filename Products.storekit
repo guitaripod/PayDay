@@ -92,11 +92,7 @@
           "familyShareable": false,
           "groupNumber": 1,
           "internalID": "PD0A0007",
-          "introductoryOffer": {
-            "internalID": "PD0A0008",
-            "paymentMode": "free",
-            "subscriptionPeriod": "P1W"
-          },
+          "introductoryOffer": null,
           "localizations": [
             {
               "description": "EN 16931 e-invoices, Peppol delivery and branding.",

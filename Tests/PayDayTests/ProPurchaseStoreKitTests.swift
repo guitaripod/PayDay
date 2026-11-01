@@ -8,7 +8,7 @@ import Testing
 
 extension StoreBacked {
     /// Buys Pay Day Pro through `ProAccess` on a MidgarStore with the app's own configuration, against
-    /// `Products.storekit`, so the plans, prices, trial and entitlement mapping the app ships are checked together on a
+    /// `Products.storekit`, so the plans, prices and entitlement mapping the app ships are checked together on a
     /// real StoreKit. The gateway is a `URLProtocol` stub that knows the Midgar ID, holds no entitlement and answers every
     /// report. A test session signs its transactions with Xcode's local certificate, so the store never reports them to
     /// the ledger. The first purchase on a fresh simulator can stall: rerun once.
@@ -72,7 +72,7 @@ extension StoreBacked {
             #expect(plans["com.guitaripod.payday.pro.monthly"]?.referenceName == "Pay Day Pro Monthly")
         }
 
-        @Test func thePaywallPlansAreAnnualThenMonthlyWithTheAnnualWeekLongTrial() async throws {
+        @Test func thePaywallPlansAreAnnualThenMonthlyWithNoTrial() async throws {
             let harness = try makeHarness()
 
             await harness.access.loadPlans()
@@ -82,8 +82,7 @@ extension StoreBacked {
             let monthly = try #require(harness.access.plans.last)
             #expect(annual.period == .annual)
             #expect(annual.localizedPrice == "$39.99")
-            #expect(annual.trialDays == 7)
-            #expect(annual.trialEligible)
+            #expect(annual.trialDays == nil)
             #expect(monthly.period == .monthly)
             #expect(monthly.localizedPrice == "$4.99")
             #expect(monthly.trialDays == nil)
