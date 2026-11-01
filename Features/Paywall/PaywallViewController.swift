@@ -138,7 +138,8 @@ final class PaywallViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] storePlans in
                 guard let self, !storePlans.isEmpty else { return }
-                self.plans = storePlans.map(Self.map)
+                let savings = ProPlan.annualSavingsPercent(in: storePlans)
+                self.plans = storePlans.map { Self.map($0, annualSavingsPercent: savings) }
                 self.selectedIndex = self.plans.firstIndex { $0.id.contains("annual") } ?? 0
                 self.renderCards()
             }
@@ -377,16 +378,17 @@ final class PaywallViewController: UIViewController {
         return row
     }
 
-    private static func map(_ plan: ProPlan) -> PlanVM {
+    private static func map(_ plan: ProPlan, annualSavingsPercent: Int?) -> PlanVM {
         let term = planTerm(plan.period)
         let trial = (plan.trialEligible && (plan.trialDays ?? 0) > 0)
             ? String(localized: "\(plan.trialDays!) days free, then \(plan.localizedPrice)/\(term). Auto-renews. Cancel anytime.")
             : nil
         return PlanVM(id: plan.id, title: planTitle(plan.period), price: plan.localizedPrice, term: term,
-                      badge: plan.period == .annual ? String(localized: "Save 33%") : nil, footnote: trial,
+                      badge: plan.period == .annual ? annualSavingsPercent.map { String(localized: "Save \($0)%") } : nil,
+                      footnote: trial,
                       cta: plan.period == .annual && trial != nil
                           ? String(localized: "Start \(plan.trialDays ?? 7)-day free trial")
-                          : String(localized: "Subscribe"))
+                          : String(localized: "Upgrade to Pro"))
     }
 
     private static func planTitle(_ period: ProPlan.Period) -> String {
@@ -398,15 +400,15 @@ final class PaywallViewController: UIViewController {
 
     private static let fallbackPlans: [PlanVM] = [
         PlanVM(id: "com.guitaripod.payday.pro.annual", title: planTitle(.annual), price: "€39.99",
-               term: planTerm(.annual), badge: String(localized: "Save 33%"),
+               term: planTerm(.annual), badge: String(localized: "Save \(33)%"),
                footnote: String(
                    localized: "Billed \("€39.99") every \(planTerm(.annual)). Auto-renews. Cancel anytime."),
-               cta: String(localized: "Subscribe")),
+               cta: String(localized: "Upgrade to Pro")),
         PlanVM(id: "com.guitaripod.payday.pro.monthly", title: planTitle(.monthly), price: "€4.99",
                term: planTerm(.monthly), badge: nil,
                footnote: String(
                    localized: "Billed \("€4.99") every \(planTerm(.monthly)). Auto-renews. Cancel anytime."),
-               cta: String(localized: "Subscribe")),
+               cta: String(localized: "Upgrade to Pro")),
     ]
 
     private static func planTerm(_ period: ProPlan.Period) -> String {

@@ -195,8 +195,20 @@ final class InvoicePreviewViewController: UIViewController {
                 }
             }
             ReviewPrompt.recordDelivery(from: self)
+            self.offerProAfterSharing()
         }
         present(sheet, animated: true)
+    }
+
+    /// An invoice that just left the app is the moment to offer Pro, when ``InvoiceOffer`` says so: a breath after the
+    /// share sheet closes, and only when nothing else (a review request, an alert) is on screen.
+    private func offerProAfterSharing() {
+        guard InvoiceOffer.policy.noteValue(isOwned: ProAccess.shared.isPro) else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
+            guard let self, self.presentedViewController == nil, self.view.window != nil else { return }
+            InvoiceOffer.policy.noteOffered()
+            self.presentPaywall(reason: String(localized: "Your invoice is on its way. Pro makes the next one a tax-authority-ready e-invoice, sent over Peppol."))
+        }
     }
 
     /// A filesystem-safe export name derived from the invoice number — "2026/014"

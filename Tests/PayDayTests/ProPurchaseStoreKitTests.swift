@@ -171,7 +171,8 @@ extension StoreBacked {
         @Test func aCancelledPurchaseShowsNothing() async throws {
             let harness = try makeHarness(buyingWith: CancellingStore())
             let monthly = ProPlan(
-                id: PayDayPacks.proMonthlyProductID, localizedPrice: "$4.99", period: .monthly, trialDays: nil, trialEligible: false)
+                id: PayDayPacks.proMonthlyProductID, localizedPrice: "$4.99", price: 4.99, period: .monthly, trialDays: nil,
+                trialEligible: false)
 
             let outcome = await harness.access.purchase(monthly)
 

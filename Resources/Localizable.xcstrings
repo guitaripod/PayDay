@@ -28041,6 +28041,158 @@
           }
         }
       }
+    },
+    "Save %lld%%" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%% sparen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahorra %lld%%"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Säästä %lld%%"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Économisez %lld%%"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risparmia %lld%%"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%% お得"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%% 절약"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bespaar %lld%%"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oszczędź %lld%%"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Economize %lld%%"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "省 %lld%%"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "省 %lld%%"
+          }
+        }
+      }
+    },
+    "Your invoice is on its way. Pro makes the next one a tax-authority-ready e-invoice, sent over Peppol." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ihre Rechnung ist unterwegs. Pro macht die nächste zu einer steuerbehördenkonformen E-Rechnung, die über Peppol versendet wird."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu factura va de camino. Pro convierte la siguiente en una factura electrónica lista para la autoridad fiscal, enviada a través de Peppol."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laskusi on matkalla. Pro tekee seuraavasta laskusta verohallinnon vaatimukset täyttävän verkkolaskun, joka lähetetään Peppolin kautta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre facture est en route. Pro fait de la prochaine une facture électronique conforme aux exigences fiscales, envoyée via Peppol."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La tua fattura è in arrivo. Pro trasforma la prossima in una fattura elettronica conforme alle norme fiscali, inviata tramite Peppol."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請求書を送信しました。Pro なら次の請求書を、税務当局に対応した電子インボイスとして Peppol 経由で送信できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "인보이스가 발송되었어요. Pro를 쓰면 다음 인보이스는 세무 당국 기준을 충족하는 전자 인보이스로 Peppol을 통해 보내져요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je factuur is onderweg. Pro maakt de volgende tot een e-factuur die voldoet aan de belastingregels en via Peppol wordt verstuurd."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twoja faktura jest w drodze. Pro sprawia, że następna będzie e-fakturą zgodną z wymogami urzędu skarbowego, wysłaną przez Peppol."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua fatura está a caminho. Com o Pro, a próxima vira uma e-invoice aceita pelo fisco, enviada pela rede Peppol."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的发票已在途中。Pro 可将下一张发票变为符合税务机关要求的电子发票，并通过 Peppol 发送。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的發票已在途中。Pro 可將下一張發票變成符合稅務機關要求的電子發票，並透過 Peppol 傳送。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
