@@ -32,7 +32,7 @@ extension SettingsViewController {
         }
         return .custom(id: "pro", title: String(localized: "Upgrade to Pro"), systemImage: "seal") { [weak self] in
             guard let self else { return }
-            present(UINavigationController(rootViewController: PaywallViewController()), animated: true)
+            present(UINavigationController(rootViewController: PaywallViewController(placement: .settings)), animated: true)
         }
     }
 

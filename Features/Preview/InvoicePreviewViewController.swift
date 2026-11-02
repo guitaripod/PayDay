@@ -207,7 +207,9 @@ final class InvoicePreviewViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
             guard let self, self.presentedViewController == nil, self.view.window != nil else { return }
             InvoiceOffer.policy.noteOffered()
-            self.presentPaywall(reason: String(localized: "Your invoice is on its way. Pro makes the next one a tax-authority-ready e-invoice, sent over Peppol."))
+            self.presentPaywall(
+                reason: String(localized: "Your invoice is on its way. Pro makes the next one a tax-authority-ready e-invoice, sent over Peppol."),
+                placement: .moment)
         }
     }
 
@@ -352,8 +354,8 @@ final class InvoicePreviewViewController: UIViewController {
         }
     }
 
-    private func presentPaywall(reason: String) {
-        let paywall = PaywallViewController(reason: reason)
+    private func presentPaywall(reason: String, placement: MidgarSignal.Placement = .feature) {
+        let paywall = PaywallViewController(reason: reason, placement: placement)
         present(UINavigationController(rootViewController: paywall), animated: true)
     }
 

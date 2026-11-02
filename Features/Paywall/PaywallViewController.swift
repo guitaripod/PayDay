@@ -1,4 +1,6 @@
 import Combine
+import MidgarCommerce
+import MidgarCore
 import UIKit
 
 /// Pay Day Pro paywall. Sells the compliance wedge with the post-3.1.2 pattern:
@@ -19,6 +21,8 @@ final class PaywallViewController: UIViewController {
     }
 
     private let reason: String
+    private let placement: MidgarSignal.Placement
+    private var hasNotedShown = false
     private let access = ProAccess.shared
     private var cancellables = Set<AnyCancellable>()
     private let cardsStack = UIStackView()
@@ -27,13 +31,29 @@ final class PaywallViewController: UIViewController {
     private var selectedIndex = 0
     private var cardViews: [UIControl] = []
 
-    init(reason: String = String(localized: "Unlock compliant e-invoicing and Peppol delivery.")) {
+    init(
+        reason: String = String(localized: "Unlock compliant e-invoicing and Peppol delivery."),
+        placement: MidgarSignal.Placement = .feature
+    ) {
         self.reason = reason
+        self.placement = placement
         super.init(nibName: nil, bundle: nil)
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        noteShownOnce()
+    }
+
+    /// Reports the paywall once per presentation, not again when a sheet over it closes.
+    private func noteShownOnce() {
+        guard !hasNotedShown else { return }
+        hasNotedShown = true
+        MidgarPaywallMoments.noteShown(placement: placement)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
