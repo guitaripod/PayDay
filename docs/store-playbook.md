@@ -61,7 +61,7 @@ marketing/appstore/framed --device-type IPHONE_67 --replace --confirm`. Captions
 - Entitlement `pro`. Subscription group "Pay Day Pro": monthly €4.99, annual €39.99 (7-day trial),
   plus a lifetime one-time unlock.
 - Consumable credit packs (Peppol sends + AI). Validated server-side by mako
-  (`/v1/credits/purchase/revenuecat/validate`, product↔pack bound) — never grant on customer
+  (`/v1/credits/purchase/validate`, product↔pack bound) — never grant on customer
   existence alone (the PixiePocket lesson).
 - Map both subs to `pro`; also derive all-access from CustomerInfo as a belt-and-suspenders fallback.
 
