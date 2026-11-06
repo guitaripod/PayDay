@@ -2,7 +2,6 @@ import MidgarUI
 import UIKit
 
 extension SettingsViewController {
-    private static let supportAddress = "support@midgarcorp.cc"
     private static let privacyURL = URL(string: LegalLinks.privacy)!
     private static let termsURL = URL(string: LegalLinks.terms)!
 
@@ -72,7 +71,7 @@ extension SettingsViewController {
                 ) { [weak self] in self?.shareApp() },
                 .privacyPolicy(url: Self.privacyURL),
                 .termsOfUse(url: Self.termsURL),
-                .support(address: Self.supportAddress),
+                .support(),
                 .version(),
             ])
     }
