@@ -9,7 +9,7 @@ subtitle + privacy URL (appInfoLocalization), Business/Finance categories
 localization), and sets MANUAL release. Re-runnable.
 
 Pricing (free), availability (China off), and IAP/subscription creation are
-handled by their own steps — see scripts/asc-products.py and the launch
+handled by their own steps — see `midgar products pay-day` and the launch
 checklist; the FIRST subscription submission needs a one-time web-UI product
 selection per OPERATIONS.md.
 
