@@ -10,6 +10,13 @@ final class InvoiceAIService: Sendable {
     private let client: AICreditsClient
     private static let draftingModel = "claude-haiku-5-5"
 
+    /// The English name of the language the app runs in ("Swedish", "Norwegian Bokmål"), which drafted text is
+    /// written in.
+    static var writingLanguage: String {
+        let code = Bundle.main.preferredLocalizations.first ?? "en"
+        return Locale(identifier: "en").localizedString(forIdentifier: code) ?? "English"
+    }
+
     init(client: AICreditsClient = AICreditsManager.shared.client) {
         self.client = client
     }
@@ -26,7 +33,8 @@ final class InvoiceAIService: Sendable {
         let prompt = """
         Extract billable line items from this image of a quote, receipt, or notes. \
         Reply with JSON only: {"lines":[{"name","details","quantity","unit_price"}]}. \
-        Amounts are in \(currency.code); unit_price is the net price per unit as a number.
+        Amounts are in \(currency.code); unit_price is the net price per unit as a number. \
+        Write name and details in \(Self.writingLanguage).
         """
         let request = CapabilityRequest.chat(
             messages: [ChatTurn(role: "user", content: prompt)],
@@ -42,7 +50,8 @@ final class InvoiceAIService: Sendable {
         let prompt = """
         Turn this freelancer's description into billable line items. \
         Reply with JSON only: {"lines":[{"name","details","quantity","unit_price"}]}. \
-        Amounts are in \(currency.code); unit_price is the net price per unit as a number.
+        Amounts are in \(currency.code); unit_price is the net price per unit as a number. \
+        Write name and details in \(Self.writingLanguage).
 
         Description: \(text)
         """
@@ -60,7 +69,8 @@ final class InvoiceAIService: Sendable {
         let prompt = """
         Write a \(tone) payment-reminder email to \(invoice.buyer.displayName) for invoice \
         \(invoice.number), amount \(total), due \(invoice.dueDate.iso8601). \
-        Keep it under 120 words, professional, no placeholders. Plain text only.
+        Keep it under 120 words, professional, no placeholders. Plain text only. \
+        Write it in \(Self.writingLanguage).
         """
         let request = CapabilityRequest.chat(messages: [ChatTurn(role: "user", content: prompt)], model: Self.draftingModel)
         let result = try await client.run(request)

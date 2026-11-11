@@ -4,10 +4,22 @@
     {
       "referenceName": "Pay Day Pro",
       "localizations": {
+        "da": {
+          "name": "Pay Day Pro"
+        },
         "en-US": {
           "name": "Pay Day Pro"
         },
+        "fi": {
+          "name": "Pay Day Pro"
+        },
+        "no": {
+          "name": "Pay Day Pro"
+        },
         "pl": {
+          "name": "Pay Day Pro"
+        },
+        "sv": {
           "name": "Pay Day Pro"
         }
       },
@@ -23,13 +35,29 @@
             "amount": "39.99"
           },
           "localizations": {
+            "da": {
+              "name": "Pay Day Pro (årligt)",
+              "description": "EN 16931 e-fakturaer, Peppol-levering og branding."
+            },
             "en-US": {
               "name": "Pay Day Pro (Annual)",
               "description": "EN 16931 e-invoices, Peppol delivery & branding."
             },
+            "fi": {
+              "name": "Pay Day Pro (vuosittain)",
+              "description": "EN 16931 -verkkolaskut, Peppol-toimitus ja brändäys."
+            },
+            "no": {
+              "name": "Pay Day Pro (årlig)",
+              "description": "EN 16931 e-fakturaer, Peppol-levering og branding."
+            },
             "pl": {
               "name": "Pay Day Pro (rocznie)",
               "description": "E-faktury EN 16931, wysyłka Peppol i marka"
+            },
+            "sv": {
+              "name": "Pay Day Pro (årsvis)",
+              "description": "EN 16931 e-fakturor, Peppol-leverans och varumärke."
             }
           },
           "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5",
@@ -46,13 +74,29 @@
             "amount": "4.99"
           },
           "localizations": {
+            "da": {
+              "name": "Pay Day Pro (månedligt)",
+              "description": "EN 16931 e-fakturaer, Peppol-levering og branding."
+            },
             "en-US": {
               "name": "Pay Day Pro (Monthly)",
               "description": "EN 16931 e-invoices, Peppol delivery & branding."
             },
+            "fi": {
+              "name": "Pay Day Pro (kuukausittain)",
+              "description": "EN 16931 -verkkolaskut, Peppol-toimitus ja brändäys."
+            },
+            "no": {
+              "name": "Pay Day Pro (månedlig)",
+              "description": "EN 16931 e-fakturaer, Peppol-levering og branding."
+            },
             "pl": {
               "name": "Pay Day Pro (miesięcznie)",
               "description": "E-faktury EN 16931, wysyłka Peppol i marka"
+            },
+            "sv": {
+              "name": "Pay Day Pro (månadsvis)",
+              "description": "EN 16931 e-fakturor, Peppol-leverans och varumärke."
             }
           },
           "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5",
@@ -71,13 +115,29 @@
         "amount": "49.99"
       },
       "localizations": {
+        "da": {
+          "name": "650 kreditter",
+          "description": "Business-pakke, bedste værdi ved stort forbrug"
+        },
         "en-US": {
           "name": "650 Credits",
           "description": "Business pack, best value for heavy use"
         },
+        "fi": {
+          "name": "650 krediittiä",
+          "description": "Business-paketti, paras arvo runsaaseen käyttöön"
+        },
+        "no": {
+          "name": "650 kreditter",
+          "description": "Business-pakke, best verdi ved mye bruk"
+        },
         "pl": {
           "name": "650 kredytów",
           "description": "Pakiet Business, opłacalny przy dużym ruchu"
+        },
+        "sv": {
+          "name": "650 krediter",
+          "description": "Business-paket, bäst värde vid tung användning"
         }
       },
       "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5"
@@ -91,13 +151,29 @@
         "amount": "24.99"
       },
       "localizations": {
+        "da": {
+          "name": "300 kreditter",
+          "description": "Pro-pakke til travl fakturering"
+        },
         "en-US": {
           "name": "300 Credits",
           "description": "Pro pack for busy invoicing workloads"
         },
+        "fi": {
+          "name": "300 krediittiä",
+          "description": "Pro-paketti kiireiseen laskutukseen"
+        },
+        "no": {
+          "name": "300 kreditter",
+          "description": "Pro-pakke for travel fakturering"
+        },
         "pl": {
           "name": "300 kredytów",
           "description": "Pakiet Pro przy dużym natężeniu fakturowania"
+        },
+        "sv": {
+          "name": "300 krediter",
+          "description": "Pro-paket för intensiv fakturering"
         }
       },
       "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5"
@@ -111,13 +187,29 @@
         "amount": "9.99"
       },
       "localizations": {
+        "da": {
+          "name": "110 kreditter",
+          "description": "Almindelig pakke til jævn månedlig fakturering"
+        },
         "en-US": {
           "name": "110 Credits",
           "description": "Regular pack for steady monthly invoicing"
         },
+        "fi": {
+          "name": "110 krediittiä",
+          "description": "Tavallinen paketti tasaiseen kuukausilaskutukseen"
+        },
+        "no": {
+          "name": "110 kreditter",
+          "description": "Vanlig pakke for jevn månedlig fakturering"
+        },
         "pl": {
           "name": "110 kredytów",
           "description": "Stały pakiet do comiesięcznego fakturowania"
+        },
+        "sv": {
+          "name": "110 krediter",
+          "description": "Vanligt paket för löpande månadsfakturering"
         }
       },
       "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5"
@@ -131,13 +223,29 @@
         "amount": "2.99"
       },
       "localizations": {
+        "da": {
+          "name": "30 kreditter",
+          "description": "Startpakke til at prøve AI-assisteret fakturering"
+        },
         "en-US": {
           "name": "30 Credits",
           "description": "Starter pack to try AI-assisted invoicing"
         },
+        "fi": {
+          "name": "30 krediittiä",
+          "description": "Aloituspaketti tekoälyavusteisen laskutuksen kokeiluun"
+        },
+        "no": {
+          "name": "30 kreditter",
+          "description": "Startpakke for å prøve AI-assistert fakturering"
+        },
         "pl": {
           "name": "30 kredytów",
           "description": "Pakiet startowy — wypróbuj fakturowanie z AI"
+        },
+        "sv": {
+          "name": "30 krediter",
+          "description": "Startpaket för att prova AI-stödd fakturering"
         }
       },
       "reviewScreenshotMd5": "4cce8aac5fce07867bca693b32c289e5"

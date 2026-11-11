@@ -148,7 +148,7 @@ final class InvoicePDFRenderer {
                 rowBottom += drawWrapped(line.details, x: cols[0], y: rowBottom, width: cols[1] - cols[0] - 8,
                                          font: .systemFont(ofSize: 10), color: Ink.secondary)
             }
-            let qty = String(localized: "\(decimalDisplay(line.quantity)) \(line.unit.label)",
+            let qty = String(localized: "\(decimalDisplay(line.quantity)) \(Localized.name(line.unit))",
                              comment: "Invoice PDF quantity cell: amount then unit of measure, e.g. 8 hour")
             drawRight(qty, rightEdge: cols[2] - 8, y: y, font: .systemFont(ofSize: 11), color: Ink.secondary)
             drawRight(decimalDisplay(line.effectiveRate) + "%", rightEdge: cols[3] - 8, y: y,

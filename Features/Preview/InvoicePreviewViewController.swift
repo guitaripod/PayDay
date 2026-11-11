@@ -162,7 +162,7 @@ final class InvoicePreviewViewController: UIViewController {
             let headline = String(
                 localized: "⚠︎ \(issues.count) issues before this is a valid e-invoice:",
                 comment: "Count of EN 16931 validation errors, followed by a bulleted list of them")
-            statusLabel.text = headline + "\n• " + issues.prefix(3).map(\.message).joined(separator: "\n• ")
+            statusLabel.text = headline + "\n• " + issues.prefix(3).map(Localized.message).joined(separator: "\n• ")
             statusLabel.textColor = DesignSystem.Color.overdue
         }
     }
