@@ -16,6 +16,7 @@ final class InvoicePreviewViewController: UIViewController {
     private var embed: FacturXEmbedder.Output?
     private var isPremium = false
     private let demoForceCompliant: Bool
+    private var reminder: ReminderFlow?
 
     init(invoice: Invoice, demoForceCompliant: Bool = false) {
         self.invoice = invoice
@@ -35,7 +36,7 @@ final class InvoicePreviewViewController: UIViewController {
             image: UIImage(systemName: "square.and.arrow.up"),
             primaryAction: UIAction { [weak self] _ in self?.share() })
         shareItem.accessibilityLabel = String(localized: "Share")
-        navigationItem.rightBarButtonItem = shareItem
+        navigationItem.rightBarButtonItems = ReminderFlow.applies(to: invoice) ? [shareItem, makeReminderItem()] : [shareItem]
         buildLayout()
         renderAsync()
     }
@@ -165,6 +166,27 @@ final class InvoicePreviewViewController: UIViewController {
             statusLabel.text = headline + "\n• " + issues.prefix(3).map(Localized.message).joined(separator: "\n• ")
             statusLabel.textColor = DesignSystem.Color.overdue
         }
+    }
+
+    /// The bar button that drafts a payment reminder, shown on an overdue invoice. The reminder goes out with the
+    /// same PDF that Share sends.
+    private func makeReminderItem() -> UIBarButtonItem {
+        let item = UIBarButtonItem(image: UIImage(systemName: "bell.badge"), primaryAction: UIAction { [weak self] _ in
+            self?.draftReminder()
+        })
+        item.accessibilityLabel = ReminderCopy.title
+        item.accessibilityIdentifier = "preview.reminder"
+        reminder = ReminderFlow(invoice: invoice, host: self, anchor: item) { [weak self] in
+            guard let self, let pdf = self.renderedPDF else { return nil }
+            return self.writeTemp(pdf, name: "\(self.exportFilename()).pdf")
+        }
+        return item
+    }
+
+    /// Starts a drafted payment reminder for this invoice, once it carries the user's own business.
+    func draftReminder() {
+        guard ensureOwnSeller() else { return }
+        reminder?.start()
     }
 
     private func share() {
@@ -373,3 +395,13 @@ final class InvoicePreviewViewController: UIViewController {
         }
     }
 }
+
+#if DEBUG
+extension InvoicePreviewViewController {
+    /// Starts the reminder on a demo document, which carries the example business and so would be held back. With a
+    /// tone it is drafted at once, as if that tone had been chosen.
+    func startReminderForDemo(tone: ReminderTone?) {
+        reminder?.startForDemo(tone: tone)
+    }
+}
+#endif

@@ -11,7 +11,7 @@ enum DemoRouting {
         AppSettings.hasOnboarded = true
         switch screen {
         case "dashboard": return tabs(.dashboard)
-        case "list", "editor", "preview", "line": return tabs(.invoices)
+        case "list", "editor", "preview", "reminder", "line": return tabs(.invoices)
         case "clients", "client": return tabs(.clients)
         case "settings", "business", "paywall", "setup": return tabs(.settings)
         case "onboarding": return OnboardingViewController.makeFlow { _ in }
@@ -27,6 +27,10 @@ enum DemoRouting {
             switch screen {
             case "editor": showEditor(in: tabs)
             case "preview": showPreview(in: tabs)
+            case "reminder":
+                let preview = showPreview(in: tabs)
+                let tone = DemoWorld.launchValue("PAYDAY_DEMO_TONE").flatMap(ReminderTone.init(rawValue:))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { preview?.startReminderForDemo(tone: tone) }
             case "line": presentLine(in: tabs)
             case "client": showClient(in: tabs)
             case "business": tabs.settingsSplit.showDetail([BusinessSettingsViewController()])
@@ -54,12 +58,14 @@ enum DemoRouting {
         (tabs.invoicesSplit.primaryList as? InvoiceListViewController)?.markShown(id: invoice.id)
     }
 
-    private static func showPreview(in tabs: RootViewController) {
-        guard let invoice = document() else { return }
+    @discardableResult
+    private static func showPreview(in tabs: RootViewController) -> InvoicePreviewViewController? {
+        guard let invoice = document() else { return nil }
         let editor = InvoiceEditorViewController(viewModel: InvoiceEditorViewModel(existing: invoice))
         let preview = InvoicePreviewViewController(invoice: invoice, demoForceCompliant: true)
         tabs.invoicesSplit.showDetail([editor, preview])
         (tabs.invoicesSplit.primaryList as? InvoiceListViewController)?.markShown(id: invoice.id)
+        return preview
     }
 
     private static func presentLine(in tabs: RootViewController) {

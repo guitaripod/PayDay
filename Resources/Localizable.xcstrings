@@ -7277,6 +7277,107 @@
         }
       }
     },
+    "Couldn't draft the reminder" : {
+      "comment" : "Alert title",
+      "localizations" : {
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunne ikke skrive påmindelsen"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnerung konnte nicht entworfen werden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo redactar el recordatorio"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muistutuksen luonnostelu ei onnistunut"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de rédiger le rappel"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekki tókst að semja áminninguna"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossibile redigere il sollecito"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "催促メールを作成できませんでした"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "리마인더 초안을 작성할 수 없습니다"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunne ikke lage påminnelsen"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herinnering kon niet worden opgesteld"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się przygotować przypomnienia"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível redigir o lembrete"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Det gick inte att skriva påminnelsen"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法起草催款提醒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法起草催款提醒"
+          }
+        }
+      }
+    },
     "Couldn't export" : {
       "localizations" : {
         "da" : {
@@ -11682,6 +11783,107 @@
         }
       }
     },
+    "Draft a Reminder" : {
+      "comment" : "Button and sheet title: have a payment reminder email written for an overdue invoice",
+      "localizations" : {
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skriv en påmindelse"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnerung entwerfen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redactar un recordatorio"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luonnostele muistutus"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rédiger un rappel"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Semja áminningu"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redigi un sollecito"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "催促メールを作成"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "리마인더 초안 작성"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lag en påminnelse"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herinnering opstellen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przygotuj przypomnienie"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redigir lembrete"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skriv en påminnelse"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "起草催款提醒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "起草催款提醒"
+          }
+        }
+      }
+    },
     "Draft line items from a photo or a sentence" : {
       "localizations" : {
         "da" : {
@@ -13384,6 +13586,208 @@
         }
       }
     },
+    "Firm" : {
+      "comment" : "Tone of a payment reminder",
+      "localizations" : {
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestemt"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestimmt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Firme"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jämäkkä"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ferme"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ákveðin"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deciso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "きっぱり"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "단호하게"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestemt"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beslist"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stanowczy"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Firme"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestämd"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "坚定"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "堅定"
+          }
+        }
+      }
+    },
+    "Final Reminder" : {
+      "comment" : "Tone of a payment reminder: the last one",
+      "localizations" : {
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sidste påmindelse"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte Erinnerung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Último recordatorio"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viimeinen muistutus"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernier rappel"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lokaáminning"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ultimo sollecito"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終催促"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최종 리마인더"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siste påminnelse"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laatste herinnering"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostateczne przypomnienie"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lembrete final"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sista påminnelse"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最终提醒"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終提醒"
+          }
+        }
+      }
+    },
     "From" : {
       "comment" : "Invoice PDF caption above the seller party block",
       "localizations" : {
@@ -13582,6 +13986,107 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@起"
+          }
+        }
+      }
+    },
+    "Friendly" : {
+      "comment" : "Tone of a payment reminder",
+      "localizations" : {
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Venlig"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freundlich"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amable"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ystävällinen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amical"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vingjarnleg"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cordiale"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フレンドリー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "친근하게"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vennlig"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vriendelijk"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przyjazny"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amigável"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vänlig"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "友好"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "友善"
           }
         }
       }
@@ -19796,102 +20301,102 @@
         }
       }
     },
-    "Only the text you type or the photo you choose, plus the invoice currency. Your client list and saved invoices are not sent." : {
+    "Only the text you type or the photo you choose, plus the invoice currency. A reminder sends the client's name and the invoice's number, amount and due date. Your client list and your other invoices are not sent." : {
       "localizations" : {
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kun den tekst, du skriver, eller det billede, du vælger, samt fakturavalutaen. Din kundeliste og gemte fakturaer sendes ikke."
+            "value" : "Kun den tekst, du skriver, eller det billede, du vælger, samt fakturavalutaen. En påmindelse sender kundens navn og fakturaens nummer, beløb og forfaldsdato. Din kundeliste og dine andre fakturaer sendes ikke."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nur der Text, den Sie eingeben, oder das Foto, das Sie auswählen, sowie die Rechnungswährung. Ihre Kundenliste und gespeicherte Rechnungen werden nicht gesendet."
+            "value" : "Nur der Text, den Sie eingeben, oder das Foto, das Sie auswählen, sowie die Rechnungswährung. Eine Erinnerung sendet den Namen des Kunden sowie die Rechnungsnummer, den Betrag und das Fälligkeitsdatum. Ihre Kundenliste und Ihre anderen Rechnungen werden nicht gesendet."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Solo el texto que escribes o la foto que eliges, además de la moneda de la factura. Tu lista de clientes y tus facturas guardadas no se envían."
+            "value" : "Solo el texto que escribes o la foto que eliges, además de la moneda de la factura. Un recordatorio envía el nombre del cliente y el número, el importe y la fecha de vencimiento de la factura. Tu lista de clientes y tus otras facturas no se envían."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vain kirjoittamasi teksti tai valitsemasi kuva sekä laskun valuutta. Asiakasluetteloasi ja tallennettuja laskujasi ei lähetetä."
+            "value" : "Vain kirjoittamasi teksti tai valitsemasi kuva sekä laskun valuutta. Muistutuksessa lähetetään asiakkaan nimi sekä laskun numero, summa ja eräpäivä. Asiakasluetteloasi ja muita laskujasi ei lähetetä."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uniquement le texte que vous saisissez ou la photo que vous choisissez, ainsi que la devise de la facture. Votre liste de clients et vos factures enregistrées ne sont pas envoyées."
+            "value" : "Uniquement le texte que vous saisissez ou la photo que vous choisissez, ainsi que la devise de la facture. Un rappel envoie le nom du client ainsi que le numéro, le montant et la date d'échéance de la facture. Votre liste de clients et vos autres factures ne sont pas envoyées."
           }
         },
         "is" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aðeins textinn sem þú slærð inn eða myndin sem þú velur, auk gjaldmiðils reikningsins. Listinn þinn yfir viðskiptavini og vistaðir reikningar eru ekki sendir."
+            "value" : "Aðeins textinn sem þú slærð inn eða myndin sem þú velur, auk gjaldmiðils reikningsins. Áminning sendir nafn viðskiptavinarins og númer reiknings, upphæð og gjalddaga. Listinn þinn yfir viðskiptavini og aðrir reikningar þínir eru ekki sendir."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Solo il testo che scrivi o la foto che scegli, più la valuta della fattura. Il tuo elenco clienti e le fatture salvate non vengono inviati."
+            "value" : "Solo il testo che scrivi o la foto che scegli, più la valuta della fattura. Un sollecito invia il nome del cliente e il numero, l'importo e la scadenza della fattura. Il tuo elenco clienti e le tue altre fatture non vengono inviati."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "送信されるのは、入力した文章または選んだ写真と、請求書の通貨だけです。取引先リストや保存済みの請求書は送信されません。"
+            "value" : "送信されるのは、入力した文章または選んだ写真と、請求書の通貨だけです。催促メールでは、取引先の名前と請求書の番号、金額、支払期日が送信されます。取引先リストやほかの請求書は送信されません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "입력한 문장이나 선택한 사진, 그리고 인보이스 통화만 전송됩니다. 거래처 목록과 저장된 인보이스는 전송되지 않습니다."
+            "value" : "입력한 문장이나 선택한 사진, 그리고 인보이스 통화만 전송됩니다. 리마인더는 거래처의 이름과 인보이스의 번호, 금액, 납기일을 전송합니다. 거래처 목록과 다른 인보이스는 전송되지 않습니다."
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bare teksten du skriver eller bildet du velger, pluss fakturavalutaen. Kundelisten og lagrede fakturaer sendes ikke."
+            "value" : "Bare teksten du skriver eller bildet du velger, pluss fakturavalutaen. En påminnelse sender kundens navn og fakturaens nummer, beløp og forfallsdato. Kundelisten og dine andre fakturaer sendes ikke."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alleen de tekst die je typt of de foto die je kiest, plus de valuta van de factuur. Je klantenlijst en bewaarde facturen worden niet verstuurd."
+            "value" : "Alleen de tekst die je typt of de foto die je kiest, plus de valuta van de factuur. Bij een herinnering worden de naam van de klant en het factuurnummer, het bedrag en de vervaldatum verstuurd. Je klantenlijst en je andere facturen worden niet verstuurd."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tylko tekst, który wpiszesz, lub zdjęcie, które wybierzesz, oraz waluta faktury. Twoja lista kontrahentów i zapisane faktury nie są wysyłane."
+            "value" : "Tylko tekst, który wpiszesz, lub zdjęcie, które wybierzesz, oraz waluta faktury. Przypomnienie wysyła nazwę klienta oraz numer faktury, kwotę i termin płatności. Twoja lista kontrahentów i pozostałe faktury nie są wysyłane."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apenas o texto que você digita ou a foto que escolhe, além da moeda da fatura. Sua lista de clientes e suas faturas salvas não são enviadas."
+            "value" : "Apenas o texto que você digita ou a foto que escolhe, além da moeda da fatura. Um lembrete envia o nome do cliente e o número, o valor e a data de vencimento da fatura. Sua lista de clientes e suas outras faturas não são enviadas."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Endast texten du skriver eller fotot du väljer, samt fakturans valuta. Din kundlista och sparade fakturor skickas inte."
+            "value" : "Endast texten du skriver eller fotot du väljer, samt fakturans valuta. En påminnelse skickar kundens namn och fakturans nummer, belopp och förfallodatum. Din kundlista och dina andra fakturor skickas inte."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "只发送你输入的文字或选择的照片，以及发票币种。你的客户名单和已保存的发票不会被发送。"
+            "value" : "只发送你输入的文字或选择的照片，以及发票币种。催款提醒会发送客户的名称，以及发票的编号、金额和到期日。你的客户名单和你的其他发票不会被发送。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "只會傳送你輸入的文字或選擇的照片，以及發票幣別。你的客戶名單和已儲存的發票不會被傳送。"
+            "value" : "只會傳送你輸入的文字或選擇的照片，以及發票幣別。催款提醒會傳送客戶的名稱，以及發票的編號、金額和到期日。你的客戶名單和你的其他發票不會被傳送。"
           }
         }
       }
@@ -20995,6 +21500,107 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pay Day——iPhone 上的免費發票與符合歐盟規範的電子發票（Peppol、Factur-X）。"
+          }
+        }
+      }
+    },
+    "Pay Day sends this client's name and the invoice's number, amount and due date to its AI service to write the email. It costs 1 credit." : {
+      "comment" : "Under the Draft a Reminder title, before a tone is chosen",
+      "localizations" : {
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day sender kundens navn samt fakturaens nummer, beløb og forfaldsdato til en AI-tjeneste, der skriver e-mailen. Det koster 1 kredit."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day sendet den Namen des Kunden sowie die Rechnungsnummer, den Betrag und das Fälligkeitsdatum an den KI-Dienst, der die E-Mail schreibt. Das kostet 1 Credit."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day envía el nombre del cliente y el número, el importe y la fecha de vencimiento de la factura a su servicio de IA para redactar el correo. Cuesta 1 crédito."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day lähettää asiakkaan nimen sekä laskun numeron, summan ja eräpäivän tekoälypalveluun sähköpostin kirjoittamista varten. Se maksaa 1 krediitin."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day envoie le nom de ce client ainsi que le numéro, le montant et la date d'échéance de la facture à son service d'IA pour rédiger l'e-mail. Cela coûte 1 crédit."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day sendir nafn viðskiptavinarins ásamt númeri, upphæð og gjalddaga reiknings til gervigreindarþjónustu sinnar til að semja tölvupóstinn. Þetta kostar 1 inneign."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day invia il nome del cliente e il numero, l'importo e la scadenza della fattura al suo servizio di IA per scrivere l'e-mail. Costa 1 credito."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day は、この取引先の名前と請求書の番号・金額・支払期日を、メールを作成するため AI サービスに送信します。1 回の作成に 1 クレジットを使用します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day는 이 거래처의 이름과 인보이스의 번호, 금액, 납기일을 이메일 작성을 위해 AI 서비스로 전송합니다. 1 크레딧이 사용됩니다."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day sender kundens navn og fakturaens nummer, beløp og forfallsdato til en KI-tjeneste for å skrive e-posten. Det koster 1 kreditt."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day stuurt de naam van deze klant en het factuurnummer, het bedrag en de vervaldatum naar de AI-dienst om de e-mail te schrijven. Dit kost 1 credit."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day wysyła nazwę tego klienta oraz numer faktury, kwotę i termin płatności do usługi AI, która napisze e-mail. Kosztuje to 1 kredyt."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Pay Day envia o nome deste cliente e o número, o valor e a data de vencimento da fatura ao serviço de IA para redigir o e-mail. Custa 1 crédito."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day skickar kundens namn och fakturans nummer, belopp och förfallodatum till sin AI-tjänst för att skriva e-postmeddelandet. Det kostar 1 kredit."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day 会将此客户的名称，以及发票的编号、金额和到期日发送给 AI 服务，用来撰写邮件。每次起草需要 1 积分。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay Day 會將此客戶的名稱，以及發票的編號、金額和到期日傳送給 AI 服務，用來撰寫郵件。每次起草需要 1 點數。"
           }
         }
       }
@@ -26787,6 +27393,107 @@
         }
       }
     },
+    "The draft didn't state this invoice correctly, so it was thrown away. Try again." : {
+      "comment" : "Alert message when a drafted reminder failed its checks",
+      "localizations" : {
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kladden angav ikke denne faktura korrekt, så den blev kasseret. Prøv igen."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Entwurf gab diese Rechnung nicht korrekt wieder, daher wurde er verworfen. Versuchen Sie es erneut."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El borrador no reflejaba correctamente esta factura, así que se descartó. Inténtalo de nuevo."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luonnos ei esittänyt tätä laskua oikein, joten se hylättiin. Yritä uudelleen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le brouillon ne reprenait pas correctement les informations de cette facture, il a donc été supprimé. Réessayez."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drögin lýstu ekki þessum reikningi rétt, svo þeim var hent. Reyndu aftur."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La bozza non descriveva correttamente questa fattura, quindi è stata scartata. Riprova."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI が作成した下書きに、この請求書の内容が正しく記載されていなかったため、破棄されました。もう一度お試しください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "초안이 이 인보이스의 내용을 정확히 담고 있지 않아 폐기되었습니다. 다시 시도해 주세요."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utkastet opplyste ikke denne fakturaen riktig, så det ble forkastet. Prøv igjen."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De concepttekst gaf deze factuur niet correct weer, dus is die weggegooid. Probeer het opnieuw."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szkic nie zawierał poprawnych danych tej faktury, dlatego został odrzucony. Spróbuj ponownie."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O rascunho não informou esta fatura corretamente, por isso foi descartado. Tente novamente."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utkastet angav inte den här fakturan korrekt, så det kasserades. Försök igen."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "草稿未正确说明此发票的信息，因此已被丢弃。请重试。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "草稿未正確說明此發票的資訊，因此已被丟棄。請再試一次。"
+          }
+        }
+      }
+    },
     "The Netherlands has no B2B mandate yet, but Peppol is the national standard and mandatory for government suppliers. EU-wide cross-border e-invoicing becomes mandatory on 1 July 2030." : {
       "localizations" : {
         "da" : {
@@ -28190,102 +28897,102 @@
         }
       }
     },
-    "To turn your words or a photo into line items, Pay Day sends the content you provide to a third-party AI service. You control when this happens — nothing is sent until you tap an AI action." : {
+    "To turn your words or a photo into line items, or an overdue invoice into a reminder, Pay Day sends the content you provide to a third-party AI service. You control when this happens: nothing is sent until you tap an AI action." : {
       "localizations" : {
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "For at omdanne dine ord eller et foto til fakturalinjer sender Pay Day det indhold, du angiver, til en tredjepartstjeneste med kunstig intelligens. Du bestemmer, hvornår det sker. Der sendes intet, før du trykker på en AI-handling."
+            "value" : "For at omdanne dine ord eller et foto til fakturalinjer eller en forfalden faktura til en påmindelse sender Pay Day det indhold, du angiver, til en tredjepartstjeneste med kunstig intelligens. Du bestemmer, hvornår det sker: Der sendes intet, før du trykker på en AI-handling."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Um Ihre Worte oder ein Foto in Positionen zu verwandeln, sendet Pay Day die von Ihnen bereitgestellten Inhalte an einen KI-Dienst eines Drittanbieters. Sie entscheiden, wann das passiert – es wird nichts gesendet, bevor Sie eine KI-Aktion antippen."
+            "value" : "Um Ihre Worte oder ein Foto in Positionen zu verwandeln oder eine überfällige Rechnung in eine Erinnerung umzuwandeln, sendet Pay Day die von Ihnen bereitgestellten Inhalte an einen KI-Dienst eines Drittanbieters. Sie entscheiden, wann das passiert: Es wird nichts gesendet, bevor Sie eine KI-Aktion antippen."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Para convertir tus palabras o una foto en líneas de factura, Pay Day envía el contenido que proporcionas a un servicio de IA de terceros. Tú decides cuándo: no se envía nada hasta que pulsas una acción de IA."
+            "value" : "Para convertir tus palabras o una foto en líneas de factura, o una factura vencida en un recordatorio, Pay Day envía el contenido que proporcionas a un servicio de IA de terceros. Tú decides cuándo: no se envía nada hasta que pulsas una acción de IA."
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jotta sanasi tai kuvasi muuttuisivat laskuriveiksi, Pay Day lähettää antamasi sisällön kolmannen osapuolen tekoälypalveluun. Sinä päätät, milloin näin tapahtuu – mitään ei lähetetä ennen kuin napautat tekoälytoimintoa."
+            "value" : "Jotta sanasi tai kuvasi muuttuisivat laskuriveiksi tai erääntynyt lasku muistutukseksi, Pay Day lähettää antamasi sisällön kolmannen osapuolen tekoälypalveluun. Sinä päätät, milloin näin tapahtuu: mitään ei lähetetä ennen kuin napautat tekoälytoimintoa."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pour transformer vos mots ou une photo en lignes de facture, Pay Day envoie le contenu que vous fournissez à un service d'IA tiers. Vous décidez du moment : rien n'est envoyé tant que vous n'avez pas touché une action IA."
+            "value" : "Pour transformer vos mots ou une photo en lignes de facture, ou une facture en retard en rappel, Pay Day envoie le contenu que vous fournissez à un service d'IA tiers. Vous décidez du moment : rien n'est envoyé tant que vous n'avez pas touché une action IA."
           }
         },
         "is" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Til að breyta því sem þú skrifar eða mynd í reikningslínur sendir Pay Day efnið sem þú gefur upp til þjónustu gervigreindar frá þriðja aðila. Þú ræður því hvenær þetta gerist: ekkert er sent fyrr en þú snertir gervigreindaraðgerð."
+            "value" : "Til að breyta því sem þú skrifar eða mynd í reikningslínur, eða reikning í vanskilum í áminningu, sendir Pay Day efnið sem þú gefur upp til þjónustu gervigreindar frá þriðja aðila. Þú ræður því hvenær þetta gerist: ekkert er sent fyrr en þú snertir gervigreindaraðgerð."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Per trasformare le tue parole o una foto in righe di fattura, Pay Day invia il contenuto che fornisci a un servizio di IA di terze parti. Decidi tu quando: non viene inviato nulla finché non tocchi un'azione IA."
+            "value" : "Per trasformare le tue parole o una foto in righe di fattura, o una fattura scaduta in un sollecito, Pay Day invia il contenuto che fornisci a un servizio di IA di terze parti. Decidi tu quando: non viene inviato nulla finché non tocchi un'azione IA."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "文章や写真を明細に変換するために、Pay Day はご提供いただいた内容を第三者の AI サービスに送信します。送信のタイミングはご自身で管理でき、AI の操作をタップするまで何も送信されません。"
+            "value" : "文章や写真を明細に変換するために、または期限超過の請求書を催促メールにするために、Pay Day はご提供いただいた内容を第三者の AI サービスに送信します。送信のタイミングはご自身で管理でき、AI の操作をタップするまで何も送信されません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "문장이나 사진을 인보이스 항목으로 바꾸기 위해 Pay Day는 제공한 내용을 제3자 AI 서비스로 전송합니다. 전송 시점은 사용자가 정하며, AI 동작을 탭하기 전까지는 아무것도 전송되지 않습니다."
+            "value" : "문장이나 사진을 인보이스 항목으로 바꾸거나 연체된 인보이스를 리마인더로 바꾸기 위해 Pay Day는 제공한 내용을 제3자 AI 서비스로 전송합니다. 전송 시점은 사용자가 정하며, AI 동작을 탭하기 전까지는 아무것도 전송되지 않습니다."
           }
         },
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "For å gjøre ordene dine eller et bilde om til fakturalinjer, sender Pay Day innholdet du oppgir til en KI-tjeneste fra en tredjepart. Du bestemmer når dette skjer: ingenting sendes før du trykker på en KI-handling."
+            "value" : "For å gjøre ordene dine eller et bilde om til fakturalinjer eller en forfalt faktura til en påminnelse, sender Pay Day innholdet du oppgir til en KI-tjeneste fra en tredjepart. Du bestemmer når dette skjer: ingenting sendes før du trykker på en KI-handling."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Om je woorden of een foto om te zetten in factuurregels stuurt Pay Day de inhoud die je aanlevert naar een AI-dienst van derden. Jij bepaalt wanneer dat gebeurt — er wordt niets verstuurd totdat je op een AI-actie tikt."
+            "value" : "Om je woorden of een foto om te zetten in factuurregels, of een factuur die te laat is in een herinnering, stuurt Pay Day de inhoud die je aanlevert naar een AI-dienst van derden. Jij bepaalt wanneer dat gebeurt: er wordt niets verstuurd totdat je op een AI-actie tikt."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aby zamienić twoje słowa lub zdjęcie w pozycje faktury, Pay Day wysyła podane treści do zewnętrznej usługi AI. To ty decydujesz, kiedy się to dzieje — nic nie zostaje wysłane, dopóki nie dotkniesz akcji AI."
+            "value" : "Aby zamienić twoje słowa lub zdjęcie w pozycje faktury albo fakturę po terminie w przypomnienie, Pay Day wysyła podane treści do zewnętrznej usługi AI. To ty decydujesz, kiedy się to dzieje: nic nie zostaje wysłane, dopóki nie dotkniesz akcji AI."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Para transformar suas palavras ou uma foto em itens de fatura, o Pay Day envia o conteúdo fornecido a um serviço de IA de terceiros. Você controla quando isso acontece — nada é enviado até você tocar em uma ação de IA."
+            "value" : "Para transformar suas palavras ou uma foto em itens de fatura, ou uma fatura vencida em um lembrete, o Pay Day envia o conteúdo fornecido a um serviço de IA de terceiros. Você controla quando isso acontece: nada é enviado até você tocar em uma ação de IA."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "För att omvandla dina ord eller ett foto till fakturarader skickar Pay Day innehållet du anger till en tredjepartstjänst för AI. Du bestämmer när det sker: ingenting skickas förrän du trycker på en AI-åtgärd."
+            "value" : "För att omvandla dina ord eller ett foto till fakturarader, eller en förfallen faktura till en påminnelse, skickar Pay Day innehållet du anger till en tredjepartstjänst för AI. Du bestämmer när det sker: ingenting skickas förrän du trycker på en AI-åtgärd."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "为了把你的文字或照片变成发票明细，Pay Day 会将你提供的内容发送给第三方 AI 服务。何时发送由你决定——在你点按 AI 操作之前，不会发送任何内容。"
+            "value" : "为了把你的文字或照片变成发票明细，或把逾期发票变成催款提醒，Pay Day 会将你提供的内容发送给第三方 AI 服务。何时发送由你决定：在你点按 AI 操作之前，不会发送任何内容。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "為了把你的文字或照片變成發票明細，Pay Day 會將你提供的內容傳送給第三方 AI 服務。何時傳送由你決定——在你點一下 AI 功能之前，不會傳送任何內容。"
+            "value" : "為了把你的文字或照片變成發票明細，或把逾期發票變成催款提醒，Pay Day 會將你提供的內容傳送給第三方 AI 服務。何時傳送由你決定：在你點一下 AI 功能之前，不會傳送任何內容。"
           }
         }
       }

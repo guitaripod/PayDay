@@ -43,9 +43,9 @@ final class AIConsentViewController: UIViewController {
 
         let intro = DesignSystem.label(
             String(localized: """
-                To turn your words or a photo into line items, Pay Day sends the content you \
-                provide to a third-party AI service. You control when this happens — nothing \
-                is sent until you tap an AI action.
+                To turn your words or a photo into line items, or an overdue invoice into a \
+                reminder, Pay Day sends the content you provide to a third-party AI service. You \
+                control when this happens: nothing is sent until you tap an AI action.
                 """),
             font: DesignSystem.Typography.body(), color: DesignSystem.Color.secondary)
 
@@ -53,7 +53,8 @@ final class AIConsentViewController: UIViewController {
             bullet(String(localized: "What is sent"),
                    String(localized: """
                        Only the text you type or the photo you choose, plus the invoice \
-                       currency. Your client list and saved invoices are not sent.
+                       currency. A reminder sends the client's name and the invoice's number, \
+                       amount and due date. Your client list and your other invoices are not sent.
                        """)),
             bullet(String(localized: "Who it is sent to"),
                    String(localized: """

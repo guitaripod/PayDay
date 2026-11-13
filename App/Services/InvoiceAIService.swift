@@ -5,7 +5,7 @@ import MidgarCore
 
 /// AI actions powered by mako (metered as credits). Each genuinely changes the
 /// outcome: a photo of a quote/receipt becomes line items; plain language
-/// becomes line items; an overdue invoice becomes a tactful reminder email.
+/// becomes line items; an overdue invoice becomes a reminder email in the tone asked for.
 final class InvoiceAIService: Sendable {
     private let client: AICreditsClient
     private static let draftingModel = "claude-haiku-5-5"
@@ -63,22 +63,50 @@ final class InvoiceAIService: Sendable {
         return Self.parseLines(result.raw)
     }
 
-    /// Draft a payment-reminder email for an (over)due invoice.
-    func paymentReminder(for invoice: Invoice, tone: String) async throws -> String {
-        let total = Format.money(invoice.totals().summary.payableAmount)
-        let prompt = """
-        Write a \(tone) payment-reminder email to \(invoice.buyer.displayName) for invoice \
-        \(invoice.number), amount \(total), due \(invoice.dueDate.iso8601). \
-        Keep it under 120 words, professional, no placeholders. Plain text only. \
-        Write it in \(Self.writingLanguage).
-        """
-        let request = CapabilityRequest.chat(messages: [ChatTurn(role: "user", content: prompt)], model: Self.draftingModel)
-        let result = try await client.run(request)
-        guard let content = Self.parseMessageContent(result.raw) else {
-            MidgarLog.error("AI reminder parse failed: \(result.raw.count) bytes, content withheld", category: .credits)
-            return ""
+    /// Why a reminder request came back without a draft a person should send.
+    enum ReminderFailure: Error {
+        case unusable
+    }
+
+    /// Drafts a payment reminder for an overdue invoice through mako's reminder alias, which holds the instructions.
+    /// Only the client's name, the invoice number, the amount and the due date are sent. A reply that misstates one
+    /// of them or adds a figure of its own is thrown away and asked for once more, which the service does not charge.
+    func reminder(for invoice: Invoice, tone: ReminderTone) async throws -> ReminderDraft {
+        let facts = ReminderFacts(
+            client: invoice.buyer.displayName,
+            invoiceNumber: invoice.number,
+            amount: Format.money(invoice.totals().summary.payableAmount),
+            dueDate: Format.date(invoice.dueDate))
+        let first = UUID().uuidString
+        if let draft = try await askForReminder(facts, tone: tone, key: first, retryOf: nil, signature: invoice.seller.displayName) {
+            return draft
         }
-        return content
+        MidgarLog.notice("AI reminder was not usable, asking once more", category: .credits)
+        if let draft = try await askForReminder(facts, tone: tone, key: UUID().uuidString, retryOf: first, signature: invoice.seller.displayName) {
+            return draft
+        }
+        throw ReminderFailure.unusable
+    }
+
+    private func askForReminder(_ facts: ReminderFacts, tone: ReminderTone, key: String, retryOf: String?, signature: String) async throws -> ReminderDraft? {
+        var parameters: [String: JSONValue] = [
+            "alias": .string(PaymentReminder.alias),
+            "input": .string(PaymentReminder.input(facts, tone: tone)),
+            "language": .string(Self.writingLanguage),
+            "idempotency_key": .string(key),
+        ]
+        if let retryOf { parameters["retry_of"] = .string(retryOf) }
+        let result = try await client.run(CapabilityRequest(capability: .chat, parameters: parameters))
+        guard let content = Self.aliasContent(result.raw) else { return nil }
+        return PaymentReminder.draft(from: content, facts: facts, signature: signature)
+    }
+
+    /// The `content` of an alias reply, which is the model's JSON as a string.
+    private static func aliasContent(_ data: Data) -> String? {
+        struct AliasReply: Decodable {
+            let content: String
+        }
+        return (try? JSONDecoder().decode(AliasReply.self, from: data))?.content
     }
 
     // MARK: Response parsing (mako proxies an OpenAI-shaped chat completion)
