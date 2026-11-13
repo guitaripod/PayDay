@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Peppol-e-fakturaer fra din iPhone",
+    "subtitle": "EN 16931-gyldig. Factur-X indlejret. Sendt med ét tryk."
+  },
+  "editor": {
+    "title": "En overholdende faktura på et minut",
+    "subtitle": "Komplet EN 16931-momsmotor, med omvendt betalingspligt."
+  },
+  "dashboard": {
+    "title": "Kend dit lands frist",
+    "subtitle": "Danmark, Belgien, Tyskland: hvad der er obligatorisk, og hvornår."
+  },
+  "preview-ic": {
+    "title": "Omvendt betalingspligt i EU, gjort rigtigt",
+    "subtitle": "Live VIES-kontrol af momsnummer for hver kunde."
+  },
+  "list": {
+    "title": "Gratis og ubegrænset",
+    "subtitle": "Fakturaer, tilbud, kunder, dit logo. Pro tilføjer regeloverholdelse."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "order": [
+    "preview",
+    "editor",
+    "dashboard",
+    "preview-ic",
+    "list"
+  ],
+  "preview": {
+    "title": "Peppol-e-fakturaer fra iPhonen din",
+    "subtitle": "EN 16931-gyldig. Factur-X innebygd. Sendt med ett trykk."
+  },
+  "editor": {
+    "title": "En regelrett faktura på ett minutt",
+    "subtitle": "Komplett EN 16931-MVA-motor, med omvendt avgiftsplikt."
+  },
+  "dashboard": {
+    "title": "Kjenn fristen for landet ditt",
+    "subtitle": "Norge, Belgia, Tyskland: hva som er obligatorisk, og når."
+  },
+  "preview-ic": {
+    "title": "Omvendt avgiftsplikt i EU, gjort riktig",
+    "subtitle": "Live VIES-kontroll av MVA-nummer for hver kunde."
+  },
+  "list": {
+    "title": "Gratis og uten begrensninger",
+    "subtitle": "Fakturaer, tilbud, kunder, din logo. Pro legger til samsvar med regelverket."
+  }
+}
