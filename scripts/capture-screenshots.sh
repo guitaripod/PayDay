@@ -9,6 +9,8 @@
 #
 # Usage: scripts/capture-screenshots.sh [locale ...]   (default: every locale)
 #   PAYDAY_SIM_NAME overrides the simulator (default "iPhone 17 Pro Max");
+#   PAYDAY_APP points at a Debug simulator build (default: the first one in DerivedData);
+#   PAYDAY_SETTLE is the wait in seconds before each capture (default 2.5);
 #   PAYDAY_SCREENS="dashboard list" limits the screens captured.
 
 set -euo pipefail
@@ -21,7 +23,7 @@ BUNDLE_ID="${PAYDAY_BUNDLE_ID}"
 OUT="$ROOT/marketing/appstore/raw"
 SCREENS=(${PAYDAY_SCREENS:-preview editor dashboard preview-ic list})
 
-ALL_LOCALES="en-US en-GB de-DE fr-FR nl-NL fi es-ES it pl pt-BR ja ko zh-Hans zh-Hant"
+ALL_LOCALES="en-US en-GB de-DE fr-FR nl-NL fi sv da no es-ES it pl pt-BR ja ko zh-Hans zh-Hant"
 
 # Prints "<AppleLanguages entry> <AppleLocale region> <PAYDAY_DEMO_COUNTRY>" for a listing locale.
 # The demo country pins the dashboard card to the market that locale sells into; CJK and
@@ -34,6 +36,9 @@ locale_settings() {
     fr-FR)   echo "fr FR FR" ;;
     nl-NL)   echo "nl BE BE" ;;
     fi)      echo "fi FI FI" ;;
+    sv)      echo "sv SE SE" ;;
+    da)      echo "da DK DK" ;;
+    no)      echo "nb NO NO" ;;
     es-ES)   echo "es ES ES" ;;
     it)      echo "it IT IT" ;;
     pl)      echo "pl PL PL" ;;
@@ -46,6 +51,15 @@ locale_settings() {
   esac
 }
 
+# Prints "<PAYDAY_DEMO route> <PAYDAY_DEMO_DOC>" for a capture name. The reverse-charge shot is the preview of
+# invoice 0046, sent to a French client inside the EU; the other names are routes of their own.
+demo_route() {
+  case "$1" in
+    preview-ic) echo "preview 0046" ;;
+    *)          echo "$1" ;;
+  esac
+}
+
 LOCALES="${*:-$ALL_LOCALES}"
 
 UDID="$(xcrun simctl list devices available -j | /opt/homebrew/bin/python3 -c "
@@ -54,7 +68,7 @@ devs=[d for r in json.load(sys.stdin)['devices'].values() for d in r if d['name'
 print(devs[0]['udid'] if devs else '')")"
 if [ -z "$UDID" ]; then echo "❌ no simulator named '$SIM_NAME'" >&2; exit 1; fi
 
-APP="$(find "$HOME/Library/Developer/Xcode/DerivedData" -name 'PayDay.app' -path '*Debug-iphonesimulator*' -not -path '*Index.noindex*' -print 2>/dev/null | head -1)"
+APP="${PAYDAY_APP:-$(find "$HOME/Library/Developer/Xcode/DerivedData" -name 'PayDay.app' -path '*Debug-iphonesimulator*' -not -path '*Index.noindex*' -print 2>/dev/null | head -1)}"
 if [ -z "$APP" ]; then echo "❌ no Debug simulator build — run scripts/ios-build.sh first" >&2; exit 1; fi
 
 xcrun simctl boot "$UDID" 2>/dev/null || true
@@ -69,7 +83,7 @@ capture() {
     --terminate-running-process \
     "$UDID" "$BUNDLE_ID" \
     -AppleLanguages "($lang)" -AppleLocale "${lang//-/_}_${region}" >/dev/null
-  sleep 2.5
+  sleep "${PAYDAY_SETTLE:-2.5}"
   xcrun simctl io "$UDID" screenshot --type png "$OUT/$locale/$screen.png" >/dev/null
 }
 
@@ -79,7 +93,9 @@ for locale in $LOCALES; do
   xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null || true
   xcrun simctl install "$UDID" "$APP"
   for screen in "${SCREENS[@]}"; do
-    SIMCTL_CHILD_PAYDAY_DEMO="$screen" \
+    read -r route doc <<< "$(demo_route "$screen")"
+    SIMCTL_CHILD_PAYDAY_DEMO="$route" \
+    SIMCTL_CHILD_PAYDAY_DEMO_DOC="$doc" \
     SIMCTL_CHILD_PAYDAY_DEMO_COUNTRY="$country" \
       capture "$locale" "$screen" "$lang" "$region"
     echo "  ✓ $locale/$screen"

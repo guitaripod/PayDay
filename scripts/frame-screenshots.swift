@@ -21,11 +21,9 @@ let subtitleSize: CGFloat = 44
 let subtitleGap: CGFloat = 24
 let imageGap: CGFloat = 80
 let imageWidth: CGFloat = 1080
-let imageCornerRadius: CGFloat = 72
 let shadowBlur: CGFloat = 60
 let shadowYOffset: CGFloat = 28
 let shadowAlpha: CGFloat = 0.18
-let borderAlpha: CGFloat = 0.08
 let titleColorHex = "#1A1712"
 let subtitleColorHex = "#6B6353"
 let backgroundTopHex = "#FAF7F0"
@@ -189,42 +187,71 @@ func drawBackground(in context: CGContext) {
     )
 }
 
-/// Draws the raw capture scaled to `imageWidth`, clipped to a rounded rect, with a soft drop
-/// shadow and a hairline border. The shadow is cast by an opaque fill of the same path (rather
-/// than the image itself) so it reads cleanly regardless of the source PNG's own alpha.
-func drawFramedScreenshot(_ image: CGImage, in context: CGContext, topFromTop: CGFloat) {
-    let scale = imageWidth / CGFloat(image.width)
-    let height = CGFloat(image.height) * scale
+/// The raw capture inside its device's real bezel, drawn by the `frames` CLI from Apple's bezel art and trimmed to
+/// the device itself, so a panel never fakes a device with a rounded rectangle.
+func bezeledDevice(rawURL: URL) throws -> CGImage {
+    let workDir = FileManager.default.temporaryDirectory.appendingPathComponent("payday-frames-\(UUID().uuidString)")
+    try FileManager.default.createDirectory(at: workDir, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: workDir) }
+    let process = Process()
+    process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+    process.arguments = ["frames", "--json", "-o", workDir.path, rawURL.path]
+    let output = Pipe()
+    process.standardOutput = output
+    process.standardError = Pipe()
+    try process.run()
+    let data = output.fileHandleForReading.readDataToEndOfFile()
+    process.waitUntilExit()
+    guard process.terminationStatus == 0,
+          let result = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+          let path = result["output"] as? String,
+          let source = CGImageSourceCreateWithURL(URL(fileURLWithPath: path) as CFURL, nil),
+          let framed = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
+        throw ScriptError(reason: "frames failed for \(rawURL.path)")
+    }
+    return try trimmedToOpaque(framed)
+}
+
+/// The image cropped to the bounding box of its non-transparent pixels.
+func trimmedToOpaque(_ image: CGImage) throws -> CGImage {
+    let width = image.width, height = image.height
+    var pixels = [UInt8](repeating: 0, count: width * height * 4)
+    guard let context = CGContext(data: &pixels, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
+                                  space: colorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else {
+        throw ScriptError(reason: "cannot read the framed device's pixels")
+    }
+    context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+    var minX = width, minY = height, maxX = -1, maxY = -1
+    for y in 0..<height {
+        for x in 0..<width where pixels[(y * width + x) * 4 + 3] > 0 {
+            minX = min(minX, x); maxX = max(maxX, x); minY = min(minY, y); maxY = max(maxY, y)
+        }
+    }
+    guard maxX >= minX, maxY >= minY,
+          let cropped = image.cropping(to: CGRect(x: minX, y: minY, width: maxX - minX + 1, height: maxY - minY + 1)) else {
+        throw ScriptError(reason: "the framed device is empty")
+    }
+    return cropped
+}
+
+/// Draws the framed device scaled to `imageWidth` across, with a soft drop shadow under it.
+func drawFramedScreenshot(_ device: CGImage, in context: CGContext, topFromTop: CGFloat) {
+    let scale = imageWidth / CGFloat(device.width)
+    let height = CGFloat(device.height) * scale
     let x = (canvasWidth - imageWidth) / 2
     let yTop = canvasHeight - topFromTop
     let rect = CGRect(x: x, y: yTop - height, width: imageWidth, height: height)
-    let path = CGPath(roundedRect: rect, cornerWidth: imageCornerRadius, cornerHeight: imageCornerRadius, transform: nil)
-
     context.saveGState()
     context.setShadow(offset: CGSize(width: 0, height: -shadowYOffset), blur: shadowBlur, color: rgba(0, 0, 0, shadowAlpha))
-    context.addPath(path)
-    context.setFillColor(rgba(0, 0, 0, 1))
-    context.fillPath()
-    context.restoreGState()
-
-    context.saveGState()
-    context.addPath(path)
-    context.clip()
-    context.draw(image, in: rect)
-    context.restoreGState()
-
-    context.saveGState()
-    context.addPath(path)
-    context.setStrokeColor(rgba(0, 0, 0, borderAlpha))
-    context.setLineWidth(1)
-    context.strokePath()
+    context.interpolationQuality = .high
+    context.draw(device, in: rect)
     context.restoreGState()
 }
 
 /// Lays the frame out top to bottom: title, subtitle 24px below it, then the screenshot 80px
 /// below the subtitle's last line — so a shorter title/subtitle leaves more of the tall capture
 /// visible before the canvas clips its bottom edge.
-func composite(rawImage: CGImage, title: String, subtitle: String, in context: CGContext) {
+func composite(device: CGImage, title: String, subtitle: String, in context: CGContext) {
     drawBackground(in: context)
 
     let contentWidth = canvasWidth - sideMargin * 2
@@ -239,14 +266,11 @@ func composite(rawImage: CGImage, title: String, subtitle: String, in context: C
     drawTextBlock(subtitleBlock, in: context, left: sideMargin, topFromTop: subtitleTop)
 
     let imageTop = subtitleTop + subtitleBlock.blockHeight + imageGap
-    drawFramedScreenshot(rawImage, in: context, topFromTop: imageTop)
+    drawFramedScreenshot(device, in: context, topFromTop: imageTop)
 }
 
 func composeScreenshot(rawURL: URL, title: String, subtitle: String, outURL: URL) throws {
-    guard let source = CGImageSourceCreateWithURL(rawURL as CFURL, nil),
-          let rawImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
-        throw ScriptError(reason: "cannot read raw image: \(rawURL.path)")
-    }
+    let device = try bezeledDevice(rawURL: rawURL)
 
     guard let context = CGContext(
         data: nil,
@@ -260,7 +284,7 @@ func composeScreenshot(rawURL: URL, title: String, subtitle: String, outURL: URL
         throw ScriptError(reason: "cannot create bitmap context for \(outURL.path)")
     }
 
-    composite(rawImage: rawImage, title: title, subtitle: subtitle, in: context)
+    composite(device: device, title: title, subtitle: subtitle, in: context)
 
     guard let image = context.makeImage() else {
         throw ScriptError(reason: "cannot finalize rendered image for \(outURL.path)")
