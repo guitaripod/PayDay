@@ -63,6 +63,19 @@ struct PaymentReminderTests {
         #expect(PaymentReminder.draft(from: Self.reply(subject: "", body: Self.good), facts: Self.facts) == nil)
     }
 
+    @Test func aSubjectTagAndChineseNumeralsInsideWordsAreNotAdditions() {
+        let company = ReminderFacts(client: "晨光设计有限公司", invoiceNumber: "INV-2026-0142", amount: "¥9,800.00", dueDate: "2026年10月14日")
+        let body = "晨光设计有限公司 您好：\n\n希望您一切顺利。这是关于发票 INV-2026-0142 的最后一次提醒，金额为 ¥9,800.00，付款截止日期为 2026年10月14日，目前仍未收到款项。请您尽快安排付款。\n\n顺祝商祺，"
+        #expect(PaymentReminder.draft(from: Self.reply(subject: "【最后提醒】发票 INV-2026-0142", body: body), facts: company) != nil)
+        #expect(PaymentReminder.draft(from: Self.reply(subject: "[最后提醒] 发票 INV-2026-0142", body: body), facts: company) != nil)
+        for added in ["请在三天内付款。", "逾期将加收百分之五的滞纳金。", "另收五百元手续费。", "请于７日内付款。"] {
+            let more = body.replacingOccurrences(of: "请您尽快安排付款。", with: added)
+            #expect(PaymentReminder.draft(from: Self.reply(subject: "发票 INV-2026-0142", body: more), facts: company) == nil, "\(added)")
+        }
+        #expect(PaymentReminder.draft(from: Self.reply(subject: "发票 INV-2026-0142", body: body + "\n[您的姓名]"), facts: company) == nil)
+        #expect(!PaymentReminder.statesACountInHanNumerals("最后一次提醒，统一处理，一切顺利"))
+    }
+
     @Test func figuresAndBracketsInTheClientsOwnNameAreNotTakenForAdditions() {
         let studio = ReminderFacts(client: "Studio 54 [Berlin] GmbH", invoiceNumber: "44", amount: "€1,244.00", dueDate: "14 Oct 2026")
         let body = "Dear Studio 54 [Berlin] GmbH,\n\nInvoice 44 for €1,244.00 was due on 14 Oct 2026 and has not been paid yet. Please arrange payment.\n\nKind regards,"

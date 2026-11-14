@@ -60,6 +60,8 @@ public enum PaymentReminder {
 
     /// The draft of a reply, or nil when the reply is not one a person should send: it must name the invoice, state
     /// the amount and the due date as given, hold no other figure and no percentage, and leave no placeholder to fill.
+    /// Figures are caught as digits of any script and as counts in Chinese numerals; a number spelled out in words
+    /// in another language is not, which the instructions on the service forbid.
     /// `signature` is added on its own line under the closing, when there is one.
     public static func draft(from reply: String, facts: ReminderFacts, signature: String = "") -> ReminderDraft? {
         struct Wire: Decodable {
@@ -73,18 +75,47 @@ public enum PaymentReminder {
         let spoken = ReminderFacts.oneLine(subject + " " + body)
         guard spoken.contains(facts.invoiceNumber), spoken.contains(facts.amount), spoken.contains(facts.dueDate) else { return nil }
         guard !addsAnything(to: spoken, beyond: facts) else { return nil }
+        guard !holdsAPlaceholder(subject: subject, body: ReminderFacts.oneLine(body), beyond: facts) else { return nil }
         let signed = ReminderFacts.oneLine(signature)
         return ReminderDraft(subject: subject, body: signed.isEmpty ? body : body + "\n" + signed)
     }
 
-    /// Whether the text, once the facts it was given are taken out, still holds a figure, a percentage or a
-    /// placeholder left to fill in.
+    /// Whether the text, once the facts it was given are taken out, still holds a figure or a percentage: a digit of
+    /// any script, a percent sign, or a count written in Chinese numerals.
     static func addsAnything(to text: String, beyond facts: ReminderFacts) -> Bool {
+        let rest = remainder(of: text, without: facts)
+        if rest.contains(where: { "%％‰".contains($0) }) { return true }
+        if rest.unicodeScalars.contains(where: { $0.properties.numericType == .decimal }) { return true }
+        return statesACountInHanNumerals(rest)
+    }
+
+    /// Whether Chinese or Japanese text counts something: a numeral right before a unit of money, time or share
+    /// ("三天", "五千元", "一割"), or a percentage spelled out ("百分之五"). A numeral inside an ordinary word
+    /// ("一切", "最后一次", "統一") is not a count.
+    static func statesACountInHanNumerals(_ text: String) -> Bool {
+        if text.contains("分之") { return true }
+        let numerals = Set("〇零一二三四五六七八九十百千万萬亿億两兩壹貳贰叁參肆伍陸陆柒捌玖拾")
+        let units = Set("元圆圓块塊円天日周週月年号號成倍割")
+        let characters = Array(text)
+        return characters.indices.dropLast().contains { numerals.contains(characters[$0]) && units.contains(characters[$0 + 1]) }
+    }
+
+    /// Whether a placeholder was left to fill in, once the facts are taken out: curly or angle brackets anywhere, or
+    /// square brackets in the body. A subject may carry a tag in square brackets, as business email in several
+    /// languages does.
+    static func holdsAPlaceholder(subject: String, body: String, beyond facts: ReminderFacts) -> Bool {
+        let heading = remainder(of: subject, without: facts)
+        let text = remainder(of: body, without: facts)
+        return (heading + text).contains { "{}<>＜＞｛｝".contains($0) } || text.contains { "[]［］".contains($0) }
+    }
+
+    /// The text with every fact it was given taken out, the longest first, so one fact inside another goes whole.
+    private static func remainder(of text: String, without facts: ReminderFacts) -> String {
         var rest = text
         for known in [facts.amount, facts.dueDate, facts.invoiceNumber, facts.client].sorted(by: { $0.count > $1.count }) where !known.isEmpty {
             rest = rest.replacingOccurrences(of: known, with: " ")
         }
-        return rest.contains { $0.isNumber || "[]{}<>%".contains($0) }
+        return rest
     }
 
     /// The body with each paragraph on plain spaces and one blank line between paragraphs.
