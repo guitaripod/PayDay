@@ -16,7 +16,29 @@ final class InvoicePreviewViewController: UIViewController {
     private var embed: FacturXEmbedder.Output?
     private var isPremium = false
     private let demoForceCompliant: Bool
-    private var reminder: ReminderFlow?
+    private var cancellables = Set<AnyCancellable>()
+
+    private lazy var shareItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(
+            image: UIImage(systemName: "square.and.arrow.up"),
+            primaryAction: UIAction { [weak self] _ in self?.share() })
+        item.accessibilityLabel = String(localized: "Share")
+        return item
+    }()
+
+    private lazy var reminderItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(image: UIImage(systemName: "bell.badge"), primaryAction: UIAction { [weak self] _ in
+            self?.draftReminder()
+        })
+        item.accessibilityLabel = ReminderCopy.title
+        item.accessibilityIdentifier = "preview.reminder"
+        return item
+    }()
+
+    private lazy var reminder = ReminderFlow(invoice: invoice, host: self, anchor: reminderItem) { [weak self] in
+        guard let self, let pdf = self.renderedPDF else { return nil }
+        return self.writeTemp(pdf, name: "\(self.exportFilename()).pdf")
+    }
 
     init(invoice: Invoice, demoForceCompliant: Bool = false) {
         self.invoice = invoice
@@ -32,13 +54,20 @@ final class InvoicePreviewViewController: UIViewController {
         title = invoice.number
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = DesignSystem.Color.background
-        let shareItem = UIBarButtonItem(
-            image: UIImage(systemName: "square.and.arrow.up"),
-            primaryAction: UIAction { [weak self] _ in self?.share() })
-        shareItem.accessibilityLabel = String(localized: "Share")
-        navigationItem.rightBarButtonItems = ReminderFlow.applies(to: invoice) ? [shareItem, makeReminderItem()] : [shareItem]
+        navigationItem.rightBarButtonItems = barButtonItems(for: ModelFeatures.current)
+        ModelFeatures.changes
+            .sink { [weak self] features in
+                guard let self else { return }
+                navigationItem.rightBarButtonItems = barButtonItems(for: features)
+            }
+            .store(in: &cancellables)
         buildLayout()
         renderAsync()
+    }
+
+    /// The share button, and the reminder button beside it on an overdue invoice while the model features work here.
+    private func barButtonItems(for features: ModelFeatures) -> [UIBarButtonItem] {
+        features.showsReminderDrafting(for: invoice) ? [shareItem, reminderItem] : [shareItem]
     }
 
     private let spinner = UIActivityIndicatorView(style: .large)
@@ -168,25 +197,11 @@ final class InvoicePreviewViewController: UIViewController {
         }
     }
 
-    /// The bar button that drafts a payment reminder, shown on an overdue invoice. The reminder goes out with the
-    /// same PDF that Share sends.
-    private func makeReminderItem() -> UIBarButtonItem {
-        let item = UIBarButtonItem(image: UIImage(systemName: "bell.badge"), primaryAction: UIAction { [weak self] _ in
-            self?.draftReminder()
-        })
-        item.accessibilityLabel = ReminderCopy.title
-        item.accessibilityIdentifier = "preview.reminder"
-        reminder = ReminderFlow(invoice: invoice, host: self, anchor: item) { [weak self] in
-            guard let self, let pdf = self.renderedPDF else { return nil }
-            return self.writeTemp(pdf, name: "\(self.exportFilename()).pdf")
-        }
-        return item
-    }
-
-    /// Starts a drafted payment reminder for this invoice, once it carries the user's own business.
+    /// Starts a drafted payment reminder for this invoice, once it carries the user's own business. The reminder goes
+    /// out with the same PDF that Share sends.
     func draftReminder() {
         guard ensureOwnSeller() else { return }
-        reminder?.start()
+        reminder.start()
     }
 
     private func share() {
@@ -401,7 +416,7 @@ extension InvoicePreviewViewController {
     /// Starts the reminder on a demo document, which carries the example business and so would be held back. With a
     /// tone it is drafted at once, as if that tone had been chosen.
     func startReminderForDemo(tone: ReminderTone?) {
-        reminder?.startForDemo(tone: tone)
+        reminder.startForDemo(tone: tone)
     }
 }
 #endif

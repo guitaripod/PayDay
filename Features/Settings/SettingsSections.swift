@@ -44,19 +44,20 @@ extension SettingsViewController {
     }
 
     private func appSection() -> MidgarSettingsSection {
-        MidgarSettingsSection(
-            id: "app",
-            title: String(localized: "App"),
-            rows: [
-                .custom(id: "appearance", title: String(localized: "Appearance"), systemImage: "circle.lefthalf.filled") {
-                    [weak self] in self?.presentAppearance()
-                },
+        var rows: [MidgarSettingsRow] = [
+            .custom(id: "appearance", title: String(localized: "Appearance"), systemImage: "circle.lefthalf.filled") {
+                [weak self] in self?.presentAppearance()
+            },
+        ]
+        if ModelFeatures.current.showsAIDrafting {
+            rows.append(
                 .custom(
                     id: "aiDrafting", title: String(localized: "AI drafting"),
                     detail: AppSettings.aiConsentGranted ? String(localized: "Allowed") : String(localized: "Off"),
                     systemImage: "sparkles"
-                ) { [weak self] in self?.presentAIConsent() },
-            ])
+                ) { [weak self] in self?.presentAIConsent() })
+        }
+        return MidgarSettingsSection(id: "app", title: String(localized: "App"), rows: rows)
     }
 
     private func aboutSection() -> MidgarSettingsSection {

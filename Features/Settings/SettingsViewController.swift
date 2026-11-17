@@ -75,5 +75,8 @@ final class SettingsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.balance = $0; self?.refreshList() }
             .store(in: &cancellables)
+        ModelFeatures.changes
+            .sink { [weak self] _ in self?.refreshList() }
+            .store(in: &cancellables)
     }
 }

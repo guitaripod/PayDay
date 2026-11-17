@@ -49,7 +49,7 @@ final class ReminderFlow {
     }
 
     func start() {
-        guard work == nil, let host else { return }
+        guard work == nil, let host, ModelFeatures.current.showsReminderDrafting(for: invoice) else { return }
         guard AppSettings.aiConsentGranted else {
             let consent = AIConsentViewController { [weak self, weak host] granted in
                 AppSettings.aiConsentGranted = granted
@@ -75,6 +75,7 @@ final class ReminderFlow {
     }
 
     private func draft(_ tone: ReminderTone) {
+        guard ModelFeatures.current.showsReminderDrafting(for: invoice) else { return }
         anchor.isEnabled = false
         work = Task { [weak self, invoice] in
             let balance = await CreditsModel.shared.refresh() ?? CreditsModel.shared.balance
@@ -88,12 +89,15 @@ final class ReminderFlow {
                 self?.finish { [weak self] host in self?.share(draft, from: host) }
             } catch {
                 MidgarLog.error("reminder draft failed for \(invoice.id): \(error)", category: .invoice)
+                let refused = ModelRefusal.note(error)
                 await CreditsModel.shared.refresh()
                 self?.finish { host in
-                    if CreditsModel.shared.isEmpty {
+                    if !refused && CreditsModel.shared.isEmpty {
                         CreditStorePresenter.present(from: host)
                     } else {
-                        let message = error is InvoiceAIService.ReminderFailure ? ReminderCopy.unusable : ReminderCopy.offline
+                        let message = refused
+                            ? MidgarModelRegion.unavailableMessage
+                            : (error is InvoiceAIService.ReminderFailure ? ReminderCopy.unusable : ReminderCopy.offline)
                         let alert = UIAlertController(title: ReminderCopy.failedTitle, message: message, preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default))
                         host.present(alert, animated: true)

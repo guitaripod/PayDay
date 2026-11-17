@@ -1,3 +1,4 @@
+import Combine
 import UIKit
 import MidgarCore
 
@@ -7,6 +8,8 @@ import MidgarCore
 /// cold start.
 final class OnboardingViewController: UIViewController {
     var onFinish: (() -> Void)?
+    private var lineDraftingRow: UIView?
+    private var cancellables = Set<AnyCancellable>()
 
     /// The whole first-run flow — welcome, then business essentials — calling
     /// `onFinish` once the user saves or defers their business.
@@ -23,6 +26,9 @@ final class OnboardingViewController: UIViewController {
         view.backgroundColor = DesignSystem.Color.background
         navigationItem.backButtonDisplayMode = .minimal
         build()
+        ModelFeatures.changes
+            .sink { [weak self] features in self?.lineDraftingRow?.isHidden = !features.showsLineItemDrafting }
+            .store(in: &cancellables)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -62,11 +68,14 @@ final class OnboardingViewController: UIViewController {
 
         let mandateLine = makeMandateLine()
 
+        let lineDrafting = feature("sparkles", String(localized: "Draft line items from a photo or a sentence"))
+        lineDrafting.isHidden = !ModelFeatures.current.showsLineItemDrafting
+        lineDraftingRow = lineDrafting
         let features = UIStackView(arrangedSubviews: [
             feature("doc.text.fill", String(localized: "Unlimited invoices & estimates, your logo, any currency")),
             feature("checkmark.seal.fill", String(localized: "One tap to a tax-authority-ready e-invoice")),
             feature("paperplane.fill", String(localized: "Send over the Peppol network across the EU")),
-            feature("sparkles", String(localized: "Draft line items from a photo or a sentence")),
+            lineDrafting,
         ])
         features.axis = .vertical
         features.spacing = DesignSystem.Spacing.m

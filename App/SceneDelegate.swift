@@ -38,6 +38,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         reportAdAttributionOnce()
         Task { await credits.refresh() }
+        Task { await ModelFeatures.refresh() }
     }
 
     /// Reports the install attribution once per launch, driven from scene

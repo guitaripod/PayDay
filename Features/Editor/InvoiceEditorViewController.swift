@@ -1,4 +1,5 @@
 import Combine
+import MidgarCore
 import PhotosUI
 import UIKit
 import PayDayCore
@@ -91,6 +92,9 @@ final class InvoiceEditorViewController: UIViewController {
                 Haptics.success()
                 self.navigationController?.popViewController(animated: true)
             }
+            .store(in: &cancellables)
+        ModelFeatures.changes
+            .sink { [weak self] _ in self?.tableView.reloadData() }
             .store(in: &cancellables)
     }
 
@@ -187,6 +191,10 @@ final class InvoiceEditorViewController: UIViewController {
                     self.viewModel.appendDraftedLines(drafts)
                 }
             } catch {
+                if ModelRefusal.note(error) {
+                    self.presentInfo(String(localized: "Couldn't draft"), MidgarModelRegion.unavailableMessage)
+                    return
+                }
                 // AI is credit-metered; the most common failure is an empty balance.
                 await CreditsModel.shared.refresh()
                 if CreditsModel.shared.isEmpty {
@@ -249,7 +257,7 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
         switch Section(rawValue: section)! {
         case .details: return 3
         case .client: return 1
-        case .lines: return (invoice?.lines.count ?? 0) + 2
+        case .lines: return (invoice?.lines.count ?? 0) + (ModelFeatures.current.showsLineItemDrafting ? 2 : 1)
         case .notes: return 2
         }
     }

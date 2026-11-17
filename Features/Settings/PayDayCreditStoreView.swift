@@ -1,5 +1,6 @@
 import AICreditsCore
 import AICreditsUI
+import Combine
 import MidgarCredits
 import SwiftUI
 
@@ -8,6 +9,7 @@ import SwiftUI
 struct PayDayCreditStoreView: View {
     @State private var model: PayDayCreditStoreModel
     @ObservedObject private var accountLink: AICreditsStore
+    @State private var features = ModelFeatures.current
     @Environment(\.dismiss) private var dismiss
 
     init(model: PayDayCreditStoreModel, accountLink: AICreditsStore) {
@@ -40,9 +42,11 @@ struct PayDayCreditStoreView: View {
                         .disabled(model.isWorking)
                     AppleWalletLinkSection()
                 }
-                Section {
-                    Text(String(localized: "Credits cover each invoice you send over Peppol and optional AI drafting. The app is fully usable without them."))
-                        .font(.footnote).foregroundStyle(.secondary)
+                if features.creditsCoverAIDrafting {
+                    Section {
+                        Text(String(localized: "Credits cover each invoice you send over Peppol and optional AI drafting. The app is fully usable without them."))
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
                 }
             }
             .navigationTitle(String(localized: "Get Credits"))
@@ -63,6 +67,7 @@ struct PayDayCreditStoreView: View {
             }
         }
         .environmentObject(accountLink)
+        .onReceive(ModelFeatures.changes) { features = $0 }
     }
 
     @ViewBuilder
