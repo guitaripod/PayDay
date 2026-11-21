@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 import PayDayCore
+import MidgarCore
 
 final class InvoiceCell: UITableViewCell {
     static let reuseID = "InvoiceCell"
@@ -76,6 +77,11 @@ final class InvoiceListViewController: UIViewController {
         setupTable()
         setupEmpty()
         bind()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        MidgarSignals.noteScreen("invoices")
     }
 
     private func switchKind() {

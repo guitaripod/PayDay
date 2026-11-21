@@ -52,6 +52,11 @@ final class ClientListViewController: UIViewController {
         emptyView = empty
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        MidgarSignals.noteScreen("clients", feature: true)
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if split?.isCollapsed ?? true, let selected = tableView.indexPathForSelectedRow {

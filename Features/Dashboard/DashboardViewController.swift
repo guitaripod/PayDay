@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 import PayDayCore
+import MidgarCore
 
 /// The home screen: outstanding receivables headline, quick actions, and a few
 /// recent documents. Binds to its view model via the `PassthroughSubject` seam.
@@ -43,6 +44,11 @@ final class DashboardViewController: UIViewController {
         navigationItem.rightBarButtonItem = compose
         buildLayout()
         bind()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        MidgarSignals.noteScreen("dashboard")
     }
 
     override func viewWillAppear(_ animated: Bool) {

@@ -70,6 +70,9 @@ extension SettingsViewController {
                     id: "share", title: String(localized: "Share Pay Day"), systemImage: "square.and.arrow.up",
                     showsDisclosure: false
                 ) { [weak self] in self?.shareApp() },
+                .usageCountsDetail { [weak self] in
+                    self?.showDetailScreen(MidgarUsageCountsViewController(theme: .payDay))
+                },
                 .privacyPolicy(url: Self.privacyURL),
                 .termsOfUse(url: Self.termsURL),
                 .support(),

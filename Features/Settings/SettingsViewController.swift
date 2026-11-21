@@ -2,6 +2,7 @@ import Combine
 import MidgarPortal
 import MidgarUI
 import UIKit
+import MidgarCore
 
 /// Settings: the Midgar portal card on top of MidgarUI's settings list with Pay Day's sections, hosted as a child so
 /// the screen can sit in the Settings split view's primary column. The sections hold the business profile, defaults,
@@ -29,6 +30,11 @@ final class SettingsViewController: UIViewController {
         view.backgroundColor = DesignSystem.Color.background
         embedList()
         bind()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        MidgarSignals.noteScreen("settings")
     }
 
     override func viewWillAppear(_ animated: Bool) {

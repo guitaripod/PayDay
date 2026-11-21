@@ -65,6 +65,12 @@ final class InvoicePreviewViewController: UIViewController {
         renderAsync()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        MidgarSignals.noteScreen("preview", feature: true)
+        MidgarSignals.noteValue()
+    }
+
     /// The share button, and the reminder button beside it on an overdue invoice while the model features work here.
     private func barButtonItems(for features: ModelFeatures) -> [UIBarButtonItem] {
         features.showsReminderDrafting(for: invoice) ? [shareItem, reminderItem] : [shareItem]

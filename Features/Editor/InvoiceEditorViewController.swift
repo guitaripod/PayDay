@@ -47,6 +47,11 @@ final class InvoiceEditorViewController: UIViewController {
         viewModel.start()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        MidgarSignals.noteScreen("editor", feature: true)
+    }
+
     /// `editButtonItem` toggles this; forward it so the line-items table shows
     /// reorder handles + delete controls (drag-reorder lives in Edit mode so it
     /// doesn't collide with the long-press context menu).

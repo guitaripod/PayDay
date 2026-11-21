@@ -20,14 +20,16 @@ Answers for App Store Connect, App Privacy section. Apple does not expose this s
 | User Content, Other User Content | Yes | No | App Functionality | The text of an AI description, what a drafted payment reminder is written from (the client's name and the invoice's number, amount and due date), and the Peppol transmission record the worker keeps (invoice number, recipient address, result). |
 | Purchases, Purchase History | Yes | No | App Functionality, Analytics, Developer's Advertising | The App Store transactions of Pay Day Pro and credit packs. mako verifies each one from the signed App Store transaction and records it against the account and the Midgar ID, so Purchase History stays linked; the install attribution is joined to whether the person subscribed. |
 | Usage Data, Advertising Data | Yes | No | Analytics, Developer's Advertising | Apple Ads attribution (campaign, ad group, keyword, country) that mako stores against the anonymous account. No advertising identifier. |
-| Usage Data, Product Interaction | No | No | Analytics | The anonymous More Apps card events (opened, shown, tapped) that the portal sends to `api.midgarcorp.cc/v1/signals` through MidgarKit's anonymous signals client, with no Midgar ID, device identifier or `Authorization` header. Reading "Your Midgar" sends no event. (New with this release.) |
+| Usage Data, Product Interaction | No | No | Analytics | The anonymous More Apps card events (opened, shown, tapped) that the portal sends to `api.midgarcorp.cc/v1/signals` through MidgarKit's anonymous signals client, with no Midgar ID, device identifier or `Authorization` header. Reading "Your Midgar" sends no event. (New with this release.) Through the same anonymous client the app also counts which of its features are used in a week, whether the install is free, on a trial, paying or lapsed, how soon after installing its main use was first reached and which version of a screen under test was shown, and, held back for six to forty-eight hours and counted one fact at a time, what led up to a purchase or to a renewal being turned off. Each is a word from a fixed list; none carries an identifier. |
+| Diagnostics, Crash Data | No | No | App Functionality | When the app crashes or freezes, MidgarKit sends one crash card to `api.midgarcorp.cc/v1/signals/diagnostics`: the kind of fault, the code addresses on the stack, the app build, the OS version and the device model, at most five a day. It holds no memory, no message text, no file path, no Midgar ID and no device identifier, and the request carries no `Authorization` header. A TestFlight or development build sends none, and turning Usage Counts off in the app's settings stops it. |
+| Diagnostics, Performance Data | No | No | App Functionality | Daily numbers from MetricKit, sent as anonymous counts through the same signals client: how long the app takes to start, how long it stopped responding, the memory it used and how often the system ended it. Usage Counts turns them off too. |
 
 Everything else is "Data Not Collected".
 
 ## Data types answered "not collected", and why
 
 - Contacts, Browsing History, Search History, Sensitive Info, Health & Fitness, Location: none.
-- Diagnostics: the log (`Library/Logs/payday.log`) stays on the device and is never uploaded. MetricKit is not collected.
+- Other Diagnostic Data: none. Only the crash cards and the daily performance numbers in the table leave the device; MetricKit's full reports never do. The log (`Library/Logs/payday.log`) stays on the device and is never uploaded.
 - Other Data: none.
 
 ## Check before the label is entered
