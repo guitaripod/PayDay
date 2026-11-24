@@ -4,13 +4,6 @@ import UIKit
 import PayDayCore
 import MidgarCore
 
-/// A rendered PDF parsed off the main actor and carried back to it as one value.
-/// `PDFDocument` is not declared `Sendable`; this instance is built inside a
-/// single detached task and only read on the main actor afterwards.
-private struct ParsedPDF: @unchecked Sendable {
-    let document: PDFDocument?
-}
-
 /// Renders the document to PDF and offers the export paths: share the PDF,
 /// share the compliant Factur-X hybrid + sidecar XML (Pro), and transmit over
 /// Peppol (Pro + credits). Compliance status is shown honestly up front.
@@ -155,7 +148,7 @@ final class InvoicePreviewViewController: UIViewController {
             self.spinner.stopAnimating()
             self.renderedPDF = visual
             self.embed = FacturXEmbedder.Output(pdf: visual, embedded: false, sidecarXML: Data())
-            if let document = await self.parse(visual) {
+            if let document = self.makeDocument(visual) {
                 self.pdfView.document = document
             } else {
                 self.statusLabel.text = String(localized: "Couldn't render this document. Try again.")
@@ -186,14 +179,11 @@ final class InvoicePreviewViewController: UIViewController {
         updateStatus()
     }
 
-    /// Parses a rendered PDF off the main actor. `PDFDocument(data:)` parses
-    /// synchronously, and handing the visible document over to `PDFView` is a
-    /// fresh page build either way, so the parse is what this keeps off the frame
-    /// the push animation is drawn on.
-    private func parse(_ data: Data) async -> PDFDocument? {
-        await Task.detached(priority: .userInitiated) {
-            ParsedPDF(document: PDFDocument(data: data))
-        }.value.document
+    /// Builds the document once the push has landed. PDFKit documents belong to the
+    /// thread that makes them, so the parse is not handed across a task boundary; the
+    /// render that precedes it stays off the main actor.
+    private func makeDocument(_ data: Data) -> PDFDocument? {
+        PDFDocument(data: data)
     }
 
     private func updateStatus() {

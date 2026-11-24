@@ -192,7 +192,7 @@ final class InvoiceListViewController: UIViewController {
         renderedKind = viewModel.kind
         documents = newDocuments
         invoicesByID = Dictionary(newDocuments.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-        rowModels = Dictionary(uniqueKeysWithValues: newDocuments.map { ($0.id, InvoiceRowModel($0)) })
+        rowModels = Dictionary(newDocuments.map { ($0.id, InvoiceRowModel($0)) }, uniquingKeysWith: { first, _ in first })
         emptyView?.isHidden = !newDocuments.isEmpty
         tableView.refreshControl?.endRefreshing()
 
