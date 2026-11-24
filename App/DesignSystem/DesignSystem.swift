@@ -136,36 +136,56 @@ enum DesignSystem {
     /// A small status pill with an icon (Draft / Sent / Paid / Overdue …).
     @MainActor
     static func statusPill(_ statusRaw: String, title: String) -> UIView {
-        let container = UIView()
-        let color = Color.status(statusRaw)
-        container.backgroundColor = color.withAlphaComponent(0.16)
-        container.layer.cornerRadius = 8
-        container.layer.cornerCurve = .continuous
+        let pill = StatusPillView()
+        pill.update(statusRaw: statusRaw, title: title)
+        return pill
+    }
 
-        let icon = UIImageView(image: UIImage(systemName: Color.statusSymbol(statusRaw),
-            withConfiguration: UIImage.SymbolConfiguration(pointSize: 9, weight: .bold)))
-        icon.tintColor = color
-        let label = UILabel()
-        label.text = title.uppercased()
-        label.font = Typography.scaledSystem(11, .bold, relativeTo: .caption2)
-        label.textColor = color
-        label.adjustsFontForContentSizeCategory = true
-        let stack = UIStackView(arrangedSubviews: [icon, label])
-        stack.axis = .horizontal
-        stack.spacing = 3
-        stack.alignment = .center
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.isUserInteractionEnabled = false
-        container.addSubview(stack)
-        NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: container.topAnchor, constant: 4),
-            stack.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -4),
-            stack.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
-            stack.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
-        ])
-        container.isAccessibilityElement = true
-        container.accessibilityLabel = title
-        return container
+    /// The status pill itself, built once and refreshed in place: a row view that
+    /// comes back on screen only reassigns a tint, a symbol and a string instead
+    /// of building a new hierarchy with four constraints per cell.
+    @MainActor
+    final class StatusPillView: UIView {
+        private let icon = UIImageView()
+        private let label = UILabel()
+
+        init() {
+            super.init(frame: .zero)
+            layer.cornerRadius = 8
+            layer.cornerCurve = .continuous
+            icon.contentMode = .scaleAspectFit
+            label.font = Typography.scaledSystem(11, .bold, relativeTo: .caption2)
+            label.adjustsFontForContentSizeCategory = true
+
+            let stack = UIStackView(arrangedSubviews: [icon, label])
+            stack.axis = .horizontal
+            stack.spacing = 3
+            stack.alignment = .center
+            stack.translatesAutoresizingMaskIntoConstraints = false
+            stack.isUserInteractionEnabled = false
+            addSubview(stack)
+            NSLayoutConstraint.activate([
+                stack.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+                stack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
+                stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+                stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            ])
+            isAccessibilityElement = true
+        }
+
+        @available(*, unavailable)
+        required init?(coder: NSCoder) { fatalError() }
+
+        func update(statusRaw: String, title: String) {
+            let color = Color.status(statusRaw)
+            backgroundColor = color.withAlphaComponent(0.16)
+            icon.image = UIImage(systemName: Color.statusSymbol(statusRaw),
+                withConfiguration: UIImage.SymbolConfiguration(pointSize: 9, weight: .bold))
+            icon.tintColor = color
+            label.text = title.uppercased()
+            label.textColor = color
+            accessibilityLabel = title
+        }
     }
 
     /// A centered empty-state placeholder (icon + title + subtitle + optional CTA),

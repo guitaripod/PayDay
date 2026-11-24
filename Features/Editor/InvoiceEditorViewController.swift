@@ -17,6 +17,7 @@ final class InvoiceEditorViewController: UIViewController {
     private var invoice: Invoice?
     private var totals: ComputedTotals?
     private var issues: [ValidationIssue] = []
+    private var showsLineItemDrafting = ModelFeatures.current.showsLineItemDrafting
     /// Only an explicit Save pops back to the list; Preview also persists but
     /// must stay on the pushed preview screen.
     private var popAfterSave = false
@@ -99,8 +100,18 @@ final class InvoiceEditorViewController: UIViewController {
             }
             .store(in: &cancellables)
         ModelFeatures.changes
-            .sink { [weak self] _ in self?.tableView.reloadData() }
+            .sink { [weak self] features in self?.applyFeatures(features) }
             .store(in: &cancellables)
+    }
+
+    /// Line-item drafting is the only model feature this form shows, and it is
+    /// one row: a region answer that changes nothing else must not reload every
+    /// cell of the table.
+    private func applyFeatures(_ features: ModelFeatures) {
+        let showsDrafting = features.showsLineItemDrafting
+        guard showsDrafting != showsLineItemDrafting else { return }
+        showsLineItemDrafting = showsDrafting
+        tableView.reloadData()
     }
 
     private func preview() {
@@ -262,7 +273,7 @@ extension InvoiceEditorViewController: UITableViewDataSource, UITableViewDelegat
         switch Section(rawValue: section)! {
         case .details: return 3
         case .client: return 1
-        case .lines: return (invoice?.lines.count ?? 0) + (ModelFeatures.current.showsLineItemDrafting ? 2 : 1)
+        case .lines: return (invoice?.lines.count ?? 0) + (showsLineItemDrafting ? 2 : 1)
         case .notes: return 2
         }
     }

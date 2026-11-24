@@ -1,6 +1,37 @@
 import UIKit
 import PayDayCore
 
+/// The strings one document row shows. A list or a dashboard section formats
+/// them once per document, so a cell that scrolls in only assigns text.
+struct InvoiceRowModel {
+    let id: Invoice.ID
+    let number: String
+    let client: String
+    let amount: String
+    let statusRaw: String
+    let statusTitle: String
+    let accessibilityLabel: String
+    let accessibilityValue: String
+
+    init(_ invoice: Invoice) {
+        let payable = Money(minorUnits: invoice.totals().summary.payableAmount.minorUnits, currency: invoice.currency)
+        let amount = Format.money(payable)
+        let status = Localized.name(invoice.status)
+        id = invoice.id
+        number = invoice.number
+        client = invoice.buyer.displayName
+        self.amount = amount
+        statusRaw = invoice.status.rawValue
+        statusTitle = status
+        accessibilityLabel = String(
+            localized: "\(Localized.name(invoice.type)) \(invoice.number), \(invoice.buyer.displayName)",
+            comment: "VoiceOver label for a document row: document kind, document number, client name")
+        accessibilityValue = String(
+            localized: "\(amount), \(status)",
+            comment: "VoiceOver value for a document row: payable amount, document status")
+    }
+}
+
 /// A tappable summary row for a document, reused on the dashboard and the list.
 /// On the dashboard it carries its own tap, context menu, and pointer lift; in
 /// the list the cell owns interaction (the row is disabled there) and reuses one
@@ -14,7 +45,7 @@ final class InvoiceRowView: UIControl {
     private let clientLabel = DesignSystem.label("", font: DesignSystem.Typography.scaledSystem(13, .regular, relativeTo: .footnote), color: DesignSystem.Color.secondary)
     private let amountLabel = DesignSystem.label("", font: DesignSystem.Typography.mono(16, weight: .semibold))
     private let rightStack = UIStackView()
-    private var pill: UIView?
+    private let pill = DesignSystem.StatusPillView()
 
     init(menu: (() -> UIMenu?)? = nil, onTap: @escaping () -> Void = {}) {
         self.onTap = onTap
@@ -35,9 +66,9 @@ final class InvoiceRowView: UIControl {
         addInteraction(UIPointerInteraction(delegate: pointerDelegate))
     }
 
-    convenience init(invoice: Invoice, menu: (() -> UIMenu?)? = nil, onTap: @escaping () -> Void) {
+    convenience init(model: InvoiceRowModel, menu: (() -> UIMenu?)? = nil, onTap: @escaping () -> Void) {
         self.init(menu: menu, onTap: onTap)
-        update(with: invoice)
+        update(with: model)
     }
 
     @available(*, unavailable)
@@ -58,21 +89,13 @@ final class InvoiceRowView: UIControl {
         layer.borderColor = DesignSystem.Color.accent.resolvedColor(with: traitCollection).cgColor
     }
 
-    func update(with invoice: Invoice) {
-        let payable = Money(minorUnits: invoice.totals().summary.payableAmount.minorUnits, currency: invoice.currency)
-        numberLabel.text = invoice.number
-        clientLabel.text = invoice.buyer.displayName
-        amountLabel.text = Format.money(payable)
-        pill?.removeFromSuperview()
-        let newPill = DesignSystem.statusPill(invoice.status.rawValue, title: Localized.name(invoice.status))
-        rightStack.addArrangedSubview(newPill)
-        pill = newPill
-        accessibilityLabel = String(
-            localized: "\(Localized.name(invoice.type)) \(invoice.number), \(invoice.buyer.displayName)",
-            comment: "VoiceOver label for a document row: document kind, document number, client name")
-        accessibilityValue = String(
-            localized: "\(Format.money(payable)), \(Localized.name(invoice.status))",
-            comment: "VoiceOver value for a document row: payable amount, document status")
+    func update(with model: InvoiceRowModel) {
+        numberLabel.text = model.number
+        clientLabel.text = model.client
+        amountLabel.text = model.amount
+        pill.update(statusRaw: model.statusRaw, title: model.statusTitle)
+        accessibilityLabel = model.accessibilityLabel
+        accessibilityValue = model.accessibilityValue
     }
 
     private func build() {
@@ -82,6 +105,7 @@ final class InvoiceRowView: UIControl {
 
         amountLabel.textAlignment = .right
         rightStack.addArrangedSubview(amountLabel)
+        rightStack.addArrangedSubview(pill)
         rightStack.axis = .vertical
         rightStack.alignment = .trailing
         rightStack.spacing = 4

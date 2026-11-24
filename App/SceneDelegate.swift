@@ -2,6 +2,7 @@ import Combine
 import UIKit
 import PayDayCore
 import MidgarCore
+import MidgarUI
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -26,6 +27,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         window.makeKeyAndVisible()
         #if DEBUG
+        MidgarFrameWatch.shared.startIfRequested()
         if let demo = ProcessInfo.processInfo.environment["PAYDAY_DEMO"] {
             DemoRouting.settle(window.rootViewController, screen: demo)
         }

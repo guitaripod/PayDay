@@ -55,12 +55,8 @@ extension UIScrollView {
 /// from `Money.canonicalString` / `CalendarDate`; these are for humans only.
 enum Format {
     static func money(_ money: Money, locale: Locale = .current) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = money.currency.code
-        formatter.locale = locale
-        formatter.maximumFractionDigits = money.currency.minorUnitDigits
-        formatter.minimumFractionDigits = money.currency.minorUnitDigits
+        let formatter = moneyFormatter(
+            currencyCode: money.currency.code, minorUnitDigits: money.currency.minorUnitDigits, locale: locale)
         return formatter.string(from: money.amount as NSDecimalNumber)
             ?? "\(money.currency.code) \(money.canonicalString)"
     }
@@ -72,14 +68,49 @@ enum Format {
         comps.day = date.day
         let calendar = Calendar(identifier: .gregorian)
         guard let resolved = calendar.date(from: comps) else { return date.iso8601 }
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.dateStyle = style
-        formatter.timeStyle = .none
-        return formatter.string(from: resolved)
+        return dateFormatter(style: style, locale: locale).string(from: resolved)
     }
 
     static func today(calendar: Calendar = Calendar(identifier: .gregorian)) -> CalendarDate {
         CalendarDate(Date(), calendar: calendar)
+    }
+
+    /// One money formatter per thread, currency and locale. Building a
+    /// `NumberFormatter` costs hundreds of microseconds, and every list row, line
+    /// row and totals bar asks for one.
+    private static func moneyFormatter(currencyCode: String, minorUnitDigits: Int, locale: Locale) -> NumberFormatter {
+        let key = "money.\(currencyCode).\(minorUnitDigits).\(locale.identifier)"
+        if let cached = formatterCache()[key] as? NumberFormatter { return cached }
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currencyCode
+        formatter.locale = locale
+        formatter.maximumFractionDigits = minorUnitDigits
+        formatter.minimumFractionDigits = minorUnitDigits
+        formatterCache()[key] = formatter
+        return formatter
+    }
+
+    /// One date formatter per thread, style and locale, for the same reason.
+    private static func dateFormatter(style: DateFormatter.Style, locale: Locale) -> DateFormatter {
+        let key = "date.\(style.rawValue).\(locale.identifier)"
+        if let cached = formatterCache()[key] as? DateFormatter { return cached }
+        let formatter = DateFormatter()
+        formatter.locale = locale
+        formatter.dateStyle = style
+        formatter.timeStyle = .none
+        formatterCache()[key] = formatter
+        return formatter
+    }
+
+    /// The per-thread cache itself. A `NumberFormatter` belongs to one thread, so
+    /// the main thread and the PDF render threads each keep their own rather than
+    /// sharing one behind a lock.
+    private static func formatterCache() -> NSMutableDictionary {
+        let cacheKey = "payday.format.formatters"
+        if let cache = Thread.current.threadDictionary[cacheKey] as? NSMutableDictionary { return cache }
+        let cache = NSMutableDictionary()
+        Thread.current.threadDictionary[cacheKey] = cache
+        return cache
     }
 }

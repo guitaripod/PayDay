@@ -24,7 +24,15 @@ final class DashboardViewController: UIViewController {
     private lazy var setupBanner = makeSetupBanner()
     private let mandateCard = MandateCardView()
     private var lastSnapshot: DashboardViewModel.Snapshot?
+    private var lastCounts: Counts?
+    private var lastRecent: [Invoice]?
     private var isPremium = false
+
+    private struct Counts: Equatable {
+        let invoices: Int
+        let estimates: Int
+        let overdue: Int
+    }
 
     init(viewModel: DashboardViewModel = DashboardViewModel()) {
         self.viewModel = viewModel
@@ -261,6 +269,18 @@ final class DashboardViewController: UIViewController {
         outstandingLabel.text = Format.money(snapshot.outstanding)
         outstandingLabel.accessibilityLabel = String(localized: "Outstanding balance")
         outstandingLabel.accessibilityValue = Format.money(snapshot.outstanding)
+        applyStats(snapshot)
+        applyRecent(snapshot.recent)
+    }
+
+    /// Rebuilds the three tiles only when one of the numbers it shows changed: a
+    /// tab return re-runs the load, and tearing down three cards to write the same
+    /// three values costs a layout pass on every appearance.
+    private func applyStats(_ snapshot: DashboardViewModel.Snapshot) {
+        let counts = Counts(
+            invoices: snapshot.invoiceCount, estimates: snapshot.estimateCount, overdue: snapshot.overdueCount)
+        guard counts != lastCounts else { return }
+        lastCounts = counts
         statsRow.arrangedSubviews.forEach { $0.removeFromSuperview() }
         statsRow.addArrangedSubview(statTile("\(snapshot.invoiceCount)", String(localized: "Invoices")))
         statsRow.addArrangedSubview(statTile("\(snapshot.estimateCount)", String(localized: "Estimates")))
@@ -270,15 +290,22 @@ final class DashboardViewController: UIViewController {
         statsRow.addArrangedSubview(statTile("\(snapshot.overdueCount)", String(localized: "Overdue"),
             tint: snapshot.overdueCount > 0 ? DesignSystem.Color.overdue : DesignSystem.Color.label,
             onTap: overdueTap))
+    }
 
+    /// Fills the Recent section, keeping the rows that are already there when the
+    /// same documents are still showing: their taps and menus capture the
+    /// document they act on, so they are only replaced when that document changes.
+    private func applyRecent(_ recent: [Invoice]) {
+        guard recent != lastRecent else { return }
+        lastRecent = recent
         recentStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        if snapshot.recent.isEmpty {
+        if recent.isEmpty {
             recentStack.addArrangedSubview(DesignSystem.emptyState(
                 symbol: "tray", title: String(localized: "Nothing here yet"),
                 subtitle: String(localized: "Your recent invoices and estimates will show up here.")))
         } else {
-            for invoice in snapshot.recent {
-                let row = InvoiceRowView(invoice: invoice,
+            for invoice in recent {
+                let row = InvoiceRowView(model: InvoiceRowModel(invoice),
                                          menu: { [weak self] in self?.recentMenu(for: invoice) },
                                          onTap: { [weak self] in self?.open(invoice) })
                 recentStack.addArrangedSubview(row)

@@ -4,6 +4,13 @@ import UIKit
 import PayDayCore
 import MidgarCore
 
+/// A rendered PDF parsed off the main actor and carried back to it as one value.
+/// `PDFDocument` is not declared `Sendable`; this instance is built inside a
+/// single detached task and only read on the main actor afterwards.
+private struct ParsedPDF: @unchecked Sendable {
+    let document: PDFDocument?
+}
+
 /// Renders the document to PDF and offers the export paths: share the PDF,
 /// share the compliant Factur-X hybrid + sidecar XML (Pro), and transmit over
 /// Peppol (Pro + credits). Compliance status is shown honestly up front.
@@ -148,7 +155,7 @@ final class InvoicePreviewViewController: UIViewController {
             self.spinner.stopAnimating()
             self.renderedPDF = visual
             self.embed = FacturXEmbedder.Output(pdf: visual, embedded: false, sidecarXML: Data())
-            if let document = PDFDocument(data: visual) {
+            if let document = await self.parse(visual) {
                 self.pdfView.document = document
             } else {
                 self.statusLabel.text = String(localized: "Couldn't render this document. Try again.")
@@ -165,13 +172,28 @@ final class InvoicePreviewViewController: UIViewController {
             let embedded = await Task.detached(priority: .userInitiated) {
                 FacturXEmbedder(profile: profile).embed(invoice: invoice, visualPDF: visual)
             }.value
-            self.renderedPDF = embedded.pdf
-            self.embed = embedded
-            if let document = PDFDocument(data: embedded.pdf) {
-                self.pdfView.document = document
-            }
-            self.updateStatus()
+            self.adopt(embedded)
         }
+    }
+
+    /// Hands the export copy over without touching the page on screen: the
+    /// embedded Factur-X has the same pages as the visual PDF, so rebuilding a
+    /// `PDFDocument` and a `PDFView` page to show identical pixels is a stall with
+    /// no visible difference. Share and Peppol still send the embedded copy.
+    private func adopt(_ embedded: FacturXEmbedder.Output) {
+        renderedPDF = embedded.pdf
+        embed = embedded
+        updateStatus()
+    }
+
+    /// Parses a rendered PDF off the main actor. `PDFDocument(data:)` parses
+    /// synchronously, and handing the visible document over to `PDFView` is a
+    /// fresh page build either way, so the parse is what this keeps off the frame
+    /// the push animation is drawn on.
+    private func parse(_ data: Data) async -> PDFDocument? {
+        await Task.detached(priority: .userInitiated) {
+            ParsedPDF(document: PDFDocument(data: data))
+        }.value.document
     }
 
     private func updateStatus() {

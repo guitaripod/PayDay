@@ -21,8 +21,8 @@ final class InvoiceCell: UITableViewCell {
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
 
-    func configure(with invoice: Invoice) {
-        row.update(with: invoice)
+    func configure(with model: InvoiceRowModel) {
+        row.update(with: model)
         row.isChosen = isSelected
     }
 
@@ -38,6 +38,9 @@ final class InvoiceListViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private var emptyView: UIView?
     private var documents: [Invoice] = []
+    private var invoicesByID: [Invoice.ID: Invoice] = [:]
+    private var rowModels: [Invoice.ID: InvoiceRowModel] = [:]
+    private var accessibilityActionsByID: [Invoice.ID: [UIAccessibilityCustomAction]] = [:]
     private var renderedKind: DocumentType
     private var shownID: Invoice.ID?
 
@@ -45,9 +48,9 @@ final class InvoiceListViewController: UIViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: InvoiceCell.reuseID, for: indexPath)
         guard let self,
               let invoiceCell = cell as? InvoiceCell,
-              let invoice = self.documents.first(where: { $0.id == id }) else { return cell }
-        invoiceCell.configure(with: invoice)
-        invoiceCell.accessibilityCustomActions = self.accessibilityActions(for: invoice)
+              let model = self.rowModels[id] else { return cell }
+        invoiceCell.configure(with: model)
+        invoiceCell.accessibilityCustomActions = self.accessibilityActions(for: id)
         return invoiceCell
     }
 
@@ -158,8 +161,22 @@ final class InvoiceListViewController: UIViewController {
             .store(in: &cancellables)
         NotificationCenter.default.publisher(for: .documentsDidChange)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.viewModel.load() }
+            .sink { [weak self] _ in
+                guard let self, self.isOnScreen else { return }
+                self.viewModel.load()
+            }
             .store(in: &cancellables)
+    }
+
+    /// Whether a reload would be seen. A save announced while a document is open
+    /// over the list, or while another tab is in front, is picked up by the
+    /// appearance load instead of re-decoding and re-diffing behind a screen the
+    /// person isn't looking at.
+    private var isOnScreen: Bool {
+        guard let window = view.window, !window.isHidden, !view.isHidden else { return false }
+        if let split = listDetailSplit, split.isCollapsed, !split.showsPlaceholder { return false }
+        if let navigationController, navigationController.visibleViewController !== self { return false }
+        return true
     }
 
     /// Diffs the new documents into the table: inserts/deletes/moves animate,
@@ -167,13 +184,15 @@ final class InvoiceListViewController: UIViewController {
     /// switch between kinds applies without animation so an invoices→estimates
     /// swap never plays as a misleading row-by-row diff.
     private func apply(_ newDocuments: [Invoice]) {
-        let previousByID = Dictionary(documents.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        let previousByID = invoicesByID
         let removedShownDocument = shownID.map { shown in
             previousByID[shown] != nil && !newDocuments.contains { $0.id == shown }
         } ?? false
         let kindChanged = renderedKind != viewModel.kind
         renderedKind = viewModel.kind
         documents = newDocuments
+        invoicesByID = Dictionary(newDocuments.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        rowModels = Dictionary(uniqueKeysWithValues: newDocuments.map { ($0.id, InvoiceRowModel($0)) })
         emptyView?.isHidden = !newDocuments.isEmpty
         tableView.refreshControl?.endRefreshing()
 
@@ -184,11 +203,19 @@ final class InvoiceListViewController: UIViewController {
             guard let old = previousByID[invoice.id], old != invoice else { return nil }
             return invoice.id
         }
+        forgetAccessibilityActions(for: changed)
+        accessibilityActionsByID = accessibilityActionsByID.filter { invoicesByID[$0.key] != nil }
         snapshot.reconfigureItems(changed)
         let animated = !kindChanged && tableView.window != nil
         dataSource.apply(snapshot, animatingDifferences: animated)
         if removedShownDocument { forgetShownDocument() }
         syncSelectionWithDetail()
+    }
+
+    /// Drops the cached VoiceOver actions of rows whose document changed, so a
+    /// reconfigured cell never acts on the value it was built from.
+    private func forgetAccessibilityActions(for ids: [Invoice.ID]) {
+        for id in ids { accessibilityActionsByID[id] = nil }
     }
 
     /// Keeps the highlighted row on the document the detail column shows, and
@@ -253,13 +280,23 @@ final class InvoiceListViewController: UIViewController {
 
     private func invoice(at indexPath: IndexPath) -> Invoice? {
         guard let id = dataSource.itemIdentifier(for: indexPath) else { return nil }
-        return documents.first { $0.id == id }
+        return invoicesByID[id]
     }
 }
 
 extension InvoiceListViewController: UITableViewDelegate {
-    /// VoiceOver mirror of the swipe/context actions, which are otherwise unreachable.
-    private func accessibilityActions(for invoice: Invoice) -> [UIAccessibilityCustomAction] {
+    /// VoiceOver mirror of the swipe/context actions, which are otherwise
+    /// unreachable. Built once per document and kept until that document
+    /// changes, so scrolling past a row does not allocate four actions again.
+    private func accessibilityActions(for id: Invoice.ID) -> [UIAccessibilityCustomAction] {
+        if let cached = accessibilityActionsByID[id] { return cached }
+        guard let invoice = invoicesByID[id] else { return [] }
+        let actions = buildAccessibilityActions(for: invoice)
+        accessibilityActionsByID[id] = actions
+        return actions
+    }
+
+    private func buildAccessibilityActions(for invoice: Invoice) -> [UIAccessibilityCustomAction] {
         var actions: [UIAccessibilityCustomAction] = []
         if let primary = primaryAction(for: invoice) {
             let title = invoice.type == .estimate ? String(localized: "Convert to Invoice") : primary.title

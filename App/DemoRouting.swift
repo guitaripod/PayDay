@@ -1,6 +1,7 @@
 #if DEBUG
 import UIKit
 import PayDayCore
+import MidgarUI
 
 /// Deterministic screen routing for App Store screenshot capture and layout
 /// checks. `PAYDAY_DEMO=<screen>` picks the screen; `PAYDAY_DEMO_DOC` (a document
@@ -38,7 +39,43 @@ enum DemoRouting {
             case "setup": present(BusinessSettingsViewController(mode: .essentials), over: tabs)
             default: break
             }
+            measure(screen, in: tabs)
         }
+    }
+
+    /// Times one measured run: the launch stretch ends once the screen has
+    /// settled, a list scrolls one screenful halfway through the dwell, and the
+    /// stretch that ends with the dwell is named after the screen the runner
+    /// screenshots next.
+    private static func measure(_ screen: String, in root: UIViewController) {
+        guard let dwell = DemoWorld.launchValue("PAYDAY_DEMO_DWELL").flatMap(TimeInterval.init) else { return }
+        MidgarFrameWatch.shared.report("launch to \(screen)")
+        DispatchQueue.main.asyncAfter(deadline: .now() + dwell / 2) {
+            scrollOnce(in: root)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + dwell) {
+            MidgarFrameWatch.shared.report(screen)
+            MidgarFrameWatch.shared.stop()
+        }
+    }
+
+    /// Scrolls the first scrollable view on screen by about a screenful, so the
+    /// whole measured stretch has to lay out rows that were not on screen.
+    private static func scrollOnce(in root: UIViewController) {
+        guard let scroll = firstScrollable(in: root.view) else { return }
+        let target = min(scroll.contentOffset.y + scroll.bounds.height * 0.9, max(0, scroll.contentSize.height - scroll.bounds.height + scroll.adjustedContentInset.bottom))
+        scroll.setContentOffset(CGPoint(x: scroll.contentOffset.x, y: target), animated: true)
+    }
+
+    private static func firstScrollable(in view: UIView) -> UIScrollView? {
+        if let scroll = view as? UIScrollView, view.window != nil,
+           scroll.contentSize.height > scroll.bounds.height + 24 {
+            return scroll
+        }
+        for subview in view.subviews {
+            if let found = firstScrollable(in: subview) { return found }
+        }
+        return nil
     }
 
     private static func tabs(_ tab: RootViewController.Tab) -> RootViewController {
